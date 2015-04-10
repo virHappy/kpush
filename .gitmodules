@@ -1,0 +1,6 @@
+[submodule "modules/netkit"]
+	path = modules/netkit
+	url = https://github.com/dantezhu/netkit.git
+[submodule "modules/ferry"]
+	path = modules/ferry
+	url = https://github.com/dantezhu/ferry.git

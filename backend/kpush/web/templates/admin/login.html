@@ -1,0 +1,40 @@
+{% extends "admin/master.html" %}
+
+{% block body %}
+
+    <div class="span12">
+        <form action="" class="form-horizontal" method="post">
+            <fieldset>
+                {{ form.csrf_token }}
+                <div class="control-group {% if form.username.errors %} error{% endif %}">
+                    <label class="control-label"><strong>{{ form.username.label }}</strong></label>
+                    <div class="controls">
+                        {{ form.username }}
+                    <span class="help-inline">
+                        {{ form.username.errors|first }}
+                    </span>
+                    </div>
+                </div>
+
+                <div class="control-group {% if form.password.errors %} error{% endif %}">
+                    <label class="control-label"><strong>{{ form.password.label }}</strong></label>
+                    <div class="controls">
+                        {{ form.password }}
+                    <span class="help-inline">
+                        {{ form.password.errors|first }}
+                    </span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="submit" class="btn">登录</button>
+                    </div>
+                </div>
+
+            </fieldset>
+
+        </form>
+    </div>
+
+{% endblock %}

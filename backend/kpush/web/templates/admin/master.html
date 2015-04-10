@@ -1,0 +1,48 @@
+{% extends "admin/base.html" %}
+
+{% block head %}
+    {{ super() }}
+
+    <script type="text/javascript">
+        // 发送post请求
+        function send_post_request(url, params) {
+            var temp = document.createElement("form");
+            temp.action = url;
+            temp.method = "post";
+            temp.style.display = "none";
+            for (var x in params) {
+                var opt = document.createElement("textarea");
+                opt.name = x;
+                opt.value = params[x];
+                temp.appendChild(opt);
+            }
+            document.body.appendChild(temp);
+            temp.submit();
+            return temp;
+        }
+
+        function user_logout() {
+            var url = "{{ url_for('adminauthview.logout') }}";
+            send_post_request(url);
+        }
+    </script>
+{% endblock %}
+
+{% block access_control %}
+    <ul class="nav pull-right">
+        {% if g.admin_user %}
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <span class="label label-important">
+                    {{ g.admin_user.username }}
+                </span>
+                <b class="caret"></b></a>
+            <ul class="dropdown-menu" role="menu" >
+                <li><a tabindex="-1" href="javascript: user_logout();">退出</a></li>
+            </ul>
+        </li>
+    {% else %}
+        <li><a href="{{ url_for('adminauthview.login') }}" >登录</a></li>
+    {% endif %}
+    </ul>
+{% endblock %}

@@ -3,15 +3,39 @@ package kpush.net_proto;
 option java_package="cn.vimer.kpush.net_proto";
 option java_outer_classname="NetProto";
 
-message RspToUsers {
-    message Row {
-        repeated int64 uids = 1;   // 发送用户列表
-        optional bytes buf = 2;
-    }
-
-    repeated Row rows = 1;
+// 为了防篡改，所有内容都用这个包一层
+message Wrapper {
+    optional bytes content = 1; // 内容
+    optional bytes sign = 2; // 签名
 }
 
-message CloseUsers {
-    repeated int64 uids = 1;
+// 用户注册
+message ReqUserRegister {
+    optional int32 appid = 1; // 分配的appid
+    optional string device_id = 2; // 设备ID
+    optional string os = 3; // 操作系统 android/ios
+    optional int32 os_version = 4; // 系统版本
+    optional string phone_type = 5; // 手机型号
+}
+
+message RspUserRegister {
+    optional int64 uid = 1; // 用户ID
+    optional string key = 2; // 用户密码
+}
+
+// 修改别名和tags
+message ReqSetAliasAndTags {
+    optional string alias = 1; // 别名
+    repeated string tags = 2; // 标签列表
+}
+
+/* ============================================================================= */
+// 新的通知
+message EvtNotification {
+    
+}
+
+// 新的自定义消息
+message EvtMsg {
+    
 }

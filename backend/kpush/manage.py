@@ -62,7 +62,7 @@ class GServer(flask_script.Command):
 
 
 manager.add_command('urls', ShowUrls())
-manager.add_command('gserver', GServer())
+manager.add_command('rungserver', GServer())
 
 
 @manager.command
@@ -139,7 +139,7 @@ def genkey(length):
 @manager.option('-d', '--debug', dest='debug', action='store_true')
 @manager.option('-t', '--host', dest='host', default='127.0.0.1')
 @manager.option('-p', '--port', dest='port', type=int, required=True)
-def worker(host, port, debug, workers):
+def runworker(host, port, debug, workers):
     """
     启动worker
     """

@@ -1,0 +1,17 @@
+package kpush.net_proto;
+
+option java_package="cn.vimer.kpush.net_proto";
+option java_outer_classname="NetProto";
+
+message RspToUsers {
+    message Row {
+        repeated int64 uids = 1;   // 发送用户列表
+        optional bytes buf = 2;
+    }
+
+    repeated Row rows = 1;
+}
+
+message CloseUsers {
+    repeated int64 uids = 1;
+}

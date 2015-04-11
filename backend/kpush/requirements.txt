@@ -1,12 +1,6 @@
 flask
-sqlalchemy
-wtforms
-gevent
 flask-sqlalchemy
 flask-admin
-flask-login
 flask-wtf
-flask_util_js
 flask-script
-flask-babel
 passlib

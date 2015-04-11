@@ -1,24 +1,25 @@
 # -*- coding: utf-8 -*-
 
+import os
 # need python >= 2.7
 from importlib import import_module
 from flask import Flask
 
-from share.extensions import db, login_manager, fujs, babel
+from share.extensions import db
 from share import models
 import views.admin
 
 
-def create_app(config=None, app_name=None):
+def create_app(config=None, name=None):
     if config is None:
-        import config
+        config = '../config.py'
 
-    if not app_name:
-        app_name = __name__
+    if not name:
+        name = __name__
 
-    app = Flask(app_name)
+    app = Flask(name)
 
-    app.config.from_object(config)
+    app.config.from_pyfile(config)
 
     configure_logging(app)
     configure_extensions(app)
@@ -31,8 +32,9 @@ def create_app(config=None, app_name=None):
 def configure_logging(app):
     import copy
     import logging.config
+    from share import log
 
-    LOGGING = copy.deepcopy(app.config['LOGGING'])
+    LOGGING = copy.deepcopy(log.LOGGING)
     LOGGING['loggers'][app.logger.name] = LOGGING['loggers']['default']
     logging.config.dictConfig(LOGGING)
 
@@ -42,15 +44,6 @@ def configure_extensions(app):
     初始化插件
     """
     db.init_app(app)
-
-    login_manager.init_app(app)
-
-    @login_manager.user_loader
-    def load_user(userid):
-        return models.User.query.get(userid)
-
-    fujs.init_app(app)
-    babel.init_app(app)
 
 
 def configure_context_processors(app):

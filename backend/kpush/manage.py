@@ -12,9 +12,19 @@ from flask_script.commands import ShowUrls
 
 from share.extensions import db
 from share.models import AdminUser
-from web.application import create_app
 
-manager = flask_script.Manager(create_app)
+def create_custom_app(**kwargs):
+    from web.application import create_app
+
+    config = kwargs.get('config')
+    if config is not None:
+        kwargs['config'] = os.path.abspath(config)
+
+    return create_app(**kwargs)
+
+manager = flask_script.Manager(create_custom_app)
+manager.add_option('-c', '--config', dest='config', required=False)
+manager.add_option('-n', '--name', dest='name', required=False)
 
 
 class GServer(flask_script.Command):
@@ -27,20 +37,22 @@ class GServer(flask_script.Command):
 
     help = description = 'Runs the Flask gevent server'
 
-    def __init__(self):
+    def __init__(self, host='127.0.0.1', port=5000):
         super(GServer, self).__init__()
+        self.host = host
+        self.port = port
 
     def get_options(self):
 
         options = (
             flask_script.Option('-t', '--host',
                                 dest='host',
-                                default='127.0.0.1'),
+                                default=self.host),
 
             flask_script.Option('-p', '--port',
                                 dest='port',
                                 type=int,
-                                default=5000),
+                                default=self.port),
         )
 
         return options
@@ -51,8 +63,6 @@ class GServer(flask_script.Command):
 
         from gevent import monkey; monkey.patch_all()
         from gevent import wsgi
-
-        app = create_app()
 
         print "* Running gserver on http://%s:%s" % (host, port)
         try:
@@ -129,7 +139,7 @@ def dbshell():
 @manager.option(dest='length', type=int)
 def genkey(length):
     """
-    生成secret key，参考django
+    generate secret key，参考django
     """
     chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
     print ''.join([random.choice(chars) for i in range(length)])
@@ -141,7 +151,7 @@ def genkey(length):
 @manager.option('-p', '--port', dest='port', type=int, required=True)
 def runworker(host, port, debug, workers):
     """
-    启动worker
+    start worker
     """
     from worker.application import create_app
     app = create_app()

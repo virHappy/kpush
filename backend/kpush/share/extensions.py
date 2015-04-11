@@ -5,11 +5,5 @@
 """
 
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_util_js import FlaskUtilJs
-from flask_babel import Babel
 
 db = SQLAlchemy()
-login_manager = LoginManager()
-fujs = FlaskUtilJs()
-babel = Babel()

@@ -4,10 +4,8 @@ import datetime
 import re
 
 from passlib.hash import sha256_crypt
-from flask import current_app
-from flask_login import UserMixin
 
-from extensions import db
+from share.extensions import db
 
 
 class AbstractBaseUser(db.Model):
@@ -57,8 +55,3 @@ class AdminUser(AbstractBaseUser):
     @parsed_roles.setter
     def parsed_roles(self, value):
         self.roles = ','.join(value)
-
-
-class User(AbstractBaseUser, UserMixin):
-    __tablename__ = 'user'
-

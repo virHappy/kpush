@@ -11,7 +11,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin import Admin
 
 from share.extensions import db
-from share.models import AdminUser, User
+from share.models import AdminUser
 from forms import LoginForm
 
 
@@ -29,7 +29,6 @@ def register_views(app):
 
     # model
     admin.add_view(AdminUserView())
-    admin.add_view(UserView())
 
     return admin
 
@@ -76,16 +75,6 @@ class AdminUserView(ModelView):
 
     def __init__(self, *args, **kwargs):
         super(AdminUserView, self).__init__(AdminUser, db.session, *args, **kwargs)
-
-    def is_accessible(self):
-        return g.admin_user
-
-
-class UserView(ModelView):
-    column_exclude_list = ('password',)
-
-    def __init__(self, *args, **kwargs):
-        super(UserView, self).__init__(User, db.session, *args, **kwargs)
 
     def is_accessible(self):
         return g.admin_user

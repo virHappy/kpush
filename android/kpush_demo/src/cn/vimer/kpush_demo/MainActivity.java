@@ -3,7 +3,7 @@ package cn.vimer.kpush_demo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import cn.vimer.kpush.PushService;
+import cn.vimer.kpush.KPush;
 
 public class MainActivity extends Activity {
     /**
@@ -14,7 +14,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        Intent intent = new Intent(this, PushService.class);
-        startService(intent);
+        KPush.init(this);
     }
 }

@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='net.proto',
   package='kpush.net_proto',
-  serialized_pb='\n\tnet.proto\x12\x0fkpush.net_proto\"(\n\x07Wrapper\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\x0c\x12\x0c\n\x04sign\x18\x02 \x01(\x0c\"g\n\x0fReqUserRegister\x12\r\n\x05\x61ppid\x18\x01 \x01(\x05\x12\x11\n\tdevice_id\x18\x02 \x01(\t\x12\n\n\x02os\x18\x03 \x01(\t\x12\x12\n\nos_version\x18\x04 \x01(\x05\x12\x12\n\nphone_type\x18\x05 \x01(\t\"+\n\x0fRspUserRegister\x12\x0b\n\x03uid\x18\x01 \x01(\x03\x12\x0b\n\x03key\x18\x02 \x01(\t\"1\n\x12ReqSetAliasAndTags\x12\r\n\x05\x61lias\x18\x01 \x01(\t\x12\x0c\n\x04tags\x18\x02 \x03(\t\"\x11\n\x0f\x45vtNotification\"\x08\n\x06\x45vtMsgB$\n\x18\x63n.vimer.kpush.net_protoB\x08NetProto')
+  serialized_pb='\n\tnet.proto\x12\x0fkpush.net_proto\"7\n\x07Wrapper\x12\r\n\x05\x61ppid\x18\x01 \x01(\x05\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\x0c\x12\x0c\n\x04sign\x18\x03 \x01(\x0c\"X\n\x0fReqUserRegister\x12\x11\n\tdevice_id\x18\x01 \x01(\t\x12\n\n\x02os\x18\x02 \x01(\t\x12\x12\n\nos_version\x18\x03 \x01(\x05\x12\x12\n\nphone_type\x18\x04 \x01(\t\"+\n\x0fRspUserRegister\x12\x0b\n\x03uid\x18\x01 \x01(\x03\x12\x0b\n\x03key\x18\x02 \x01(\t\"1\n\x12ReqSetAliasAndTags\x12\r\n\x05\x61lias\x18\x01 \x01(\t\x12\x0c\n\x04tags\x18\x02 \x03(\t\"\x11\n\x0f\x45vtNotification\"\x0c\n\nEvtMessageB$\n\x18\x63n.vimer.kpush.net_protoB\x08NetProto')
 
 
 
@@ -26,15 +26,22 @@ _WRAPPER = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='content', full_name='kpush.net_proto.Wrapper.content', index=0,
-      number=1, type=12, cpp_type=9, label=1,
+      name='appid', full_name='kpush.net_proto.Wrapper.appid', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='content', full_name='kpush.net_proto.Wrapper.content', index=1,
+      number=2, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value="",
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='sign', full_name='kpush.net_proto.Wrapper.sign', index=1,
-      number=2, type=12, cpp_type=9, label=1,
+      name='sign', full_name='kpush.net_proto.Wrapper.sign', index=2,
+      number=3, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value="",
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -49,7 +56,7 @@ _WRAPPER = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=30,
-  serialized_end=70,
+  serialized_end=85,
 )
 
 
@@ -61,36 +68,29 @@ _REQUSERREGISTER = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='appid', full_name='kpush.net_proto.ReqUserRegister.appid', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
+      name='device_id', full_name='kpush.net_proto.ReqUserRegister.device_id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='device_id', full_name='kpush.net_proto.ReqUserRegister.device_id', index=1,
+      name='os', full_name='kpush.net_proto.ReqUserRegister.os', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='os', full_name='kpush.net_proto.ReqUserRegister.os', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='os_version', full_name='kpush.net_proto.ReqUserRegister.os_version', index=3,
-      number=4, type=5, cpp_type=1, label=1,
+      name='os_version', full_name='kpush.net_proto.ReqUserRegister.os_version', index=2,
+      number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='phone_type', full_name='kpush.net_proto.ReqUserRegister.phone_type', index=4,
-      number=5, type=9, cpp_type=9, label=1,
+      name='phone_type', full_name='kpush.net_proto.ReqUserRegister.phone_type', index=3,
+      number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -104,7 +104,7 @@ _REQUSERREGISTER = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=72,
+  serialized_start=87,
   serialized_end=175,
 )
 
@@ -200,9 +200,9 @@ _EVTNOTIFICATION = _descriptor.Descriptor(
 )
 
 
-_EVTMSG = _descriptor.Descriptor(
-  name='EvtMsg',
-  full_name='kpush.net_proto.EvtMsg',
+_EVTMESSAGE = _descriptor.Descriptor(
+  name='EvtMessage',
+  full_name='kpush.net_proto.EvtMessage',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
@@ -217,7 +217,7 @@ _EVTMSG = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=292,
-  serialized_end=300,
+  serialized_end=304,
 )
 
 DESCRIPTOR.message_types_by_name['Wrapper'] = _WRAPPER
@@ -225,7 +225,7 @@ DESCRIPTOR.message_types_by_name['ReqUserRegister'] = _REQUSERREGISTER
 DESCRIPTOR.message_types_by_name['RspUserRegister'] = _RSPUSERREGISTER
 DESCRIPTOR.message_types_by_name['ReqSetAliasAndTags'] = _REQSETALIASANDTAGS
 DESCRIPTOR.message_types_by_name['EvtNotification'] = _EVTNOTIFICATION
-DESCRIPTOR.message_types_by_name['EvtMsg'] = _EVTMSG
+DESCRIPTOR.message_types_by_name['EvtMessage'] = _EVTMESSAGE
 
 class Wrapper(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
@@ -257,11 +257,11 @@ class EvtNotification(_message.Message):
 
   # @@protoc_insertion_point(class_scope:kpush.net_proto.EvtNotification)
 
-class EvtMsg(_message.Message):
+class EvtMessage(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _EVTMSG
+  DESCRIPTOR = _EVTMESSAGE
 
-  # @@protoc_insertion_point(class_scope:kpush.net_proto.EvtMsg)
+  # @@protoc_insertion_point(class_scope:kpush.net_proto.EvtMessage)
 
 
 DESCRIPTOR.has_options = True

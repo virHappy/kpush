@@ -10,19 +10,11 @@ from flask import render_template_string
 import flask_script
 from flask_script.commands import ShowUrls
 
+from web.application import create_app
 from share.extensions import db
 from share.models import AdminUser
 
-def create_custom_app(**kwargs):
-    from web.application import create_app
-
-    config = kwargs.get('config')
-    if config is not None:
-        kwargs['config'] = os.path.abspath(config)
-
-    return create_app(**kwargs)
-
-manager = flask_script.Manager(create_custom_app)
+manager = flask_script.Manager(create_app)
 manager.add_option('-c', '--config', dest='config', required=False)
 manager.add_option('-n', '--name', dest='name', required=False)
 

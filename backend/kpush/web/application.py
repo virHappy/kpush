@@ -12,14 +12,14 @@ import views.admin
 
 def create_app(config=None, name=None):
     if config is None:
-        config = '../config.py'
+        config = 'config'
 
     if not name:
         name = __name__
 
     app = Flask(name)
 
-    app.config.from_pyfile(config)
+    app.config.from_object(config)
 
     configure_logging(app)
     configure_extensions(app)
@@ -30,13 +30,11 @@ def create_app(config=None, name=None):
 
 
 def configure_logging(app):
-    import copy
     import logging.config
-    from share import log
 
-    LOGGING = copy.deepcopy(log.LOGGING)
-    LOGGING['loggers'][app.logger.name] = LOGGING['loggers']['default']
-    logging.config.dictConfig(LOGGING)
+    # 不可删除此行
+    app.logger
+    logging.config.dictConfig(app.config['LOGGING'])
 
 
 def configure_extensions(app):

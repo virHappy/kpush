@@ -10,33 +10,31 @@ from web.application import create_app
 from share import proto
 
 
-class TestWorker(object):
-    app = None
-    app_ctx = None
-    worker_client = None
+app = create_app()
+app_ctx = app.test_request_context()
+worker_client = TcpClient(Box, '115.28.224.64', 29000)
 
-    def __init__(self):
-        self.app = create_app()
-        self.app_ctx = self.app.test_request_context()
-        self.worker_client = TcpClient(Box, '115.28.224.64', 29000)
 
-    def setup(self):
-        """
-        小写更喜欢
-        :return:
-        """
-        self.app_ctx.push()
-        self.worker_client.connect()
+def setup():
+    """
+    小写更喜欢
+    :return:
+    """
+    print "setup"
+    app_ctx.push()
+    worker_client.connect()
 
-    def teardown(self):
-        self.app_ctx.pop()
 
-    def test_register(self):
-        from share.net_pb2 import ReqUserRegister
-        req = ReqUserRegister()
-        self.worker_client.write(dict(
-            cmd=proto.CMD_REGISTER,
-            body=req.SerializeToString()
-        ))
+def teardown():
+    app_ctx.pop()
 
-        print self.worker_client.read()
+
+def test_register():
+    from share.net_pb2 import ReqUserRegister
+    req = ReqUserRegister()
+    worker_client.write(dict(
+        cmd=proto.CMD_REGISTER,
+        body=req.SerializeToString()
+    ))
+
+    print worker_client.read()

@@ -8,6 +8,7 @@ import cn.vimer.ferry.Ferry;
 import cn.vimer.kpush_demo.Constants;
 import cn.vimer.netkit.Box;
 import cn.vimer.netkit.IBox;
+import org.json.JSONObject;
 
 /**
  * Created by dantezhu on 15-4-13.
@@ -25,7 +26,7 @@ public class PushService extends Service {
 
         regEventCallback();
 
-        Ferry.getInstance().init("192.168.1.77", 29000);
+        Ferry.getInstance().init("115.28.224.64", 29000);
         Ferry.getInstance().start();
     }
 
@@ -49,10 +50,15 @@ public class PushService extends Service {
                 Log.d(Constants.LOG_TAG, "onOpen");
 
                 Box box = new Box();
-                box.version = 100;
-                box.flag = 99;
-                box.cmd = 1;
-                box.body = new String("I love you").getBytes();
+                box.cmd = Proto.CMD_REGISTER;
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("device_id", "2323234234");
+                }
+                catch (Exception e) {
+                }
+
+                box.body = jsonObject.toString().getBytes();
 
                 Ferry.getInstance().send(box, new Ferry.CallbackListener() {
                     @Override
@@ -93,7 +99,7 @@ public class PushService extends Service {
                 Log.d(Constants.LOG_TAG, String.format("onError, code: %s, box: %s", code, ibox));
             }
 
-        }, this, "ok");
+        }, this, "main");
     }
 
 }

@@ -1,11 +1,17 @@
 package cn.vimer.kpush;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 import cn.vimer.ferry.Ferry;
 import cn.vimer.kpush_demo.Constants;
+import cn.vimer.kpush_demo.MainActivity;
+import cn.vimer.kpush_demo.R;
 import cn.vimer.netkit.Box;
 import cn.vimer.netkit.IBox;
 import org.json.JSONObject;
@@ -53,9 +59,8 @@ public class PushService extends Service {
                 box.cmd = Proto.CMD_REGISTER;
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("device_id", "2323234234");
-                }
-                catch (Exception e) {
+                    jsonObject.put("device_id", 1);
+                } catch (Exception e) {
                 }
 
                 box.body = jsonObject.toString().getBytes();
@@ -86,6 +91,10 @@ public class PushService extends Service {
             @Override
             public void onRecv(IBox ibox) {
                 Log.d(Constants.LOG_TAG, String.format("onRecv, box: %s", ibox));
+                Box box = (Box) ibox;
+                if (box.cmd == Proto.EVT_NOTIFICATION) {
+                    registerNtf();
+                }
             }
 
             @Override
@@ -100,6 +109,32 @@ public class PushService extends Service {
             }
 
         }, this, "main");
+    }
+
+    public void registerNtf() {
+        //消息通知栏
+        //定义NotificationManager
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+        //定义通知栏展现的内容信息
+        int icon = R.drawable.ic_launcher;
+        CharSequence tickerText = "我的通知栏标题";
+        long when = System.currentTimeMillis();
+        Notification notification = new Notification(icon, tickerText, when);
+
+        //定义下拉通知栏时要展现的内容信息
+        Context context = getApplicationContext();
+        CharSequence contentTitle = "我的通知栏标展开标题";
+        CharSequence contentText = "我的通知栏展开详细内容";
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent, 0);
+        notification.setLatestEventInfo(context, contentTitle, contentText,
+                contentIntent);
+
+        //用mNotificationManager的notify方法通知用户生成标题栏消息通知
+        int nfyid = 1;
+        mNotificationManager.notify(nfyid, notification);
     }
 
 }

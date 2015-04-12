@@ -9,8 +9,9 @@ bp = Blueprint()
 
 @bp.route(proto.CMD_REGISTER)
 def login(request):
+    req = json.loads(request.box.body)
     rsp = dict(
-        uid=1,
+        uid=req['device_id'],
         key="mykey",
     )
 

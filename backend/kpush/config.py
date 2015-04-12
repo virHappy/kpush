@@ -21,6 +21,7 @@ BLUEPRINTS = (
     ('web.views.frontend', ''),
 )
 
+
 class RequireDebugOrNot(logging.Filter):
     _need_debug = False
 

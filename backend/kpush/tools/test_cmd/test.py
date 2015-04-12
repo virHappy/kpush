@@ -3,6 +3,7 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../"))
 
+import json
 from flask import current_app, request
 from netkit.contrib.tcp_client import TcpClient
 from netkit.box import Box
@@ -29,11 +30,10 @@ def teardown():
 
 
 def test_register():
-    from share.net_pb2 import ReqUserRegister
-    req = ReqUserRegister()
+    req = dict()
     worker_client.write(dict(
         cmd=proto.CMD_REGISTER,
-        body=req.SerializeToString()
+        body=json.dumps(req)
     ))
 
     print worker_client.read()

@@ -6,8 +6,8 @@ option java_outer_classname="NetProto";
 // 为了防篡改，所有内容都用这个包一层
 message Wrapper {
     optional int32 appid = 1; // 分配的appid
-    optional bytes content = 2; // 内容
-    optional bytes sign = 3; // 签名
+    optional string content = 2; // 内容
+    optional string sign = 3; // 签名
 }
 
 // 用户注册

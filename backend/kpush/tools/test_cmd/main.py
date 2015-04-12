@@ -10,7 +10,7 @@ from web.application import create_app
 from share import proto
 
 
-class TestWorker():
+class TestWorker(object):
     app = None
     app_ctx = None
     worker_client = None
@@ -20,11 +20,15 @@ class TestWorker():
         self.app_ctx = self.app.test_request_context()
         self.worker_client = TcpClient(Box, '115.28.224.64', 29000)
 
-    def setUp(self):
+    def setup(self):
+        """
+        小写更喜欢
+        :return:
+        """
         self.app_ctx.push()
         self.worker_client.connect()
 
-    def tearDown(self):
+    def teardown(self):
         self.app_ctx.pop()
 
     def test_register(self):

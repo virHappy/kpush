@@ -31,9 +31,7 @@ def create_app(config=None, name=None):
 def configure_logging(app):
     import logging.config
 
-    # 不可删除此行
-    app.logger
-    logging.config.dictConfig(app.config['LOGGING'])
+    app.logger and logging.config.dictConfig(app.config['LOGGING'])
 
 
 def configure_extensions(app):

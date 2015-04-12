@@ -3,25 +3,23 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../"))
 
+from flask import current_app, request
 from web.application import create_app
 
 
-def setup():
-    print 'setup'
+class TestWorker():
+    app = None
+    app_ctx = None
 
+    def __init__(self):
+        self.app = create_app()
+        self.app_ctx = self.app.test_request_context()
 
-def teardown():
-    print 'teardown'
+    def setUp(self):
+        self.app_ctx.push()
 
+    def tearDown(self):
+        self.app_ctx.pop()
 
-def app_request_ctx(func):
-    import functools
-    @functools.wraps(func)
-    def func_wrapper(*args, **kwargs):
-
-        return func(*args, **kwargs)
-    return func_wrapper
-
-
-def test_register():
-    pass
+    def test_register(self):
+        pass

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 # need python >= 2.7
 from importlib import import_module
 from flask import Flask

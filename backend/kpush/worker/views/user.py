@@ -12,7 +12,10 @@ def login(request):
     rsp = RspUserRegister()
     rsp.uid = 1
     rsp.key = "mykey"
-    request.write(dict(
+
+    request.login_client(rsp.uid)
+
+    request.write_to_client(dict(
         ret=0,
         body=rsp.SerializeToString(),
     ))

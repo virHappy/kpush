@@ -4,3 +4,4 @@ flask-admin
 flask-wtf
 flask-script
 passlib
+maple

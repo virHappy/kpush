@@ -20,7 +20,6 @@ def setup():
     小写更喜欢
     :return:
     """
-    print "setup"
     app_ctx.push()
     worker_client.connect()
 

@@ -6,7 +6,9 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
 import cn.vimer.ferry.Ferry;
 import cn.vimer.kpush_demo.MainActivity;
@@ -19,6 +21,9 @@ import org.json.JSONObject;
  * Created by dantezhu on 15-4-13.
  */
 public class PushService extends Service {
+
+    private Handler handler;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -28,6 +33,8 @@ public class PushService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(Constants.LOG_TAG, "onCreate");
+
+        handler = new Handler();
 
         regEventCallback();
 
@@ -54,55 +61,7 @@ public class PushService extends Service {
             public void onOpen() {
                 Log.d(Constants.LOG_TAG, "onOpen");
 
-                Box box = new Box();
-                box.cmd = Proto.CMD_REGISTER;
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("os", Constants.OS);
-                    jsonObject.put("sdk_version", Constants.SDK_VERSION);
-                    jsonObject.put("appkey", KPush.getAppkey());
-                    jsonObject.put("channel", KPush.getChannel());
-                    jsonObject.put("device_id", DeviceUtil.getDeviceId());
-                    jsonObject.put("os_version", DeviceUtil.getOsVersion());
-                    jsonObject.put("app_version", DeviceUtil.getAppVersion());
-                    jsonObject.put("device_name", DeviceUtil.getDeviceName());
-                    jsonObject.put("package_name", DeviceUtil.getPackageName());
-                } catch (Exception e) {
-                }
-
-                Log.d(Constants.LOG_TAG, "" + KPush.getAppkey());
-                Log.d(Constants.LOG_TAG, jsonObject.toString());
-
-                byte[] body = Utils.packData(jsonObject);
-                if (body == null) {
-                    return;
-                }
-
-                box.body = body;
-
-                Ferry.getInstance().send(box, new Ferry.CallbackListener() {
-                    @Override
-                    public void onSend(IBox ibox) {
-                        Log.d(Constants.LOG_TAG, String.format("onSend, box: %s", ibox));
-                    }
-
-                    @Override
-                    public void onRecv(IBox ibox) {
-                        Log.d(Constants.LOG_TAG, String.format("onRecv, box: %s", ibox));
-                        Box box = (Box) ibox;
-                        Log.d(Constants.LOG_TAG, "data: " + Utils.unpackData(box.body));
-                    }
-
-                    @Override
-                    public void onError(int code, IBox ibox) {
-                        Log.d(Constants.LOG_TAG, String.format("onError, code: %s, box: %s", code, ibox));
-                    }
-
-                    @Override
-                    public void onTimeout() {
-                        Log.d(Constants.LOG_TAG, "onTimeout");
-                    }
-                }, 5, this);
+                userRegister();
             }
 
             @Override
@@ -126,6 +85,84 @@ public class PushService extends Service {
             }
 
         }, this, "main");
+    }
+
+    private void userRegister() {
+
+        Log.d(Constants.LOG_TAG, "userRegister");
+
+        Box box = new Box();
+        box.cmd = Proto.CMD_REGISTER;
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("os", Constants.OS);
+            jsonObject.put("sdk_version", Constants.SDK_VERSION);
+            jsonObject.put("appkey", KPush.getAppkey());
+            jsonObject.put("channel", KPush.getChannel());
+            jsonObject.put("device_id", DeviceUtil.getDeviceId());
+            jsonObject.put("os_version", DeviceUtil.getOsVersion());
+            jsonObject.put("app_version", DeviceUtil.getAppVersion());
+            jsonObject.put("device_name", DeviceUtil.getDeviceName());
+            jsonObject.put("package_name", DeviceUtil.getPackageName());
+        } catch (Exception e) {
+        }
+
+        Log.d(Constants.LOG_TAG, "" + KPush.getAppkey());
+        Log.d(Constants.LOG_TAG, jsonObject.toString());
+
+        byte[] body = Utils.packData(jsonObject);
+        if (body == null) {
+            return;
+        }
+
+        box.body = body;
+
+        Ferry.getInstance().send(box, new Ferry.CallbackListener() {
+            @Override
+            public void onSend(IBox ibox) {
+                Log.d(Constants.LOG_TAG, String.format("onSend, box: %s", ibox));
+            }
+
+            @Override
+            public void onRecv(IBox ibox) {
+                Log.d(Constants.LOG_TAG, String.format("onRecv, box: %s", ibox));
+                Box box = (Box) ibox;
+                // Log.d(Constants.LOG_TAG, "data: " + Utils.unpackData(box.body));
+
+                if (box.ret != 0) {
+                    // 几秒后再重试
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            userRegister();
+                        }
+                    }, Constants.ERROR_RETRY_INTERVAL * 1000);
+                }
+            }
+
+            @Override
+            public void onError(int code, IBox ibox) {
+                Log.d(Constants.LOG_TAG, String.format("onError, code: %s, box: %s", code, ibox));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        userRegister();
+                    }
+                }, Constants.ERROR_RETRY_INTERVAL * 1000);
+            }
+
+            @Override
+            public void onTimeout() {
+                Log.d(Constants.LOG_TAG, "onTimeout");
+
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        userRegister();
+                    }
+                }, Constants.ERROR_RETRY_INTERVAL * 1000);
+            }
+        }, 5, this);
     }
 
     public void registerNtf() {

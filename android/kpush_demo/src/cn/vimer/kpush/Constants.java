@@ -11,4 +11,7 @@ public class Constants {
     public static final String OS = "android";
 
     public static final String PREFS_NAME = "data";
+
+    // 出错重试的时间（秒）
+    public static final int ERROR_RETRY_INTERVAL = 1;
 }

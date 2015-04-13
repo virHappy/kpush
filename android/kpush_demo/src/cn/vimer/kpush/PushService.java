@@ -30,6 +30,10 @@ public class PushService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // 因为service可能重新进来
+        DeviceInfo.init(this);
+
         Log.d(Constants.LOG_TAG, "onCreate");
 
         handler = new Handler();
@@ -107,8 +111,8 @@ public class PushService extends Service {
         try {
             jsonObject.put("os", Constants.OS);
             jsonObject.put("sdk_version", Constants.SDK_VERSION);
-            jsonObject.put("appkey", KPush.getAppkey());
-            jsonObject.put("channel", KPush.getChannel());
+            jsonObject.put("appkey", DeviceInfo.getAppkey());
+            jsonObject.put("channel", DeviceInfo.getChannel());
             jsonObject.put("device_id", DeviceInfo.getDeviceId());
             jsonObject.put("os_version", DeviceInfo.getOsVersion());
             jsonObject.put("app_version", DeviceInfo.getAppVersion());
@@ -117,7 +121,6 @@ public class PushService extends Service {
         } catch (Exception e) {
         }
 
-        Log.d(Constants.LOG_TAG, "" + KPush.getAppkey());
         Log.d(Constants.LOG_TAG, jsonObject.toString());
 
         byte[] body = Utils.packData(jsonObject);

@@ -11,19 +11,9 @@ import android.util.Log;
 public class KPush {
 
     private static Context context = null;
-    // 默认从清单文件里获取
-    private static String appkey = null;
-    private static String channel = null;
 
     public static void init(Context context) {
         KPush.context = context;
-
-        DeviceInfo.init(context);
-
-        appkey = Utils.getMetaValue(context, "KPUSH_APPKEY");
-        channel = Utils.getMetaValue(context, "KPUSH_CHANNEL");
-
-        Log.v(Constants.LOG_TAG, String.format("channel:%s, appkey: %s", channel, appkey));
 
         startService();
     }
@@ -36,13 +26,5 @@ public class KPush {
 
     public static Context getContext() {
         return context;
-    }
-
-    public static String getAppkey() {
-        return appkey;
-    }
-
-    public static String getChannel() {
-        return channel;
     }
 }

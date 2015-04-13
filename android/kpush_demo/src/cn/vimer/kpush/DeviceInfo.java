@@ -15,6 +15,10 @@ import java.util.UUID;
  * Created by dantezhu on 15-4-13.
  */
 public class DeviceInfo {
+    // 默认从清单文件里获取
+    private static String appkey = null;
+    private static String channel = null;
+
     private static String packageName = null;
     private static int appVersion = 0;
     private static String deviceId = null;
@@ -39,6 +43,9 @@ public class DeviceInfo {
     }
 
     private static void initVals() {
+        appkey = Utils.getMetaValue(context, "KPUSH_APPKEY");
+        channel = Utils.getMetaValue(context, "KPUSH_CHANNEL");
+
         packageName = context.getPackageName();
 
         try
@@ -104,4 +111,11 @@ public class DeviceInfo {
         return appIconId;
     }
 
+    public static String getAppkey() {
+        return appkey;
+    }
+
+    public static String getChannel() {
+        return channel;
+    }
 }

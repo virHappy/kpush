@@ -12,7 +12,7 @@ public class PushReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.d(Constants.LOG_TAG, "action: " + intent.getAction());
+        Log.d(Constants.LOG_TAG, String.format("action: %s, data: %s", intent.getAction(), intent.getData()));
         Intent serviceIntent = new Intent();
 
         if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
@@ -22,6 +22,7 @@ public class PushReceiver extends BroadcastReceiver {
             serviceIntent.setAction(Constants.INTENT_ACTION_PACKAGE_REMOVED);
         }
         else {
+            // Intent.ACTION_USER_PRESENT 是在锁屏操作触发的，并不实时
             serviceIntent.setAction(Constants.INTENT_ACTION_SERVICE_START);
         }
 

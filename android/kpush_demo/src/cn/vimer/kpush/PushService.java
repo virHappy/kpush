@@ -193,9 +193,11 @@ public class PushService extends Service {
         Notification notification = new Notification(DeviceInfo.getAppIconId(), tickerText, when);
         notification.setLatestEventInfo(this, title, content,
                 contentIntent);
+        //在通知栏上点击此通知后自动清除此通知
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
         //用mNotificationManager的notify方法通知用户生成标题栏消息通知
-        int nfyid = 1;
+        int nfyid = 0;
         mNotificationManager.notify(nfyid, notification);
     }
 

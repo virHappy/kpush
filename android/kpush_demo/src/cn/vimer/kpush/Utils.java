@@ -3,9 +3,10 @@ package cn.vimer.kpush;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
+import org.json.JSONObject;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by dantezhu on 15-4-13.
@@ -39,6 +40,51 @@ public class Utils {
             return appInfo.metaData.getString(key);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private JSONObject unpackContent(String body) {
+        try{
+            JSONObject jsonBody = new JSONObject(body);
+
+            String content = jsonBody.getString("content");
+            String sign = jsonBody.getString("sign");
+
+            String source = Constants.SECRET + "|" + content;
+
+            String calcSign = genMD5(source);
+
+            if (!sign.equals(calcSign)) {
+                Log.e(Constants.LOG_TAG, String.format("sign not equal. sign: %s, calcSign: %s", sign, calcSign));
+                return null;
+            }
+
+            return new JSONObject(content);
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, "unpackContent fail: " + body);
+        }
+
+        return null;
+    }
+
+    private String packContent(JSONObject jsonContent) {
+        try{
+            JSONObject jsonBody = new JSONObject();
+
+            String content = jsonContent.toString();
+            String source = Constants.SECRET + "|" + content;
+            String sign = genMD5(source);
+
+            jsonBody.put("content", content);
+            jsonBody.put("sign", sign);
+
+            return jsonBody.toString();
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, "packContent fail: " + jsonContent.toString());
         }
 
         return null;

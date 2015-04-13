@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 import cn.vimer.ferry.Ferry;
-import cn.vimer.kpush_demo.Constants;
 import cn.vimer.kpush_demo.MainActivity;
 import cn.vimer.kpush_demo.R;
 import cn.vimer.netkit.Box;

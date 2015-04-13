@@ -3,14 +3,11 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../"))
 
-import hashlib
-import json
 from netkit.contrib.tcp_client import TcpClient
 from netkit.box import Box
-from flask import current_app
 from web.application import create_app
-from share import proto
-from share.utils import pack_content, unpack_content
+from worker.worker_share import proto
+from worker.worker_share.utils import pack_content, unpack_content
 
 
 worker_client = TcpClient(Box, '115.28.224.64', 29000)

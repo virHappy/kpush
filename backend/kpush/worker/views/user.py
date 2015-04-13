@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from maple import Blueprint
-from share import proto
-from share.utils import pack_content
+
+from worker.worker_share import proto
+from worker.worker_share.utils import pack_content
+
 
 bp = Blueprint()
 

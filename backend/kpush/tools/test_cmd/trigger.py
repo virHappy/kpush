@@ -3,12 +3,9 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../"))
 
-import json
-from netkit.contrib.tcp_client import TcpClient
 from netkit.box import Box
 from web.application import create_app
 from maple import Trigger
-from share import proto
 
 
 trigger = Trigger(Box, '115.28.224.64', 28000)

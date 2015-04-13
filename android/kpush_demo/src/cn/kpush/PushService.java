@@ -47,7 +47,7 @@ public class PushService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 每次发intent都会进来，可以重复进入
-        Log.d(Constants.LOG_TAG, "onStartCommand");
+        Log.d(Constants.LOG_TAG, "onStartCommand. action: " + intent.getAction());
         return super.onStartCommand(intent, flags, startId);
     }
 

@@ -15,15 +15,27 @@
 
         <service android:name="cn.kpush.PushService">
             <intent-filter>
-                <!--
-                <action android:name="cn.kpush.TEST"/>
-                -->
+                <action android:name="cn.kpush.intent.SERVICE_START"/>
+                <action android:name="cn.kpush.intent.SEND_MSG"/>
+                <action android:name="cn.kpush.intent.PACKAGE_ADDED"/>
+                <action android:name="cn.kpush.intent.PACKAGE_REMOVED"/>
             </intent-filter>
         </service>
 
         <meta-data android:name="KPUSH_APPKEY" android:value="7d357c9b4ce1414fb27f077b54fb5a8f" />
         <meta-data android:name="KPUSH_CHANNEL" android:value="MAIN"/>
 
+        <receiver android:name="cn.kpush.PushReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
     </application>
 
 

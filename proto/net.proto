@@ -16,12 +16,12 @@ message ReqUserRegister {
     optional string device_id; // 设备ID
     optional string os; // 操作系统 android/ios
     optional int32 os_version; // 系统版本
+    optional int32 sdk_version; // 应用版本
     optional string phone_type; // 手机型号
 }
 
 message RspUserRegister {
     optional int64 uid; // 用户ID
-    optional string key; // 用户密码
 }
 
 // 修改别名和tags

@@ -48,6 +48,10 @@ public class Utils {
 
     public static JSONObject unpackData(byte[] bytesBody) {
         try{
+            if (bytesBody == null) {
+                return null;
+            }
+
             String body = new String(bytesBody, "UTF-8");
 
             JSONObject jsonBody = new JSONObject(body);
@@ -75,6 +79,10 @@ public class Utils {
 
     public static byte[] packData(JSONObject jsonData) {
         try{
+            if (jsonData == null) {
+                return null;
+            }
+
             JSONObject jsonBody = new JSONObject();
 
             String data = jsonData.toString();

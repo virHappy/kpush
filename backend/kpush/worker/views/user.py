@@ -29,6 +29,10 @@ def register(request):
         appid=appinfo['appid'],
         channel=request.json_data['channel'],
         device_id=request.json_data['device_id'],
+        os=request.json_data.get('os'),
+        os_version=request.json_data.get('os_version'),
+        sdk_version=request.json_data.get('sdk_version'),
+        phone_type=request.json_data.get('phone_type'),
     ))
 
     worker_logger.debug("user: %s", user)

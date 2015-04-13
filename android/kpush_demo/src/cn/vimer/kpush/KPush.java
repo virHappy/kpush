@@ -18,7 +18,7 @@ public class KPush {
     public static void init(Context context) {
         KPush.context = context;
 
-        DeviceUtil.init(context);
+        DeviceInfo.init(context);
 
         appkey = Utils.getMetaValue(context, "KPUSH_APPKEY");
         channel = Utils.getMetaValue(context, "KPUSH_CHANNEL");

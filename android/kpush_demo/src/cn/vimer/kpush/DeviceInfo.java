@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by dantezhu on 15-4-13.
  */
-public class DeviceUtil {
+public class DeviceInfo {
     private static String packageName = null;
     private static int appVersion = 0;
     private static String deviceId = null;
@@ -26,7 +26,7 @@ public class DeviceUtil {
     private static Context context = null;
 
     public static void init(Context context) {
-        DeviceUtil.context = context;
+        DeviceInfo.context = context;
 
         initVals();
 

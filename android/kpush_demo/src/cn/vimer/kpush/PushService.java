@@ -8,11 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 import cn.vimer.ferry.Ferry;
 import cn.vimer.kpush_demo.MainActivity;
-import cn.vimer.kpush_demo.R;
 import cn.vimer.netkit.Box;
 import cn.vimer.netkit.IBox;
 import org.json.JSONObject;
@@ -99,11 +97,11 @@ public class PushService extends Service {
             jsonObject.put("sdk_version", Constants.SDK_VERSION);
             jsonObject.put("appkey", KPush.getAppkey());
             jsonObject.put("channel", KPush.getChannel());
-            jsonObject.put("device_id", DeviceUtil.getDeviceId());
-            jsonObject.put("os_version", DeviceUtil.getOsVersion());
-            jsonObject.put("app_version", DeviceUtil.getAppVersion());
-            jsonObject.put("device_name", DeviceUtil.getDeviceName());
-            jsonObject.put("package_name", DeviceUtil.getPackageName());
+            jsonObject.put("device_id", DeviceInfo.getDeviceId());
+            jsonObject.put("os_version", DeviceInfo.getOsVersion());
+            jsonObject.put("app_version", DeviceInfo.getAppVersion());
+            jsonObject.put("device_name", DeviceInfo.getDeviceName());
+            jsonObject.put("package_name", DeviceInfo.getPackageName());
         } catch (Exception e) {
         }
 
@@ -173,7 +171,7 @@ public class PushService extends Service {
         //定义通知栏展现的内容信息
         CharSequence tickerText = "我的通知栏标题";
         long when = System.currentTimeMillis();
-        Notification notification = new Notification(DeviceUtil.getAppIconId(), tickerText, when);
+        Notification notification = new Notification(DeviceInfo.getAppIconId(), tickerText, when);
 
         //定义下拉通知栏时要展现的内容信息
         Context context = getApplicationContext();

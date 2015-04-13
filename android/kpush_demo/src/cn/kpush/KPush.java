@@ -20,6 +20,8 @@ public class KPush {
     private static void startService() {
         // 启动service
         Intent intent = new Intent(context, PushService.class);
+        //Intent intent = new Intent();
+        //intent.setAction("cn.kpush.TEST");
         context.startService(intent);
     }
 

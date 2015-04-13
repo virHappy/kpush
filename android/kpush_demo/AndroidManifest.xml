@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="cn.vimer.kpush_demo"
+          package="cn.kpush_demo"
           android:versionCode="1"
           android:versionName="1.0">
     <uses-sdk android:minSdkVersion="19"/>
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
-        <activity android:name="MainActivity"
+        <activity android:name="cn.kpush_demo.MainActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -13,7 +13,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="cn.vimer.kpush.PushService"/>
+        <service android:name="cn.kpush.PushService"/>
 
         <meta-data android:name="KPUSH_APPKEY" android:value="7d357c9b4ce1414fb27f077b54fb5a8f" />
         <meta-data android:name="KPUSH_CHANNEL" android:value="MAIN"/>

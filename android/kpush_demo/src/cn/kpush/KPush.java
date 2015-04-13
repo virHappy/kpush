@@ -1,8 +1,7 @@
-package cn.vimer.kpush;
+package cn.kpush;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 
 /**

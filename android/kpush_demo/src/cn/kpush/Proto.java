@@ -1,4 +1,4 @@
-package cn.vimer.kpush;
+package cn.kpush;
 
 /**
  * Created by dantezhu on 15-4-13.

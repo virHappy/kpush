@@ -1,9 +1,8 @@
-package cn.vimer.kpush_demo;
+package cn.kpush_demo;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import cn.vimer.kpush.KPush;
+import cn.kpush.KPush;
 
 public class MainActivity extends Activity {
     /**

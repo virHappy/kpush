@@ -1,4 +1,4 @@
-package cn.vimer.kpush;
+package cn.kpush;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import cn.vimer.ferry.Ferry;
-import cn.vimer.kpush_demo.MainActivity;
+import cn.kpush_demo.MainActivity;
 import cn.vimer.netkit.Box;
 import cn.vimer.netkit.IBox;
 import org.json.JSONObject;

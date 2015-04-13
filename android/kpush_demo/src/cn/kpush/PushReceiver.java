@@ -15,14 +15,14 @@ public class PushReceiver extends BroadcastReceiver {
         Log.d(Constants.LOG_TAG, "action: " + intent.getAction());
         Intent serviceIntent = new Intent();
 
-        if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
-            serviceIntent.setAction("cn.kpush.intent.PACKAGE_ADDED");
+        if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
+            serviceIntent.setAction(Constants.INTENT_ACTION_PACKAGE_ADDED);
         }
-        else if (intent.getAction().equals("android.intent.action.PACKAGE_REMOVED")) {
-            serviceIntent.setAction("cn.kpush.intent.PACKAGE_REMOVED");
+        else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
+            serviceIntent.setAction(Constants.INTENT_ACTION_PACKAGE_REMOVED);
         }
         else {
-            serviceIntent.setAction("cn.kpush.intent.SERVICE_START");
+            serviceIntent.setAction(Constants.INTENT_ACTION_SERVICE_START);
         }
 
         context.startService(serviceIntent);

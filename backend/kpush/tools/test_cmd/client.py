@@ -7,7 +7,7 @@ from netkit.contrib.tcp_client import TcpClient
 from netkit.box import Box
 from web.application import create_app
 from worker.worker_share import proto
-from worker.worker_share.utils import pack_content, unpack_content
+from worker.worker_share.utils import pack_data, unpack_data
 
 
 worker_client = TcpClient(Box, '115.28.224.64', 29000)
@@ -19,13 +19,13 @@ def test_register():
     )
     worker_client.write(dict(
         cmd=proto.CMD_REGISTER,
-        body=pack_content(req)
+        body=pack_data(req)
     ))
 
     while not worker_client.closed():
         box = worker_client.read()
         if box:
-            print unpack_content(box.body)
+            print unpack_data(box.body)
         else:
             break
 

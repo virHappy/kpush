@@ -5,30 +5,30 @@ import hashlib
 from flask import current_app
 
 
-def pack_content(json_content):
+def pack_data(json_data):
     """
-    :param json_content:
+    :param json_data:
     :return:
     """
 
-    content = json.dumps(json_content)
-    sign = hashlib.md5('|'.join([current_app.config['SECRET_KEY'], content])).hexdigest()
+    data = json.dumps(json_data)
+    sign = hashlib.md5('|'.join([current_app.config['SECRET_KEY'], data])).hexdigest()
 
     return json.dumps(dict(
-        content=content,
+        data=data,
         sign=sign,
     ))
 
 
-def unpack_content(body):
+def unpack_data(body):
     json_body = json.loads(body)
 
-    content = json_body.get("content")
+    data = json_body.get("data")
     sign = json_body.get("sign")
 
-    calc_sign = hashlib.md5('|'.join([current_app.config['SECRET_KEY'], content])).hexdigest()
+    calc_sign = hashlib.md5('|'.join([current_app.config['SECRET_KEY'], data])).hexdigest()
 
     if sign != calc_sign:
         return None
 
-    return json.loads(content)
+    return json.loads(data)

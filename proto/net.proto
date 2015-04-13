@@ -5,7 +5,7 @@ option java_outer_classname="NetProto";
 
 // 为了防篡改，所有内容都用这个包一层
 message Wrapper {
-    optional string content; // 内容
+    optional string data; // 内容
     optional string sign; // 签名
 }
 

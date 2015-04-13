@@ -46,16 +46,16 @@ public class Utils {
         return null;
     }
 
-    public static JSONObject unpackContent(byte[] bytesBody) {
+    public static JSONObject unpackData(byte[] bytesBody) {
         try{
             String body = new String(bytesBody, "UTF-8");
 
             JSONObject jsonBody = new JSONObject(body);
 
-            String content = jsonBody.getString("content");
+            String data = jsonBody.getString("data");
             String sign = jsonBody.getString("sign");
 
-            String source = Constants.SECRET + "|" + content;
+            String source = Constants.SECRET + "|" + data;
 
             String calcSign = genMD5(source);
 
@@ -64,32 +64,30 @@ public class Utils {
                 return null;
             }
 
-            return new JSONObject(content);
+            return new JSONObject(data);
         }
         catch (Exception e) {
-            Log.e(Constants.LOG_TAG, "unpackContent fail: " + bytesBody);
+            Log.e(Constants.LOG_TAG, "unpackData fail: " + bytesBody);
         }
 
         return null;
     }
 
-    public static byte[] packContent(JSONObject jsonContent) {
+    public static byte[] packData(JSONObject jsonData) {
         try{
             JSONObject jsonBody = new JSONObject();
 
-            String content = jsonContent.toString();
-            String source = Constants.SECRET + "|" + content;
+            String data = jsonData.toString();
+            String source = Constants.SECRET + "|" + data;
             String sign = genMD5(source);
 
-            Log.d(Constants.LOG_TAG, "sign: " + sign);
-
-            jsonBody.put("content", content);
+            jsonBody.put("data", data);
             jsonBody.put("sign", sign);
 
             return jsonBody.toString().getBytes();
         }
         catch (Exception e) {
-            Log.e(Constants.LOG_TAG, "packContent fail: " + jsonContent.toString());
+            Log.e(Constants.LOG_TAG, "packData fail: " + jsonData.toString());
         }
 
         return null;

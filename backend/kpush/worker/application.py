@@ -19,27 +19,27 @@ def configure_handlers(app):
     """
 
     @app.before_request
-    def inject_json_content(request):
+    def inject_json_data(request):
         """
         内部content json
         """
 
         # 先赋值None
-        request.json_content = None
+        request.json_data = None
 
         json_body = request.box.get_json()
-        content = json_body.get('content')
+        data = json_body.get('data')
         sign = json_body.get('sign')
 
         calc_sign = hashlib.md5('|'.join(
-            [current_app.config['SECRET_KEY'], content]
+            [current_app.config['SECRET_KEY'], data]
         )).hexdigest()
 
         if calc_sign != sign:
             worker_logger.error('sign not equal. sign: %s, calc_sign: %s', sign, calc_sign)
             return
 
-        request.json_content = json.loads(content)
+        request.json_data = json.loads(data)
 
 
 def create_app():

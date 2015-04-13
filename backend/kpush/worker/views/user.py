@@ -3,7 +3,7 @@
 from maple import Blueprint
 
 from worker.worker_share import proto
-from worker.worker_share.utils import pack_content
+from worker.worker_share.utils import pack_data
 from share.kit import kit
 
 
@@ -12,8 +12,17 @@ bp = Blueprint()
 
 @bp.route(proto.CMD_REGISTER)
 def login(request):
+    """
+    appinfo_table = kit.mongo_client.get_default_database().appinfo
+
+    appinfo_table.find_one(dict(
+    ))
+
+    user_table = kit.mongo_client.get_default_database().user
+    """
+
     rsp = dict(
-        uid=request.json_content['device_id'],
+        uid=request.json_data['device_id'],
         key="mykey",
     )
 
@@ -21,5 +30,5 @@ def login(request):
 
     request.write_to_client(dict(
         ret=0,
-        body=pack_content(rsp)
+        body=pack_data(rsp)
     ))

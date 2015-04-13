@@ -62,7 +62,7 @@ public class PushService extends Service {
                 } catch (Exception e) {
                 }
 
-                byte[] body = Utils.packContent(jsonObject);
+                byte[] body = Utils.packData(jsonObject);
                 if (body == null) {
                     return;
                 }
@@ -79,7 +79,7 @@ public class PushService extends Service {
                     public void onRecv(IBox ibox) {
                         Log.d(Constants.LOG_TAG, String.format("onRecv, box: %s", ibox));
                         Box box = (Box) ibox;
-                        Log.d(Constants.LOG_TAG, "content: " + Utils.unpackContent(box.body));
+                        Log.d(Constants.LOG_TAG, "data: " + Utils.unpackData(box.body));
                     }
 
                     @Override

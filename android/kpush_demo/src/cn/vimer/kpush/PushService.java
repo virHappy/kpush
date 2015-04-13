@@ -192,7 +192,7 @@ public class PushService extends Service {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
         Notification notification = new Notification(DeviceInfo.getAppIconId(), tickerText, when);
-        notification.setLatestEventInfo(KPush.getContext(), title, content,
+        notification.setLatestEventInfo(this, title, content,
                 contentIntent);
 
         //用mNotificationManager的notify方法通知用户生成标题栏消息通知

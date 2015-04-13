@@ -4,6 +4,7 @@ from maple import Blueprint
 
 from worker.worker_share import proto
 from worker.worker_share.utils import pack_content
+from share.kit import kit
 
 
 bp = Blueprint()

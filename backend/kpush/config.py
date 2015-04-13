@@ -152,3 +152,6 @@ SQLALCHEMY_ECHO = False
 
 # admin_user
 SESSION_KEY_ADMIN_USERNAME = 'admin_username'
+
+# mongodb
+MONGO_URL = 'mongodb://admin:admin@127.0.0.1:27017/kpush'

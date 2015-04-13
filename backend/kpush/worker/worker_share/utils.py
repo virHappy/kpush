@@ -100,6 +100,13 @@ def get_or_create_user(user_info):
 
         # 没有这个用户
         user_table.insert(new_user_info)
+    else:
+        # 更新字段, 要用 $set 才会只更新指定的字段
+        user_table.update({
+            '_id': user['_id'],
+        }, {
+            "$set": user_info,
+        })
 
     return user_table.find_one(dict(
         appid=user_info['appid'],

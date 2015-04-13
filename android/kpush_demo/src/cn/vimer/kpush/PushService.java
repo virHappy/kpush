@@ -58,9 +58,19 @@ public class PushService extends Service {
                 box.cmd = Proto.CMD_REGISTER;
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("device_id", 1);
+                    jsonObject.put("os", Constants.OS);
+                    jsonObject.put("sdk_version", Constants.SDK_VERSION);
+                    jsonObject.put("appkey", KPush.getAppkey());
+                    jsonObject.put("channel", KPush.getChannel());
+                    jsonObject.put("device_id", KPush.getDeviceId());
+                    jsonObject.put("os_version", KPush.getOsVersion());
+                    jsonObject.put("app_version", KPush.getAppkey());
+                    jsonObject.put("device_name", KPush.getDeviceName());
                 } catch (Exception e) {
                 }
+
+                Log.d(Constants.LOG_TAG, "" + KPush.getAppkey());
+                Log.d(Constants.LOG_TAG, jsonObject.toString());
 
                 byte[] body = Utils.packData(jsonObject);
                 if (body == null) {

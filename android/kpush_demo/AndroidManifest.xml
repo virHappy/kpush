@@ -15,8 +15,8 @@
 
         <service android:name="cn.vimer.kpush.PushService"/>
 
-        <meta-data android:name="KPUSH_CHANNEL" android:value=""/>
-        <meta-data android:name="KPUSH_APPKEY" android:value="8eb22f7739abb2a1946c2438" />
+        <meta-data android:name="KPUSH_CHANNEL" android:value="MAIN"/>
+        <meta-data android:name="KPUSH_APPKEY" android:value="1" />
 
     </application>
 

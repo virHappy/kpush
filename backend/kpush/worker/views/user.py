@@ -32,7 +32,7 @@ def register(request):
         os=request.json_data.get('os'),
         os_version=request.json_data.get('os_version'),
         sdk_version=request.json_data.get('sdk_version'),
-        phone_type=request.json_data.get('phone_type'),
+        device_name=request.json_data.get('device_name'),
     ))
 
     worker_logger.debug("user: %s", user)

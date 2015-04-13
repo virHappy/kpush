@@ -62,10 +62,11 @@ public class PushService extends Service {
                     jsonObject.put("sdk_version", Constants.SDK_VERSION);
                     jsonObject.put("appkey", KPush.getAppkey());
                     jsonObject.put("channel", KPush.getChannel());
-                    jsonObject.put("device_id", KPush.getDeviceId());
-                    jsonObject.put("os_version", KPush.getOsVersion());
-                    jsonObject.put("app_version", KPush.getAppkey());
-                    jsonObject.put("device_name", KPush.getDeviceName());
+                    jsonObject.put("device_id", DeviceUtil.getDeviceId());
+                    jsonObject.put("os_version", DeviceUtil.getOsVersion());
+                    jsonObject.put("app_version", DeviceUtil.getAppVersion());
+                    jsonObject.put("device_name", DeviceUtil.getDeviceName());
+                    jsonObject.put("package_name", DeviceUtil.getPackageName());
                 } catch (Exception e) {
                 }
 

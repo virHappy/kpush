@@ -2,14 +2,8 @@ package cn.vimer.kpush;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import java.util.UUID;
 
 /**
  * Created by dantezhu on 15-4-13.

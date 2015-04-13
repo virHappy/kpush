@@ -49,7 +49,6 @@ public class PushService extends Service {
         // 每次发intent都会进来，可以重复进入
         Log.d(Constants.LOG_TAG, "onStartCommand");
         return super.onStartCommand(intent, flags, startId);
-        //return START_STICKY;
     }
 
     @Override

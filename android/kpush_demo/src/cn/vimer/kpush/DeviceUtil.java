@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -19,6 +20,8 @@ public class DeviceUtil {
     private static String deviceId = null;
     private static int osVersion = 0;
     private static String deviceName = null;
+    private static Drawable appIcon = null;
+    private static int appIconId = 0;
 
     private static Context context = null;
 
@@ -42,6 +45,8 @@ public class DeviceUtil {
         {
             PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, PackageManager.GET_CONFIGURATIONS);
             appVersion = packageInfo.versionCode;
+            appIcon = packageInfo.applicationInfo.loadIcon(context.getPackageManager());
+            appIconId = packageInfo.applicationInfo.icon;
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, "get versionCode fail");
@@ -89,6 +94,14 @@ public class DeviceUtil {
 
     public static String getDeviceName() {
         return deviceName;
+    }
+
+    public static Drawable getAppIcon() {
+        return appIcon;
+    }
+
+    public static int getAppIconId() {
+        return appIconId;
     }
 
 }

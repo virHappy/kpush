@@ -171,10 +171,9 @@ public class PushService extends Service {
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
         //定义通知栏展现的内容信息
-        int icon = R.drawable.ic_launcher;
         CharSequence tickerText = "我的通知栏标题";
         long when = System.currentTimeMillis();
-        Notification notification = new Notification(icon, tickerText, when);
+        Notification notification = new Notification(DeviceUtil.getAppIconId(), tickerText, when);
 
         //定义下拉通知栏时要展现的内容信息
         Context context = getApplicationContext();

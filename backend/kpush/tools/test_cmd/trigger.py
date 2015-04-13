@@ -13,7 +13,7 @@ trigger = Trigger(Box, '115.28.224.64', 28000)
 
 def test_notification():
     trigger.write_to_users((
-        ((1, 2), dict(cmd=1000, body='')),
+        ((-1, ), dict(cmd=1000, body='')),
     ))
 
 

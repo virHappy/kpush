@@ -15,7 +15,7 @@ MODE = os.environ.get('MODE')
 DEBUG = MODE == DEV_MODE
 
 # 不能随便修改。用作 session、user.password 的密钥
-SECRET_KEY = 'tmp_secret_key'
+SECRET_KEY = "4y%zgs*074ibnacl31w2d!l-o$3qaa+lu)w25g*0#e6i_qt1*#305^gij7a+js$i"
 
 BLUEPRINTS = (
     ('web.views.frontend', ''),

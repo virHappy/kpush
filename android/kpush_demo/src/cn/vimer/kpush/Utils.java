@@ -17,17 +17,18 @@ public class Utils {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             md5.update(val.getBytes());
             byte[] m = md5.digest();//加密
-            return bytesToString(m);
+            return hexToString(m);
         }
         catch (Exception e) {
             return null;
         }
     }
 
-    public static String bytesToString(byte[] b){
+    public static String hexToString(byte[] b){
         StringBuffer sb = new StringBuffer();
         for(int i = 0; i < b.length; i ++){
-            sb.append(b[i]);
+            //sb.append(b[i]);
+            sb.append(String.format("%02x", b[i]));
         }
         return sb.toString();
     }
@@ -79,6 +80,8 @@ public class Utils {
             String content = jsonContent.toString();
             String source = Constants.SECRET + "|" + content;
             String sign = genMD5(source);
+
+            Log.d(Constants.LOG_TAG, "sign: " + sign);
 
             jsonBody.put("content", content);
             jsonBody.put("sign", sign);

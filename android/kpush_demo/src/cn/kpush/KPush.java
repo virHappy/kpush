@@ -21,7 +21,7 @@ public class KPush {
         // 启动service
         //Intent intent = new Intent(context, PushService.class);
         Intent intent = new Intent();
-        intent.setAction("cn.kpush.intent.SERVICE_START");
+        intent.setAction(Constants.INTENT_ACTION_SERVICE_START);
         context.startService(intent);
     }
 

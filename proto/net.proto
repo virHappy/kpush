@@ -34,7 +34,8 @@ message ReqSetAliasAndTags {
 /* ============================================================================= */
 // 新的通知
 message EvtNotification {
-    
+    optional string title; // 标题
+    optional string content; // 内容
 }
 
 // 新的自定义消息

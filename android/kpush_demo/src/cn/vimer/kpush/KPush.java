@@ -34,6 +34,10 @@ public class KPush {
         context.startService(intent);
     }
 
+    public static Context getContext() {
+        return context;
+    }
+
     public static String getAppkey() {
         return appkey;
     }

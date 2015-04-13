@@ -45,11 +45,18 @@ public class PushService extends Service {
         // 每次发intent都会进来，可以重复进入
         Log.d(Constants.LOG_TAG, "onStartCommand");
         return super.onStartCommand(intent, flags, startId);
+
+        /*
+        // 死掉之后重启
+        // 好像不是那么回事
+        return START_REDELIVER_INTENT;
+        */
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Ferry.getInstance().stop();
         Log.d(Constants.LOG_TAG, "onDestory");
     }
 
@@ -66,8 +73,18 @@ public class PushService extends Service {
             public void onRecv(IBox ibox) {
                 Log.d(Constants.LOG_TAG, String.format("onRecv, box: %s", ibox));
                 Box box = (Box) ibox;
+
+                JSONObject jsonData = Utils.unpackData(box.body);
+
                 if (box.cmd == Proto.EVT_NOTIFICATION) {
-                    registerNtf();
+                    if (jsonData != null) {
+                        try {
+                            showNotification(jsonData.getString("title"), jsonData.getString("content"));
+                        }
+                        catch (Exception e) {
+                            Log.e(Constants.LOG_TAG, String.format("exc occur. e: %s, box: %s", e, box));
+                        }
+                    }
                 }
             }
 
@@ -163,24 +180,21 @@ public class PushService extends Service {
         }, 5, this);
     }
 
-    public void registerNtf() {
+    public void showNotification(String title, String content) {
         //消息通知栏
         //定义NotificationManager
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
         //定义通知栏展现的内容信息
-        CharSequence tickerText = "我的通知栏标题";
+        CharSequence tickerText = title;
         long when = System.currentTimeMillis();
-        Notification notification = new Notification(DeviceInfo.getAppIconId(), tickerText, when);
 
         //定义下拉通知栏时要展现的内容信息
-        Context context = getApplicationContext();
-        CharSequence contentTitle = "我的通知栏标展开标题";
-        CharSequence contentText = "我的通知栏展开详细内容";
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
-        notification.setLatestEventInfo(context, contentTitle, contentText,
+        Notification notification = new Notification(DeviceInfo.getAppIconId(), tickerText, when);
+        notification.setLatestEventInfo(KPush.getContext(), title, content,
                 contentIntent);
 
         //用mNotificationManager的notify方法通知用户生成标题栏消息通知

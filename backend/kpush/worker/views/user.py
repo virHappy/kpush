@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import json
 from maple import Blueprint
 from share import proto
+from share.utils import pack_content
 
 bp = Blueprint()
 
 
 @bp.route(proto.CMD_REGISTER)
 def login(request):
-    req = json.loads(request.box.body)
     rsp = dict(
-        uid=req['device_id'],
+        uid=request.json_content['device_id'],
         key="mykey",
     )
 
@@ -19,5 +18,5 @@ def login(request):
 
     request.write_to_client(dict(
         ret=0,
-        body=json.dumps(rsp)
+        body=pack_content(rsp)
     ))

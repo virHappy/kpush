@@ -45,5 +45,6 @@ def configure_handlers(app):
 def create_app():
     app = Worker(Box)
     configure_views(app)
+    configure_handlers(app)
 
     return app

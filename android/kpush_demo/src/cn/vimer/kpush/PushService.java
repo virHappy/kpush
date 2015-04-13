@@ -15,6 +15,8 @@ import cn.vimer.netkit.Box;
 import cn.vimer.netkit.IBox;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+
 /**
  * Created by dantezhu on 15-4-13.
  */
@@ -108,6 +110,51 @@ public class PushService extends Service {
             }
 
         }, this, "main");
+    }
+
+    private JSONObject unpackContent(String body) {
+        try{
+            JSONObject jsonBody = new JSONObject(body);
+
+            String content = jsonBody.getString("content");
+            String sign = jsonBody.getString("sign");
+
+            String source = Constants.SECRET + "|" + content;
+
+            String calcSign = Utils.genMD5(source);
+
+            if (!sign.equals(calcSign)) {
+                Log.e(Constants.LOG_TAG, String.format("sign not equal. sign: %s, calcSign: %s", sign, calcSign));
+                return null;
+            }
+
+            return new JSONObject(content);
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, "unpackContent fail: " + body);
+        }
+
+        return null;
+    }
+
+    private String packContent(JSONObject jsonContent) {
+        try{
+            JSONObject jsonBody = new JSONObject();
+
+            String content = jsonContent.toString();
+            String source = Constants.SECRET + "|" + content;
+            String sign = Utils.genMD5(source);
+
+            jsonBody.put("content", content);
+            jsonBody.put("sign", sign);
+
+            return jsonBody.toString();
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, "packContent fail: " + jsonContent.toString());
+        }
+
+        return null;
     }
 
     public void registerNtf() {

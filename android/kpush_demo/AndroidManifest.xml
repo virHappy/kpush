@@ -13,6 +13,11 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="cn.kpush.PushActivity"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                  android:configChanges="orientation|keyboardHidden">
+        </activity>
+
         <service android:name="cn.kpush.PushService">
             <intent-filter>
                 <action android:name="cn.kpush.intent.SERVICE_START"/>

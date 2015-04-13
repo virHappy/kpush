@@ -47,7 +47,7 @@ public class PushService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 每次发intent都会进来，可以重复进入
-        Log.d(Constants.LOG_TAG, "onStartCommand. action: " + intent.getAction());
+        Log.d(Constants.LOG_TAG, "onStartCommand. action: " + (intent == null ? null : intent.getAction()));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -187,7 +187,7 @@ public class PushService extends Service {
         long when = System.currentTimeMillis();
 
         //定义下拉通知栏时要展现的内容信息
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, PushActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
         Notification notification = new Notification(DeviceInfo.getAppIconId(), tickerText, when);

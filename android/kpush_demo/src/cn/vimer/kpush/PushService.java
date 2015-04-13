@@ -62,7 +62,12 @@ public class PushService extends Service {
                 } catch (Exception e) {
                 }
 
-                box.body = jsonObject.toString().getBytes();
+                byte[] body = Utils.packContent(jsonObject);
+                if (body == null) {
+                    return;
+                }
+
+                box.body = body;
 
                 Ferry.getInstance().send(box, new Ferry.CallbackListener() {
                     @Override
@@ -73,6 +78,8 @@ public class PushService extends Service {
                     @Override
                     public void onRecv(IBox ibox) {
                         Log.d(Constants.LOG_TAG, String.format("onRecv, box: %s", ibox));
+                        Box box = (Box) ibox;
+                        Log.d(Constants.LOG_TAG, "content: " + Utils.unpackContent(box.body));
                     }
 
                     @Override

@@ -24,7 +24,7 @@ public class Utils {
         }
     }
 
-    private static String bytesToString(byte[] b){
+    public static String bytesToString(byte[] b){
         StringBuffer sb = new StringBuffer();
         for(int i = 0; i < b.length; i ++){
             sb.append(b[i]);
@@ -45,8 +45,10 @@ public class Utils {
         return null;
     }
 
-    private JSONObject unpackContent(String body) {
+    public static JSONObject unpackContent(byte[] bytesBody) {
         try{
+            String body = new String(bytesBody, "UTF-8");
+
             JSONObject jsonBody = new JSONObject(body);
 
             String content = jsonBody.getString("content");
@@ -64,13 +66,13 @@ public class Utils {
             return new JSONObject(content);
         }
         catch (Exception e) {
-            Log.e(Constants.LOG_TAG, "unpackContent fail: " + body);
+            Log.e(Constants.LOG_TAG, "unpackContent fail: " + bytesBody);
         }
 
         return null;
     }
 
-    private String packContent(JSONObject jsonContent) {
+    public static byte[] packContent(JSONObject jsonContent) {
         try{
             JSONObject jsonBody = new JSONObject();
 
@@ -81,7 +83,7 @@ public class Utils {
             jsonBody.put("content", content);
             jsonBody.put("sign", sign);
 
-            return jsonBody.toString();
+            return jsonBody.toString().getBytes();
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, "packContent fail: " + jsonContent.toString());

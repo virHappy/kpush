@@ -15,7 +15,9 @@ worker_client = TcpClient(Box, '115.28.224.64', 29000)
 
 def test_register():
     req = dict(
-        device_id=2
+        device_id=2,
+        appkey="1",
+        channel="MAIN",
     )
     worker_client.write(dict(
         cmd=proto.CMD_REGISTER,

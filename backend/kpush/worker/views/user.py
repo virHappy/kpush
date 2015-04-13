@@ -3,27 +3,38 @@
 from maple import Blueprint
 
 from worker.worker_share import proto
-from worker.worker_share.utils import pack_data
+from worker.worker_share.utils import pack_data, get_or_create_user, get_appinfo_by_appkey
 from share.kit import kit
+from share.log import worker_logger
 
 
 bp = Blueprint()
 
 
 @bp.route(proto.CMD_REGISTER)
-def login(request):
-    """
-    appinfo_table = kit.mongo_client.get_default_database().appinfo
+def register(request):
+    appinfo = get_appinfo_by_appkey(request.json_data['appkey'])
+    worker_logger.debug("appinfo: %s", appinfo)
 
-    appinfo_table.find_one(dict(
+    if appinfo is None:
+        # 报错
+        request.write_to_client(
+            dict(
+                ret=-1
+            )
+        )
+        return
+
+    user = get_or_create_user(dict(
+        appid=appinfo['appid'],
+        channel=request.json_data['channel'],
+        device_id=request.json_data['device_id'],
     ))
 
-    user_table = kit.mongo_client.get_default_database().user
-    """
+    worker_logger.debug("user: %s", user)
 
     rsp = dict(
-        uid=request.json_data['device_id'],
-        key="mykey",
+        uid=user['uid'],
     )
 
     request.login_client(rsp['uid'])

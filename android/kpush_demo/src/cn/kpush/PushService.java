@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import cn.vimer.ferry.Ferry;
-import cn.kpush_demo.MainActivity;
 import cn.vimer.netkit.Box;
 import cn.vimer.netkit.IBox;
 import org.json.JSONObject;

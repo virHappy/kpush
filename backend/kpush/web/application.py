@@ -2,7 +2,7 @@
 
 # need python >= 2.7
 from importlib import import_module
-from flask import Flask
+from flask import Flask, request
 
 from share.extensions import db, admin
 from share import models
@@ -24,6 +24,7 @@ def create_app(config=None, name=None):
     configure_extensions(app)
     configure_views(app)
     configure_context_processors(app)
+    configure_handlers(app)
 
     return app
 
@@ -47,6 +48,18 @@ def configure_context_processors(app):
     模板变量
     """
     pass
+
+
+def configure_handlers(app):
+    @app.before_request
+    def inject_json_data():
+        from share.utils import unpack_data
+        request.json_data = None
+        if request.method == 'POST' and request.get_data():
+            try:
+                request.json_data = unpack_data(request.get_data())
+            except:
+                pass
 
 
 def configure_views(app):

@@ -24,3 +24,27 @@
 3. 离线消息
 
     这个要用到数据存储了
+
+
+### 部署配置
+
+supervisor配置:
+
+    [program:kpush_web]
+    environment=PYTHON_EGG_CACHE=/tmp/.python-eggs/
+    directory=/kpush/backend/kpush
+    command=/usr/local/bin/gunicorn -c gun_config.py web.wsgi:app
+    user=user_00
+    autorestart=true
+    redirect_stderr=true
+
+    [program:kpush_worker]
+    environment=PYTHON_EGG_CACHE=/tmp/.python-eggs/
+    directory=/kpush/backend/kpush
+    command=/usr/local/bin/python manage.py runworker -p 28000
+    user=user_00
+    autorestart=true
+    redirect_stderr=true
+    stopsignal=USR1
+    stopwaitsecs=10
+

@@ -60,7 +60,7 @@ def set_alias_and_tags(request):
         update_values['alias'] = request.json_data.get('alias')
 
     if request.json_data.get('tags') is not None:
-        update_values['tags'] = request.json_data.get('tags')
+        update_values['tags'] = list(set(request.json_data.get('tags')))
 
     user_table.update({
         'uid': request.gw_box.uid,

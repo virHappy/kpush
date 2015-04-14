@@ -11,7 +11,7 @@ from share import proto
 bp = Blueprint('frontend', __name__)
 
 
-@bp.route('/server/alloc', methods=['POST'])
+@bp.route('/server/alloc', methods=['GET', 'POST'])
 def alloc_server():
     """
     # 方便测试

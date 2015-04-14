@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from worker.worker_share import proto
+from share import proto
 
 
 def login_required(func):

@@ -175,5 +175,26 @@ def addapp(appkey):
 
     print "appid: %s, appkey: %s" % (appid, appkey)
 
+
+@manager.option(dest='port', type=int)
+@manager.option(dest='host')
+def addserver(host, port):
+    from share.kit import kit
+    server_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_SERVER']]
+
+    if server_table.find_one({
+        "host": host,
+        "port": port,
+    }):
+        print 'server exists'
+        return
+    else:
+        server_table.insert({
+            "host": host,
+            "port": port,
+        })
+
+        print "succ"
+
 if __name__ == '__main__':
     manager.run()

@@ -6,8 +6,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../"))
 from netkit.contrib.tcp_client import TcpClient
 from netkit.box import Box
 from web.application import create_app
-from worker.worker_share import proto
-from share.utils import pack_data, unpack_data
+from share import proto
+from share.utils import pack_data
 
 
 worker_client = TcpClient(Box, '115.28.224.64', 29000)

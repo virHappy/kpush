@@ -64,7 +64,7 @@ def alloc_autoid(name):
         new=True,  # 返回修改过的
     )
 
-    print autoid_info
+    # print autoid_info
     return autoid_info["value"]
 
 

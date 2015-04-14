@@ -151,10 +151,25 @@ def runworker(host, port, debug, workers):
 
 
 @manager.option(dest='appkey')
-@manager.option(dest='appid', type=int)
-def addapp(appid, appkey):
-    print appid, appkey
+def addapp(appkey):
+    from share.kit import kit
+    from worker.worker_share.utils import alloc_autoid
+    appinfo_table = kit.mongo_client.get_default_database()["appinfo"]
 
+    if appinfo_table.find_one({
+        "appkey": appkey
+    }):
+        print 'appkey exists'
+        return
+
+    appid = alloc_autoid("appinfo")
+
+    appinfo_table.insert({
+        "appid": appid,
+        "appkey": appkey,
+    })
+
+    print "appid: %s, appkey: %s" % (appid, appkey)
 
 if __name__ == '__main__':
     manager.run()

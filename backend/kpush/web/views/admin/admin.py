@@ -43,7 +43,7 @@ class AdminAuthView(BaseView):
         if form.validate_on_submit():
             admin_user = AdminUser.auth(form.username.data, form.password.data)
             if not admin_user:
-                flash(u'用户名或密码错误')
+                flash('Invalid username or password')
                 return self.render("admin/login.html", form=form)
 
             session.permanent = True

@@ -24,12 +24,24 @@ def test_register():
         body=pack_data(req)
     ))
 
-    while not worker_client.closed():
-        box = worker_client.read()
-        if box:
-            print unpack_data(box.body)
-        else:
-            break
+    box = worker_client.read()
+    if box:
+        print unpack_data(box.body)
+    else:
+        return
+
+    worker_client.write(dict(
+        cmd=proto.CMD_SET_ALIAS_AND_TAGS,
+        body=pack_data(dict(
+            alias='dante',
+        ))
+    ))
+
+    box = worker_client.read()
+    if box:
+        print unpack_data(box.body)
+    else:
+        return
 
 
 def main():

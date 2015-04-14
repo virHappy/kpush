@@ -53,4 +53,21 @@ def register(request):
 @bp.route(proto.CMD_SET_ALIAS_AND_TAGS)
 @login_required
 def set_alias_and_tags(request):
-    pass
+    user_table = kit.mongo_client.get_default_database()["user"]
+
+    update_values = dict()
+    if request.json_data.get('alias') is not None:
+        update_values['alias'] = request.json_data.get('alias')
+
+    if request.json_data.get('tags') is not None:
+        update_values['tags'] = request.json_data.get('tags')
+
+    user_table.update({
+        'uid': request.gw_box.uid,
+    }, {
+        '$set': update_values
+    })
+
+    request.write_to_client(dict(
+        ret=0
+    ))

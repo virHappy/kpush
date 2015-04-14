@@ -16,7 +16,7 @@ worker_client = TcpClient(Box, '115.28.224.64', 29000)
 def test_register():
     req = dict(
         device_id=2,
-        appkey="1",
+        appkey="7d357c9b4ce1414fb27f077b54fb5a8f",
         channel="MAIN",
     )
     worker_client.write(dict(

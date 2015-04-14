@@ -76,7 +76,7 @@ def syncdb():
 
 
 @manager.command
-def adminadd(username, password, roles=None):
+def addadmin(username, password, roles=None):
     """
     Add admin user
     """
@@ -148,6 +148,12 @@ def runworker(host, port, debug, workers):
     from worker.application import create_app
     app = create_app()
     app.run(host, port, debug, workers)
+
+
+@manager.option(dest='appkey', required=True)
+@manager.option(dest='appid', required=True, type=int)
+def addapp(appid, appkey):
+    print appid, appkey
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@
 from importlib import import_module
 from flask import Flask
 
-from share.extensions import db
+from share.extensions import db, admin
 from share import models
 import views.admin
 
@@ -39,6 +39,7 @@ def configure_extensions(app):
     初始化插件
     """
     db.init_app(app)
+    admin.init_app(app)
 
 
 def configure_context_processors(app):

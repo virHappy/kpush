@@ -8,9 +8,8 @@ from flask import session, request, g, current_app
 from flask import Markup
 from flask_admin import AdminIndexView, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
-from flask_admin import Admin
 
-from share.extensions import db
+from share.extensions import db, admin
 from share.models import AdminUser
 from forms import LoginForm
 
@@ -23,14 +22,10 @@ def register_views(app):
         g.admin_user = AdminUser.query.filter(
             AdminUser.username == session.get(current_app.config['SESSION_KEY_ADMIN_USERNAME'])).first()
 
-    admin = Admin(app)
-
     admin.add_view(AdminAuthView())
 
     # model
     admin.add_view(AdminUserView())
-
-    return admin
 
 
 class AdminAuthView(BaseView):

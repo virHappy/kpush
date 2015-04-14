@@ -151,7 +151,8 @@ def runworker(host, port, debug, workers):
 
 
 @manager.option('-k', '--appkey', dest='appkey')
-def addapp(appkey):
+@manager.option('-n', '--appname', dest='appname', required=True)
+def addapp(appname, appkey):
     import uuid
     from share.kit import kit
     from share.utils import alloc_autoid
@@ -171,9 +172,10 @@ def addapp(appkey):
     appinfo_table.insert({
         "appid": appid,
         "appkey": appkey,
+        "appname": appname,
     })
 
-    print "appid: %s, appkey: %s" % (appid, appkey)
+    print "appid: %s, appkey: %s, appname: %s" % (appid, appkey, appname)
 
 
 @manager.option(dest='port', type=int)

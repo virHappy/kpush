@@ -4,6 +4,8 @@
 import os
 import sys
 import random
+import uuid
+import re
 
 from flask import current_app
 from flask import render_template_string
@@ -13,6 +15,8 @@ from flask_script.commands import ShowUrls
 from web.application import create_app
 from share.extensions import db
 from share.models import AdminUser
+from share.kit import kit
+from share.utils import alloc_autoid
 
 manager = flask_script.Manager(create_app)
 manager.add_option('-c', '--config', dest='config', required=False)
@@ -80,12 +84,25 @@ def addadmin(username, password, roles=None):
     """
     Add admin user
     """
-    admin_user = AdminUser(username=username)
-    admin_user.set_password(password)
-    admin_user.roles = roles
+    from passlib.hash import sha256_crypt
 
-    db.session.add(admin_user)
-    db.session.commit()
+    admin_user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_ADMIN_USER']]
+
+    roles = re.split(r'\s*,\s*', roles) if roles else []
+
+    if admin_user_table.find_one(dict(
+        username=username
+    )):
+        print 'username exists'
+        return
+
+    admin_user_table.insert(dict(
+        username=username,
+        password=sha256_crypt.encrypt(password),
+        roles=roles,
+    ))
+
+    print 'succ'
 
 
 @manager.command
@@ -153,9 +170,6 @@ def runworker(host, port, debug, workers):
 @manager.option('-k', '--appkey', dest='appkey')
 @manager.option('-n', '--appname', dest='appname', required=True)
 def addapp(appname, appkey):
-    import uuid
-    from share.kit import kit
-    from share.utils import alloc_autoid
     appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
 
     if appkey:
@@ -181,7 +195,6 @@ def addapp(appname, appkey):
 @manager.option(dest='port', type=int)
 @manager.option(dest='host')
 def addserver(host, port):
-    from share.kit import kit
     server_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_SERVER']]
 
     if server_table.find_one({

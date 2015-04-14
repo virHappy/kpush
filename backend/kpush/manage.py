@@ -14,7 +14,6 @@ from flask_script.commands import ShowUrls
 
 from web.application import create_app
 from share.extensions import db
-from share.models import AdminUser
 from share.kit import kit
 from share.utils import alloc_autoid
 

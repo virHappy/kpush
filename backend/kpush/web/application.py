@@ -5,7 +5,6 @@ from importlib import import_module
 from flask import Flask, request
 
 from share.extensions import db, admin
-from share import models
 import views.admin
 
 

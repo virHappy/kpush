@@ -26,7 +26,7 @@ def test_register():
 
     box = worker_client.read()
     if box:
-        print unpack_data(box.body)
+        print box
     else:
         return
 
@@ -39,7 +39,7 @@ def test_register():
 
     box = worker_client.read()
     if box:
-        print unpack_data(box.body)
+        print box
     else:
         return
 

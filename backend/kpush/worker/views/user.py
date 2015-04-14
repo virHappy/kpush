@@ -4,7 +4,7 @@ from maple import Blueprint
 from flask import current_app
 
 from worker.worker_share import proto
-from worker.worker_share.utils import pack_data, get_or_create_user, get_appinfo_by_appkey
+from share.utils import pack_data, get_or_create_user, get_appinfo_by_appkey
 from share.kit import kit
 from share.log import worker_logger
 from worker.worker_share.utils import login_required

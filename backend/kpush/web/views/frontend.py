@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Blueprint
-from flask import render_template
+from flask import render_template, jsonify
 
 bp = Blueprint('frontend', __name__)
 

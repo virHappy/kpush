@@ -5,6 +5,7 @@ from share import proto
 
 def login_required(func):
     import functools
+
     @functools.wraps(func)
     def func_wrapper(request, *args, **kwargs):
         if request.gw_box.uid <= 0:

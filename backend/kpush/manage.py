@@ -150,8 +150,8 @@ def runworker(host, port, debug, workers):
     app.run(host, port, debug, workers)
 
 
-@manager.option(dest='appkey', required=True)
-@manager.option(dest='appid', required=True, type=int)
+@manager.option(dest='appkey')
+@manager.option(dest='appid', type=int)
 def addapp(appid, appkey):
     print appid, appkey
 

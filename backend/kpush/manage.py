@@ -19,7 +19,6 @@ from share.utils import alloc_autoid
 
 manager = flask_script.Manager(create_app)
 manager.add_option('-c', '--config', dest='config', required=False)
-manager.add_option('-n', '--name', dest='name', required=False)
 
 
 class GServer(flask_script.Command):

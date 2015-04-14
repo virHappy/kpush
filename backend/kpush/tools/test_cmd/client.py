@@ -7,7 +7,7 @@ from netkit.contrib.tcp_client import TcpClient
 from netkit.box import Box
 from web.application import create_app
 from worker.worker_share import proto
-from worker.worker_share.utils import pack_data, unpack_data
+from share.utils import pack_data, unpack_data
 
 
 worker_client = TcpClient(Box, '115.28.224.64', 29000)

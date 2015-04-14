@@ -6,7 +6,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../"))
 from netkit.box import Box
 from web.application import create_app
 from maple import Trigger
-from worker.worker_share.utils import pack_data
+from share.utils import pack_data
 
 
 trigger = Trigger(Box, '115.28.224.64', 28000)

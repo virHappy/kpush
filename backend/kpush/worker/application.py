@@ -6,6 +6,7 @@ from flask import current_app
 from maple import Worker
 from netkit.box import Box
 from share.log import worker_logger
+from share.kit import kit
 
 
 def configure_views(app):
@@ -40,6 +41,15 @@ def configure_handlers(app):
             return
 
         request.json_data = json.loads(data)
+
+    @app.before_request
+    def inject_user(request):
+        if request.gw_box.uid > 0:
+            request.user = kit.mongo_client.get_default_database()['user'].find_one(dict(
+                uid=request.gw_box.uid
+            ))
+        else:
+            request.user = None
 
 
 def create_app():

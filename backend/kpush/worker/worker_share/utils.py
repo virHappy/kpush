@@ -5,6 +5,7 @@ import hashlib
 from flask import current_app
 import uuid
 from share.kit import kit
+from worker.worker_share import proto
 
 
 def pack_data(json_data):
@@ -112,3 +113,18 @@ def get_or_create_user(user_info):
         appid=user_info['appid'],
         device_id=user_info['device_id'],
     ))
+
+
+def login_required(func):
+    import functools
+    @functools.wraps(func)
+    def func_wrapper(request, *args, **kwargs):
+        if request.gw_box.uid <= 0:
+            request.write(dict(
+                ret=proto.RET_NOT_LOGIN,
+            ))
+            return
+
+        return func(request, *args, **kwargs)
+    return func_wrapper
+

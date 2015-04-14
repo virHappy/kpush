@@ -6,6 +6,7 @@ from worker.worker_share import proto
 from worker.worker_share.utils import pack_data, get_or_create_user, get_appinfo_by_appkey
 from share.kit import kit
 from share.log import worker_logger
+from worker.worker_share.utils import login_required
 
 
 bp = Blueprint()
@@ -20,7 +21,7 @@ def register(request):
         # 报错
         request.write_to_client(
             dict(
-                ret=-1
+                ret=proto.RET_INVALID_PARAMS
             )
         )
         return
@@ -47,3 +48,9 @@ def register(request):
         ret=0,
         body=pack_data(rsp)
     ))
+
+
+@bp.route(proto.CMD_SET_ALIAS_AND_TAGS)
+@login_required
+def set_alias_and_tags(request):
+    pass

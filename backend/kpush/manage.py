@@ -166,7 +166,7 @@ def runworker(host, port, debug, workers):
 
 
 @manager.option('-k', '--appkey', dest='appkey')
-@manager.option('-n', '--appname', dest='appname', required=True)
+@manager.option(dest='appname')
 def addapp(appname, appkey):
     appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
 

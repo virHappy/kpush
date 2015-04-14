@@ -8,9 +8,10 @@ from flask import session, request, g, current_app
 from flask import Markup
 from flask_admin import AdminIndexView, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
+from passlib.hash import sha256_crypt
 
-from share.extensions import db, admin
-from share.models import AdminUser
+from share.extensions import admin
+from share.kit import kit
 from forms import LoginForm
 
 
@@ -19,13 +20,12 @@ def register_views(app):
     @app.before_request
     def inject_admin_user():
         # 注入admin_user
-        g.admin_user = AdminUser.query.filter(
-            AdminUser.username == session.get(current_app.config['SESSION_KEY_ADMIN_USERNAME'])).first()
+        admin_user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_ADMIN_USER']]
+        g.admin_user = admin_user_table.find_one(dict(
+            username=session.get(current_app.config['SESSION_KEY_ADMIN_USERNAME'])
+        ))
 
     admin.add_view(AdminAuthView())
-
-    # model
-    admin.add_view(AdminUserView())
 
 
 class AdminAuthView(BaseView):
@@ -41,16 +41,17 @@ class AdminAuthView(BaseView):
     def login(self):
         form = LoginForm()
         if form.validate_on_submit():
-            admin_user = AdminUser.auth(form.username.data, form.password.data)
-            if not admin_user:
+            admin_user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_ADMIN_USER']]
+            admin_user = admin_user_table.find_one(dict(
+                username=form.username.data
+            ))
+
+            if not admin_user or not sha256_crypt.verify(form.password.data, admin_user['password']):
                 flash('invalid username or password')
                 return self.render("admin/login.html", form=form)
 
             session.permanent = True
-            session[current_app.config['SESSION_KEY_ADMIN_USERNAME']] = admin_user.username
-
-            admin_user.login_time = datetime.datetime.utcnow()
-            db.session.commit()
+            session[current_app.config['SESSION_KEY_ADMIN_USERNAME']] = admin_user['username']
 
             if request.args.get('next', None):
                 return redirect(request.args['next'])
@@ -64,12 +65,3 @@ class AdminAuthView(BaseView):
         session.pop(current_app.config['SESSION_KEY_ADMIN_USERNAME'], None)
         return redirect(url_for('admin.index'))
 
-
-class AdminUserView(ModelView):
-    column_exclude_list = ('password',)
-
-    def __init__(self, *args, **kwargs):
-        super(AdminUserView, self).__init__(AdminUser, db.session, *args, **kwargs)
-
-    def is_accessible(self):
-        return g.admin_user

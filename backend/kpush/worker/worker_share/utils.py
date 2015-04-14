@@ -120,7 +120,7 @@ def login_required(func):
     @functools.wraps(func)
     def func_wrapper(request, *args, **kwargs):
         if request.gw_box.uid <= 0:
-            request.write(dict(
+            request.write_to_client(dict(
                 ret=proto.RET_NOT_LOGIN,
             ))
             return

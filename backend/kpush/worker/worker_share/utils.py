@@ -49,7 +49,7 @@ def alloc_autoid(name):
     :return:
     """
 
-    autoid_table = kit.mongo_client.get_default_database().autoid
+    autoid_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_AUTOID']]
 
     autoid_info = autoid_table.find_and_modify(
         query=dict(
@@ -73,7 +73,7 @@ def get_appinfo_by_appkey(appkey):
     获取appinfo
     """
 
-    appinfo_table = kit.mongo_client.get_default_database().appinfo
+    appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
 
     return appinfo_table.find_one(dict(
         appkey=appkey
@@ -85,7 +85,7 @@ def get_or_create_user(user_info):
     返回或者创建user
     """
 
-    user_table = kit.mongo_client.get_default_database().user
+    user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_USER']]
 
     user = user_table.find_one(dict(
         appid=user_info['appid'],

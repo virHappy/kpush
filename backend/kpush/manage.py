@@ -155,7 +155,7 @@ def addapp(appkey):
     import uuid
     from share.kit import kit
     from worker.worker_share.utils import alloc_autoid
-    appinfo_table = kit.mongo_client.get_default_database()["appinfo"]
+    appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
 
     if appkey:
         if appinfo_table.find_one({

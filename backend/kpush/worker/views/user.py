@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from maple import Blueprint
+from flask import current_app
 
 from worker.worker_share import proto
 from worker.worker_share.utils import pack_data, get_or_create_user, get_appinfo_by_appkey
@@ -53,7 +54,7 @@ def register(request):
 @bp.route(proto.CMD_SET_ALIAS_AND_TAGS)
 @login_required
 def set_alias_and_tags(request):
-    user_table = kit.mongo_client.get_default_database()["user"]
+    user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_USER']]
 
     update_values = dict()
     if request.json_data.get('alias') is not None:

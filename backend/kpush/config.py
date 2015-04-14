@@ -155,3 +155,12 @@ SESSION_KEY_ADMIN_USERNAME = 'admin_username'
 
 # mongodb
 MONGO_URL = 'mongodb://admin:admin@127.0.0.1:27017/kpush'
+
+# 表
+MONGO_TB_AUTOID = 'autoid'
+MONGO_TB_SERVER = 'server'
+MONGO_TB_APPINFO = 'appinfo'
+MONGO_TB_USER = 'user'
+MONGO_TB_NTF = 'ntf'
+
+MONGO_TB_ADMIN_USER = 'admin_user'

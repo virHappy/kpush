@@ -17,7 +17,7 @@ def test_alloc_server():
         dict(
             appkey='7d357c9b4ce1414fb27f077b54fb5a8f',
             channel='M',
-            device_id='234234',
+            device_id='23423',
             device_name='fefer',
         )
     )

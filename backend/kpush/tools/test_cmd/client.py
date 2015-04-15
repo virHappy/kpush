@@ -47,7 +47,7 @@ def test_register():
 def test_login():
     req = dict(
         uid=1,
-        key='1556eaa05ee84b1d8b58e5a1247c218f',
+        key='db9ad9bb1ea04f649ff9d7ee67ba9478',
         os='android',
         os_version=33,
         sdk_version=22,

@@ -7,6 +7,8 @@ from flask import render_template, jsonify
 from flask import current_app, request
 from share.kit import kit
 from share import proto
+from share.log import web_logger
+from share.utils import get_appinfo_by_appkey, get_or_create_user
 
 bp = Blueprint('frontend', __name__)
 
@@ -21,13 +23,39 @@ def alloc_server():
         )
     """
 
-    server = random.choice(current_app.config['SERVER_LIST'])
+    appinfo = get_appinfo_by_appkey(request.json_data['appkey'])
+    web_logger.debug("appinfo: %s", appinfo)
+
+    if appinfo is None:
+        # 报错
+        jsonify(
+            ret=proto.RET_INVALID_PARAMS
+        )
+        return
+
+    user = get_or_create_user(dict(
+        appid=appinfo['appid'],
+        channel=request.json_data['channel'],
+        device_id=request.json_data['device_id'],
+        device_name=request.json_data.get('device_name'),
+        os=request.json_data.get('os'),
+        os_version=request.json_data.get('os_version'),
+        sdk_version=request.json_data.get('sdk_version'),
+    ))
+
+    server_list = current_app.config['SERVER_LIST']
+
+    # 取模
+    server = server_list[user['uid'] % len(server_list)]
 
     return jsonify(
         ret=0,
+        user=dict(
+            uid=user['uid'],
+            key=user['key'],
+        ),
         server=dict(
             host=server[0],
             port=server[1],
         )
     )
-

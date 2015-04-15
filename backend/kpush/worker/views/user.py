@@ -31,10 +31,10 @@ def register(request):
         appid=appinfo['appid'],
         channel=request.json_data['channel'],
         device_id=request.json_data['device_id'],
+        device_name=request.json_data.get('device_name'),
         os=request.json_data.get('os'),
         os_version=request.json_data.get('os_version'),
         sdk_version=request.json_data.get('sdk_version'),
-        device_name=request.json_data.get('device_name'),
     ))
 
     worker_logger.debug("user: %s", user)

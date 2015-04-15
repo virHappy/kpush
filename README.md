@@ -10,8 +10,9 @@
 所以流程如下:
 
 1. 用户登录
-
-    用户将请求发送给gateway，具体参数如uuid等暂且不表，worker收到请求后，分配给客户端一个唯一long long的uid，并将连接标记为已登陆
+    
+    先访问http，将device_id等传入，从而申请uid和gateway的ip，gateway的ip按照取模的方式返回。
+    用户连接gateway，并发送登录请求，gateway验证通过后，将连接标记为已登陆，并返回登录成功
 
 2. 消息下发
 

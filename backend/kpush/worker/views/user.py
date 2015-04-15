@@ -63,6 +63,7 @@ def login(request):
     :param request:
     :return:
     """
+    worker_logger.debug(request.json_data)
     user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_USER']]
 
     user = user_table.find_one({

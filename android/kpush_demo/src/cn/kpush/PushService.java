@@ -48,6 +48,7 @@ public class PushService extends Service {
 
         regEventCallback();
 
+        allocServer();
     }
 
     @Override
@@ -289,6 +290,7 @@ public class PushService extends Service {
 
         @Override
         protected void onPostExecute(Integer result) {
+            KLog.d("result: " + result);
             if (result != 0) {
                 // 说明失败
                 allocServerLater();

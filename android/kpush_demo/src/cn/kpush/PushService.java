@@ -68,7 +68,9 @@ public class PushService extends Service {
     private void connectToServer() {
         Ferry.getInstance().init(serverHost, serverPort);
         if (Ferry.getInstance().isRunning()) {
-            Ferry.getInstance().connect();
+            if (!Ferry.getInstance().isConnected()) {
+                Ferry.getInstance().connect();
+            }
         }
         else {
             Ferry.getInstance().start();

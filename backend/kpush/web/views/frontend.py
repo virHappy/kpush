@@ -8,7 +8,7 @@ from flask import current_app, request
 from share.kit import kit
 from share import proto
 from share.log import web_logger
-from share.utils import get_appinfo_by_appkey, get_or_create_user
+from share.utils import get_appinfo_by_appkey, get_or_create_user, pack_data
 
 bp = Blueprint('frontend', __name__)
 
@@ -48,14 +48,16 @@ def alloc_server():
     # 取模
     server = server_list[user['uid'] % len(server_list)]
 
-    return jsonify(
-        ret=0,
-        user=dict(
-            uid=user['uid'],
-            key=user['key'],
-        ),
-        server=dict(
-            host=server[0],
-            port=server[1],
+    return current_app.response_class(pack_data(
+        dict(
+            ret=0,
+            user=dict(
+                uid=user['uid'],
+                key=user['key'],
+            ),
+            server=dict(
+                host=server[0],
+                port=server[1],
+            )
         )
-    )
+    ), mimetype='application/json')

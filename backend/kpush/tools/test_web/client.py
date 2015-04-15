@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../"))
+
 import requests
+from web.application import create_app
 from share.utils import pack_data, unpack_data
 
 
 def test_alloc_server():
-    url = 'http://115.28.224.64:7555/server/alloc'
+    # url = 'http://115.28.224.64:7555/server/alloc'
+    url = 'http://127.0.0.1:5000/server/alloc'
 
     post_body = pack_data(
         dict(
@@ -21,4 +27,6 @@ def test_alloc_server():
     print rsp.text
 
 if __name__ == '__main__':
-    test_alloc_server()
+    app = create_app()
+    with app.test_request_context():
+        test_alloc_server()

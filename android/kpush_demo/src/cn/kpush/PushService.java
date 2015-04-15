@@ -6,12 +6,19 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import cn.vimer.ferry.Ferry;
 import cn.vimer.netkit.Box;
 import cn.vimer.netkit.IBox;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 /**
@@ -20,6 +27,10 @@ import org.json.JSONObject;
 public class PushService extends Service {
 
     private Handler handler;
+    private String serverHost;
+    private Integer serverPort;
+    private long userId;
+    private String userKey;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -39,8 +50,6 @@ public class PushService extends Service {
 
         regEventCallback();
 
-        Ferry.getInstance().init("115.28.224.64", 29000);
-        Ferry.getInstance().start();
     }
 
     @Override
@@ -57,13 +66,23 @@ public class PushService extends Service {
         Log.d(Constants.LOG_TAG, "onDestory");
     }
 
+    private void connectToServer() {
+        Ferry.getInstance().init(serverHost, serverPort);
+        if (Ferry.getInstance().isRunning()) {
+            Ferry.getInstance().connect();
+        }
+        else {
+            Ferry.getInstance().start();
+        }
+    }
+
     private void regEventCallback() {
         Ferry.getInstance().addEventCallback(new Ferry.CallbackListener() {
             @Override
             public void onOpen() {
                 Log.d(Constants.LOG_TAG, "onOpen");
 
-                userRegister();
+                userLogin();
             }
 
             @Override
@@ -77,8 +96,7 @@ public class PushService extends Service {
                     if (jsonData != null) {
                         try {
                             showNotification(jsonData.getString("title"), jsonData.getString("content"));
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             Log.e(Constants.LOG_TAG, String.format("exc occur. e: %s, box: %s", e, box));
                         }
                     }
@@ -88,7 +106,9 @@ public class PushService extends Service {
             @Override
             public void onClose() {
                 Log.d(Constants.LOG_TAG, "onClose");
-                Ferry.getInstance().connect();
+                // Ferry.getInstance().connect();
+                // 从获取IP开始
+                allocServer();
             }
 
             @Override
@@ -99,34 +119,27 @@ public class PushService extends Service {
         }, this, "main");
     }
 
-    private void userRegister() {
+    private void userLogin() {
 
-        Log.d(Constants.LOG_TAG, "userRegister");
+        Log.d(Constants.LOG_TAG, "userLogin");
 
         Box box = new Box();
-        box.cmd = Proto.CMD_REGISTER;
+        box.cmd = Proto.CMD_LOGIN;
         JSONObject jsonObject = new JSONObject();
         try {
+            jsonObject.put("uid", userId);
+            jsonObject.put("key", userKey);
             jsonObject.put("os", Constants.OS);
             jsonObject.put("sdk_version", Constants.SDK_VERSION);
-            jsonObject.put("appkey", DeviceInfo.getAppkey());
-            jsonObject.put("channel", DeviceInfo.getChannel());
-            jsonObject.put("device_id", DeviceInfo.getDeviceId());
             jsonObject.put("os_version", DeviceInfo.getOsVersion());
-            jsonObject.put("app_version", DeviceInfo.getAppVersion());
-            jsonObject.put("device_name", DeviceInfo.getDeviceName());
-            jsonObject.put("package_name", DeviceInfo.getPackageName());
         } catch (Exception e) {
         }
 
         Log.d(Constants.LOG_TAG, jsonObject.toString());
 
-        byte[] body = Utils.packData(jsonObject);
-        if (body == null) {
-            return;
-        }
+        String body = Utils.packData(jsonObject);
 
-        box.body = body;
+        box.body = body == null ? null:body.getBytes();
 
         Ferry.getInstance().send(box, new Ferry.CallbackListener() {
             @Override
@@ -142,41 +155,51 @@ public class PushService extends Service {
 
                 if (box.ret != 0) {
                     // 几秒后再重试
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            userRegister();
-                        }
-                    }, Constants.ERROR_RETRY_INTERVAL * 1000);
+                    userLoginLater();
                 }
             }
 
             @Override
             public void onError(int code, IBox ibox) {
                 Log.d(Constants.LOG_TAG, String.format("onError, code: %s, box: %s", code, ibox));
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        userRegister();
-                    }
-                }, Constants.ERROR_RETRY_INTERVAL * 1000);
+                userLoginLater();
             }
 
             @Override
             public void onTimeout() {
                 Log.d(Constants.LOG_TAG, "onTimeout");
 
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        userRegister();
-                    }
-                }, Constants.ERROR_RETRY_INTERVAL * 1000);
+                userLoginLater();
             }
         }, 5, this);
     }
 
-    public void showNotification(String title, String content) {
+    private void userLoginLater() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                userLogin();
+            }
+        }, Constants.ERROR_RETRY_INTERVAL * 1000);
+    }
+
+
+    private void allocServer() {
+        // 申请 server
+        new AllocServerTask().execute();
+    }
+
+    private void allocServerLater() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // 重新申请
+                allocServer();
+            }
+        }, Constants.ERROR_RETRY_INTERVAL * 1000);
+    }
+
+    private void showNotification(String title, String content) {
         //消息通知栏
         //定义NotificationManager
         String ns = Context.NOTIFICATION_SERVICE;
@@ -204,6 +227,97 @@ public class PushService extends Service {
         //用mNotificationManager的notify方法通知用户生成标题栏消息通知
         int nfyid = 0;
         mNotificationManager.notify(nfyid, notification);
+    }
+
+    private class AllocServerTask extends AsyncTask<String, Integer, Integer> {
+        JSONObject jsonData;
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Integer doInBackground(String... params) {
+            try{
+                HttpClient httpClient = new DefaultHttpClient();
+
+                HttpPost httpPost = new HttpPost(Constants.ALLOC_SERVER_URL);
+
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("appkey", DeviceInfo.getAppkey());
+                jsonObject.put("channel", DeviceInfo.getChannel());
+                jsonObject.put("device_id", DeviceInfo.getDeviceId());
+                jsonObject.put("device_name", DeviceInfo.getDeviceName());
+                jsonObject.put("os_version", DeviceInfo.getOsVersion());
+                jsonObject.put("os", Constants.OS);
+                jsonObject.put("sdk_version", Constants.SDK_VERSION);
+
+                Log.d(Constants.LOG_TAG, jsonObject.toString());
+
+                String postBody = Utils.packData(jsonObject);
+                if (postBody == null) {
+                    return -1;
+                }
+
+                httpPost.setEntity(new StringEntity(postBody));
+
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                int code = httpResponse.getStatusLine().getStatusCode();
+                if (code == 200) {
+                    String recvBody = EntityUtils.toString(httpResponse.getEntity());
+
+                    jsonData = Utils.unpackData(recvBody);
+
+                    if (jsonData == null) {
+                        return -3;
+                    }
+
+                    // 解析成功
+                    return 0;
+                }
+                else {
+                    return -4;
+                }
+            }
+            catch (Exception e) {
+                Log.e(Constants.LOG_TAG, "fail: " + e.toString());
+
+                return -2;
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progresses) {
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            if (result != 0) {
+                // 说明失败
+                allocServerLater();
+
+                return;
+            }
+
+            try{
+                serverHost = jsonData.getJSONObject("server").getString("host");
+                serverPort = jsonData.getJSONObject("server").getInt("port");
+                userId = jsonData.getJSONObject("user").getLong("uid");
+                userKey = jsonData.getJSONObject("user").getString("key");
+            }
+            catch (Exception e) {
+                Log.e(Constants.LOG_TAG, "fail: " + e.toString());
+
+                allocServerLater();
+                return;
+            }
+
+            connectToServer();
+        }
+
+        @Override
+        protected void onCancelled() {
+        }
     }
 
 }

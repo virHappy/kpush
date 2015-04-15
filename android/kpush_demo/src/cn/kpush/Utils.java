@@ -54,6 +54,21 @@ public class Utils {
 
             String body = new String(bytesBody, "UTF-8");
 
+            return unpackData(body);
+        }
+        catch (Exception e) {
+            Log.e(Constants.LOG_TAG, "unpackData fail: " + bytesBody);
+        }
+
+        return null;
+    }
+
+    public static JSONObject unpackData(String body) {
+        if (body == null) {
+            return null;
+        }
+
+        try{
             JSONObject jsonBody = new JSONObject(body);
 
             String data = jsonBody.getString("data");
@@ -71,13 +86,13 @@ public class Utils {
             return new JSONObject(data);
         }
         catch (Exception e) {
-            Log.e(Constants.LOG_TAG, "unpackData fail: " + bytesBody);
+            Log.e(Constants.LOG_TAG, "unpackData fail: " + body);
         }
 
         return null;
     }
 
-    public static byte[] packData(JSONObject jsonData) {
+    public static String packData(JSONObject jsonData) {
         try{
             if (jsonData == null) {
                 return null;
@@ -92,7 +107,7 @@ public class Utils {
             jsonBody.put("data", data);
             jsonBody.put("sign", sign);
 
-            return jsonBody.toString().getBytes();
+            return jsonBody.toString();
         }
         catch (Exception e) {
             Log.e(Constants.LOG_TAG, "packData fail: " + jsonData.toString());
@@ -100,5 +115,4 @@ public class Utils {
 
         return null;
     }
-
 }

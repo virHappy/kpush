@@ -121,8 +121,6 @@ public class PushService extends Service {
 
     private void userKLogin() {
 
-        KLog.d("");
-
         Box box = new Box();
         box.cmd = Proto.CMD_LOGIN;
         JSONObject jsonObject = new JSONObject();

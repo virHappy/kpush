@@ -56,7 +56,7 @@ public class Utils {
             return unpackData(body);
         }
         catch (Exception e) {
-            KLog.e("unpackData fail: " + bytesBody);
+            KLog.e("fail: " + bytesBody);
         }
 
         return null;
@@ -85,7 +85,7 @@ public class Utils {
             return new JSONObject(data);
         }
         catch (Exception e) {
-            KLog.e("unpackData fail: " + body);
+            KLog.e("fail: " + body);
         }
 
         return null;
@@ -109,7 +109,7 @@ public class Utils {
             return jsonBody.toString();
         }
         catch (Exception e) {
-            KLog.e("packData fail: " + jsonData.toString());
+            KLog.e("fail: " + jsonData.toString());
         }
 
         return null;

@@ -2,14 +2,14 @@ package cn.kpush;
 
 import android.util.Log;
 
-public class XLog {
+public class KLog {
     /**
      * 对外static调用
      */
-    private static XLog instance = getXLogger("xlog");
+    private static KLog instance = getXLogger("kpush");
 
-    public static XLog getXLogger(String tag) {
-        return new XLog(tag);
+    public static KLog getXLogger(String tag) {
+        return new KLog(tag);
     }
 
     public static void v(String msg){
@@ -34,7 +34,7 @@ public class XLog {
      */
     private String tag = null;//application name
 
-    public XLog(String tag) {
+    public KLog(String tag) {
         this.tag = tag;
     }
 

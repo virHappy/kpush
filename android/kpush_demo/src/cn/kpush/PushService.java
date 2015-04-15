@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import cn.vimer.ferry.Ferry;
 import cn.vimer.netkit.Box;
 import cn.vimer.netkit.IBox;
@@ -43,8 +42,7 @@ public class PushService extends Service {
 
         // 因为service可能重新进来
         DeviceInfo.init(this);
-
-        Log.d(Constants.LOG_TAG, "onCreate");
+        KLog.d("");
 
         handler = new Handler();
 
@@ -55,7 +53,7 @@ public class PushService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 每次发intent都会进来，可以重复进入
-        Log.d(Constants.LOG_TAG, "onStartCommand. action: " + (intent == null ? null : intent.getAction()));
+        KLog.d("action: " + (intent == null ? null : intent.getAction()));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -63,7 +61,7 @@ public class PushService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Ferry.getInstance().stop();
-        Log.d(Constants.LOG_TAG, "onDestory");
+        KLog.d("");
     }
 
     private void connectToServer() {
@@ -80,14 +78,13 @@ public class PushService extends Service {
         Ferry.getInstance().addEventCallback(new Ferry.CallbackListener() {
             @Override
             public void onOpen() {
-                Log.d(Constants.LOG_TAG, "onOpen");
 
-                userLogin();
+                userKLogin();
             }
 
             @Override
             public void onRecv(IBox ibox) {
-                Log.d(Constants.LOG_TAG, String.format("onRecv, box: %s", ibox));
+                KLog.d(String.format("onRecv, box: %s", ibox));
                 Box box = (Box) ibox;
 
                 JSONObject jsonData = Utils.unpackData(box.body);
@@ -97,7 +94,7 @@ public class PushService extends Service {
                         try {
                             showNotification(jsonData.getString("title"), jsonData.getString("content"));
                         } catch (Exception e) {
-                            Log.e(Constants.LOG_TAG, String.format("exc occur. e: %s, box: %s", e, box));
+                            KLog.e(String.format("exc occur. e: %s, box: %s", e, box));
                         }
                     }
                 }
@@ -105,7 +102,7 @@ public class PushService extends Service {
 
             @Override
             public void onClose() {
-                Log.d(Constants.LOG_TAG, "onClose");
+                KLog.d("");
                 // Ferry.getInstance().connect();
                 // 从获取IP开始
                 allocServer();
@@ -113,15 +110,15 @@ public class PushService extends Service {
 
             @Override
             public void onError(int code, IBox ibox) {
-                Log.d(Constants.LOG_TAG, String.format("onError, code: %s, box: %s", code, ibox));
+                KLog.d(String.format("code: %s, box: %s", code, ibox));
             }
 
         }, this, "main");
     }
 
-    private void userLogin() {
+    private void userKLogin() {
 
-        Log.d(Constants.LOG_TAG, "userLogin");
+        KLog.d("");
 
         Box box = new Box();
         box.cmd = Proto.CMD_LOGIN;
@@ -135,7 +132,7 @@ public class PushService extends Service {
         } catch (Exception e) {
         }
 
-        Log.d(Constants.LOG_TAG, jsonObject.toString());
+        KLog.d(jsonObject.toString());
 
         String body = Utils.packData(jsonObject);
 
@@ -144,41 +141,41 @@ public class PushService extends Service {
         Ferry.getInstance().send(box, new Ferry.CallbackListener() {
             @Override
             public void onSend(IBox ibox) {
-                Log.d(Constants.LOG_TAG, String.format("onSend, box: %s", ibox));
+                KLog.d(String.format("box: %s", ibox));
             }
 
             @Override
             public void onRecv(IBox ibox) {
-                Log.d(Constants.LOG_TAG, String.format("onRecv, box: %s", ibox));
+                KLog.d(String.format("box: %s", ibox));
                 Box box = (Box) ibox;
-                // Log.d(Constants.LOG_TAG, "data: " + Utils.unpackData(box.body));
+                // KLog.d("data: " + Utils.unpackData(box.body));
 
                 if (box.ret != 0) {
                     // 几秒后再重试
-                    userLoginLater();
+                    userKLoginLater();
                 }
             }
 
             @Override
             public void onError(int code, IBox ibox) {
-                Log.d(Constants.LOG_TAG, String.format("onError, code: %s, box: %s", code, ibox));
-                userLoginLater();
+                KLog.d(String.format("code: %s, box: %s", code, ibox));
+                userKLoginLater();
             }
 
             @Override
             public void onTimeout() {
-                Log.d(Constants.LOG_TAG, "onTimeout");
+                KLog.d("");
 
-                userLoginLater();
+                userKLoginLater();
             }
         }, 5, this);
     }
 
-    private void userLoginLater() {
+    private void userKLoginLater() {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                userLogin();
+                userKLogin();
             }
         }, Constants.ERROR_RETRY_INTERVAL * 1000);
     }
@@ -252,7 +249,7 @@ public class PushService extends Service {
                 jsonObject.put("os", Constants.OS);
                 jsonObject.put("sdk_version", Constants.SDK_VERSION);
 
-                Log.d(Constants.LOG_TAG, jsonObject.toString());
+                KLog.d(jsonObject.toString());
 
                 String postBody = Utils.packData(jsonObject);
                 if (postBody == null) {
@@ -280,7 +277,7 @@ public class PushService extends Service {
                 }
             }
             catch (Exception e) {
-                Log.e(Constants.LOG_TAG, "fail: " + e.toString());
+                KLog.e("fail: " + e.toString());
 
                 return -2;
             }
@@ -306,7 +303,7 @@ public class PushService extends Service {
                 userKey = jsonData.getJSONObject("user").getString("key");
             }
             catch (Exception e) {
-                Log.e(Constants.LOG_TAG, "fail: " + e.toString());
+                KLog.e("fail: " + e.toString());
 
                 allocServerLater();
                 return;

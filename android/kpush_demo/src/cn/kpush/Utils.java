@@ -3,7 +3,6 @@ package cn.kpush;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.util.Log;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
@@ -57,7 +56,7 @@ public class Utils {
             return unpackData(body);
         }
         catch (Exception e) {
-            Log.e(Constants.LOG_TAG, "unpackData fail: " + bytesBody);
+            KLog.e("unpackData fail: " + bytesBody);
         }
 
         return null;
@@ -79,14 +78,14 @@ public class Utils {
             String calcSign = genMD5(source);
 
             if (!sign.equals(calcSign)) {
-                Log.e(Constants.LOG_TAG, String.format("sign not equal. sign: %s, calcSign: %s", sign, calcSign));
+                KLog.e(String.format("sign not equal. sign: %s, calcSign: %s", sign, calcSign));
                 return null;
             }
 
             return new JSONObject(data);
         }
         catch (Exception e) {
-            Log.e(Constants.LOG_TAG, "unpackData fail: " + body);
+            KLog.e("unpackData fail: " + body);
         }
 
         return null;
@@ -110,7 +109,7 @@ public class Utils {
             return jsonBody.toString();
         }
         catch (Exception e) {
-            Log.e(Constants.LOG_TAG, "packData fail: " + jsonData.toString());
+            KLog.e("packData fail: " + jsonData.toString());
         }
 
         return null;

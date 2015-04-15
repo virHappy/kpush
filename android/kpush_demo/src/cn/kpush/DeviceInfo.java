@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import java.util.UUID;
 
@@ -34,7 +33,7 @@ public class DeviceInfo {
 
         initVals();
 
-        Log.v(Constants.LOG_TAG, String.format(
+        KLog.v(String.format(
                         "packageName: %s, appVersion: %s, deviceId: %s, osVersion: %s, deviceName: %s",
                         packageName, appVersion, deviceId, osVersion, deviceName
                 )
@@ -56,7 +55,7 @@ public class DeviceInfo {
             appIconId = packageInfo.applicationInfo.icon;
         }
         catch (Exception e) {
-            Log.e(Constants.LOG_TAG, "get versionCode fail");
+            KLog.e("get versionCode fail");
         }
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_NAME, 0);

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class PushActivity extends Activity {
             String packageName = ri.activityInfo.packageName;
             String className = ri.activityInfo.name;
 
-            Log.d(Constants.LOG_TAG, String.format("packageName: %s, className: %s", packageName, className));
+            KLog.d(String.format("packageName: %s, className: %s", packageName, className));
 
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);

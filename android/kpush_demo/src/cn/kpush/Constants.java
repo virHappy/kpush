@@ -8,7 +8,6 @@ public class Constants {
     public static final String ALLOC_SERVER_URL = "http://" + DOMAIN + "/server/alloc";
 
     public static final String SECRET = "4y%zgs*074ibnacl31w2d!l-o$3qaa+lu)w25g*0#e6i_qt1*#305^gij7a+js$i";
-    public static final String LOG_TAG = "kpush";
 
     public static final int SDK_VERSION = 1;
     public static final String OS = "android";

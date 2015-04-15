@@ -44,9 +44,42 @@ def test_register():
         return
 
 
+def test_login():
+    req = dict(
+        uid=1,
+        key='1556eaa05ee84b1d8b58e5a1247c218f',
+        os='android',
+        os_version=33,
+        sdk_version=22,
+    )
+    worker_client.write(dict(
+        cmd=proto.CMD_LOGIN,
+        body=pack_data(req)
+    ))
+
+    box = worker_client.read()
+    if box:
+        print box
+    else:
+        return
+
+    worker_client.write(dict(
+        cmd=proto.CMD_SET_ALIAS_AND_TAGS,
+        body=pack_data(dict(
+            alias='dante',
+        ))
+    ))
+
+    box = worker_client.read()
+    if box:
+        print box
+    else:
+        return
+
 def main():
     worker_client.connect()
-    test_register()
+    # test_register()
+    test_login()
 
 if __name__ == '__main__':
     app = create_app()

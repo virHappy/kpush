@@ -21,22 +21,13 @@ def alloc_server():
         )
     """
 
-    server_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_SERVER']]
-
-    server_list = list(server_table.find())
-
-    if not server_list:
-        return jsonify(
-            ret=proto.RET_INTERNAL_ERROR,
-        )
-
-    server = random.choice(server_list)
+    server = random.choice(current_app.config['SERVER_LIST'])
 
     return jsonify(
         ret=0,
         server=dict(
-            host=server['host'],
-            port=server['port'],
+            host=server[0],
+            port=server[1],
         )
     )
 

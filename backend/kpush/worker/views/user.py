@@ -15,6 +15,11 @@ bp = Blueprint()
 
 @bp.route(proto.CMD_REGISTER)
 def register(request):
+    """
+    注册，废弃
+    :param request:
+    :return:
+    """
     appinfo = get_appinfo_by_appkey(request.json_data['appkey'])
     worker_logger.debug("appinfo: %s", appinfo)
 
@@ -48,6 +53,46 @@ def register(request):
     request.write_to_client(dict(
         ret=0,
         body=pack_data(rsp)
+    ))
+
+
+@bp.route(proto.CMD_LOGIN)
+def login(request):
+    """
+    登录
+    :param request:
+    :return:
+    """
+    appinfo = get_appinfo_by_appkey(request.json_data['appkey'])
+    worker_logger.debug("appinfo: %s", appinfo)
+
+    if appinfo is None:
+        # 报错
+        request.write_to_client(
+            dict(
+                ret=proto.RET_INVALID_PARAMS
+            )
+        )
+        return
+
+    user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_USER']]
+
+    user = user_table.find_one({
+        'appid': appinfo['appid'],
+        'uid': request.json_data['uid'],
+        'key': request.json_data['key'],
+    })
+
+    if not user:
+        request.write_to_client(dict(
+            ret=proto.RET_NO_DATA
+        ))
+        return
+
+    request.login_client(user['uid'])
+
+    request.write_to_client(dict(
+        ret=0
     ))
 
 

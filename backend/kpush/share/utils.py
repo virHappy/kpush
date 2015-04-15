@@ -93,7 +93,7 @@ def get_or_create_user(user_info):
 
     if user is None:
         new_user_info = dict(
-            uid=alloc_autoid("user"),
+            uid=alloc_autoid("user_appid:%d" % user_info["appid"]),
             key=uuid.uuid4().hex,
         )
         new_user_info.update(user_info)

@@ -87,7 +87,7 @@ public class PushService extends Service {
 
             @Override
             public void onRecv(IBox ibox) {
-                KLog.d(String.format("onRecv, box: %s", ibox));
+                KLog.d(String.format("box: %s", ibox));
                 Box box = (Box) ibox;
 
                 JSONObject jsonData = Utils.unpackData(box.body);

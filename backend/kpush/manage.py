@@ -180,11 +180,13 @@ def addapp(appname, appkey):
         appkey = uuid.uuid4().hex
 
     appid = alloc_autoid("appinfo")
+    appsecret = uuid.uuid4().hex
 
     appinfo_table.insert({
         "appid": appid,
         "appkey": appkey,
         "appname": appname,
+        "appsecret": appsecret,
     })
 
     print "appid: %s, appkey: %s, appname: %s" % (appid, appkey, appname)

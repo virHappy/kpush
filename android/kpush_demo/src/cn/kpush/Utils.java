@@ -24,7 +24,7 @@ public class Utils {
     }
 
     public static String hexToString(byte[] b){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for(int i = 0; i < b.length; i ++){
             //sb.append(b[i]);
             sb.append(String.format("%02x", b[i]));

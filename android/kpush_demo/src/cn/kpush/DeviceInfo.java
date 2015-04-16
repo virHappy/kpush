@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
 import java.util.UUID;
@@ -58,20 +59,7 @@ public class DeviceInfo {
             KLog.e("get versionCode fail");
         }
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_NAME, 0);
-
-        deviceId = sharedPreferences.getString("device_id", null);
-
-        if (deviceId == null || deviceId.isEmpty()) {
-            deviceId = ((TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-
-            if (deviceId == null || deviceId.isEmpty()) {
-                deviceId = UUID.randomUUID().toString();
-            }
-        }
-
-        // apply
-        sharedPreferences.edit().putString("device_id", deviceId).apply();
+        initDeviceId();
 
         deviceName = Build.MODEL;
         osVersion = Build.VERSION.SDK_INT;
@@ -116,5 +104,31 @@ public class DeviceInfo {
 
     public static String getChannel() {
         return channel;
+    }
+
+    private static void initDeviceId() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_NAME, 0);
+
+        String tmpDeviceId = sharedPreferences.getString("device_id", null);
+
+        if (tmpDeviceId != null && !tmpDeviceId.isEmpty()) {
+            deviceId = tmpDeviceId;
+            return;
+        }
+
+        tmpDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        if (tmpDeviceId == null || tmpDeviceId.isEmpty() || "9774d56d682e549c".equals(tmpDeviceId)) {
+            tmpDeviceId = ((TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+        }
+
+        if (tmpDeviceId != null && !tmpDeviceId.isEmpty()) {
+            deviceId = UUID.nameUUIDFromBytes(tmpDeviceId.getBytes()).toString();
+        }
+        else {
+            deviceId = UUID.randomUUID().toString();
+        }
+
+        // apply
+        sharedPreferences.edit().putString("device_id", deviceId).apply();
     }
 }

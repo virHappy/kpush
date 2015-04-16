@@ -13,7 +13,7 @@ from worker.worker_share.utils import login_required
 bp = Blueprint()
 
 
-@bp.route(proto.CMD_REGISTER)
+# @bp.route(proto.CMD_REGISTER)
 def register(request):
     """
     注册，废弃

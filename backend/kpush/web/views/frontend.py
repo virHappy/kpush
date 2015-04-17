@@ -8,7 +8,7 @@ from flask import current_app, request
 from share.kit import kit
 from share import proto
 from share.log import web_logger
-from share.utils import get_appinfo_by_appkey, get_or_create_user, pack_data
+from share.utils import get_appinfo_by_appkey, create_or_update_user, pack_data
 
 bp = Blueprint('frontend', __name__)
 
@@ -33,7 +33,7 @@ def alloc_server():
         )
         return
 
-    user = get_or_create_user(dict(
+    user = create_or_update_user(dict(
         appid=appinfo['appid'],
         channel=request.json_data['channel'],
         device_id=request.json_data['device_id'],

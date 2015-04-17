@@ -79,7 +79,7 @@ def get_appinfo_by_appkey(appkey):
     ))
 
 
-def get_or_create_user(user_info):
+def create_or_update_user(user_info):
     """
     返回或者创建user
     """

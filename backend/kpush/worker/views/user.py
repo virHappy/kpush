@@ -4,7 +4,7 @@ from maple import Blueprint
 from flask import current_app
 
 from share import proto
-from share.utils import pack_data, get_or_create_user, get_appinfo_by_appkey
+from share.utils import pack_data, create_or_update_user, get_appinfo_by_appkey
 from share.kit import kit
 from share.log import worker_logger
 from worker.worker_share.utils import login_required
@@ -32,7 +32,7 @@ def register(request):
         )
         return
 
-    user = get_or_create_user(dict(
+    user = create_or_update_user(dict(
         appid=appinfo['appid'],
         channel=request.json_data['channel'],
         device_id=request.json_data['device_id'],
@@ -79,16 +79,17 @@ def login(request):
 
     worker_logger.debug("user: %s", user)
 
+    # 因为现在注册永远是第一步，所以不需要再在login的时候做更新了
     # 只有部分数据要更新，其他的就按照注册的时候来
-    user_table.update({
-        '_id': user['_id'],
-    }, {
-        '$set': dict(
-            os=request.json_data.get('os'),
-            os_version=request.json_data.get('os_version'),
-            sdk_version=request.json_data.get('sdk_version'),
-        )
-    })
+    # user_table.update({
+    #     '_id': user['_id'],
+    # }, {
+    #     '$set': dict(
+    #         os=request.json_data.get('os'),
+    #         os_version=request.json_data.get('os_version'),
+    #         sdk_version=request.json_data.get('sdk_version'),
+    #     )
+    # })
 
     request.login_client(user['uid'])
 

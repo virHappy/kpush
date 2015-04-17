@@ -229,7 +229,7 @@ def pushntf(title, content, appid, appkey, alias, str_tags_or):
 
 
 @manager.option(dest='notification_id', type=int)
-def ntfstat(notification_id):
+def statntf(notification_id):
 
     notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 

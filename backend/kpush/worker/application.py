@@ -25,10 +25,15 @@ def configure_handlers(app):
         内部content json
         """
 
+        worker_logger.debug(request.box)
+
         # 先赋值None
         request.json_data = None
 
         json_body = request.box.get_json()
+        if not json_body:
+            return
+
         data = json_body.get('data')
         sign = json_body.get('sign')
 

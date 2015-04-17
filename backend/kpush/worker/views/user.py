@@ -142,6 +142,8 @@ def remove_user(request):
     :return:
     """
 
+    worker_logger.debug("remove_user: %s", request.gw_box.uid)
+
     user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_USER']]
 
     user_table.remove(dict(

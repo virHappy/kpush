@@ -85,7 +85,8 @@ public class PushService extends Service {
                         break;
                     case Proto.CMD_REMOVE_USER:
                         // 删除
-                        removeUser();
+                        // 不删除了，因为有时候顺序会很奇怪
+                        // removeUser();
                         break;
                 }
             }
@@ -299,7 +300,7 @@ public class PushService extends Service {
             public void run() {
                 heartbeat();
             }
-        }, Constants.HEARTBEAT_INTERVAL);
+        }, Constants.HEARTBEAT_INTERVAL * 1000);
     }
 
     private void sendPendingMsgs() {

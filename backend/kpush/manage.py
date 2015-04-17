@@ -6,6 +6,7 @@ import sys
 import random
 import uuid
 import re
+import json
 
 from flask import current_app
 from flask import render_template_string
@@ -223,6 +224,39 @@ def pushntf(title, content, appid, appkey, alias, str_tags_or):
     print push_helper.push_notification(
         title, content,
         appid=appid, appkey=appkey, alias=alias, tags_or=tags_or)
+
+
+@manager.option(dest='notification_id', type=int)
+def ntfstat(notification_id):
+
+    notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
+
+    notification = notification_table.find_one(dict(
+        id=notification_id
+    ))
+
+    if not notification:
+        print 'notification not exists: %s' % notification_id
+        return
+
+    stat_info = dict(
+        dst=0,
+        recv=0,
+        click=0,
+    )
+    if notification.get('stat'):
+        stat_info.update(
+            notification.get('stat')
+        )
+
+    stat_info['recv_rate'] = 0 if stat_info['dst'] == 0 else 1.0 * stat_info['recv'] / stat_info['dst']
+    stat_info['click_rate'] = 0 if stat_info['recv'] == 0 else 1.0 * stat_info['click'] / stat_info['recv']
+
+    print u'目标数: %s' % stat_info['dst']
+    print u'触达数: %s' % stat_info['recv']
+    print u'点击数: %s' % stat_info['click']
+    print u'触达率: %.02f%%' % (stat_info['recv_rate'] * 100)
+    print u'点击率: %.02f%%' % (stat_info['click_rate'] * 100)
 
 if __name__ == '__main__':
     manager.run()

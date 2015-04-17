@@ -89,6 +89,9 @@ public class PushService extends Service {
                         // 不删除了，因为有时候顺序会很奇怪
                         // removeUser();
                         break;
+                    case Proto.CMD_NOTIFICATION_CLICK:
+                        clickNotification(intent.getIntExtra("notification_id", 0));
+                        break;
                 }
             }
         }
@@ -133,7 +136,11 @@ public class PushService extends Service {
                 if (box.cmd == Proto.EVT_NOTIFICATION) {
                     if (jsonData != null) {
                         try {
-                            showNotification(jsonData.getString("title"), jsonData.getString("content"));
+                            int notificationID = jsonData.getInt("id");
+
+                            recvNotification(notificationID);
+
+                            showNotification(notificationID, jsonData.getString("title"), jsonData.getString("content"));
                         } catch (Exception e) {
                             KLog.e(String.format("exc occur. e: %s, box: %s", e, box));
                         }
@@ -281,6 +288,64 @@ public class PushService extends Service {
         }
     }
 
+    private boolean recvNotification(int notificationID) {
+        Box box = new Box();
+        box.cmd = Proto.CMD_NOTIFICATION_RECV;
+
+        JSONObject jsonObject = new JSONObject();
+        try{
+            jsonObject.put("notification_id", notificationID);
+            KLog.d("json: " + jsonObject.toString());
+
+            String body = Utils.packData(jsonObject);
+            box.body = body == null ? null:body.getBytes();
+        }
+        catch (Exception e) {
+            KLog.e("exc occur. e: " + e);
+            return false;
+        }
+
+        // 因为一定是在主线程里操作
+        if (userAuthed) {
+            // 其实是可以支持回调的
+            Ferry.getInstance().send(box);
+            return true;
+        }
+        else {
+            // 不要阻塞
+            return pendingMsgs.offer(box);
+        }
+    }
+
+    private boolean clickNotification(int notificationID) {
+        Box box = new Box();
+        box.cmd = Proto.CMD_NOTIFICATION_CLICK;
+
+        JSONObject jsonObject = new JSONObject();
+        try{
+            jsonObject.put("notification_id", notificationID);
+            KLog.d("json: " + jsonObject.toString());
+
+            String body = Utils.packData(jsonObject);
+            box.body = body == null ? null:body.getBytes();
+        }
+        catch (Exception e) {
+            KLog.e("exc occur. e: " + e);
+            return false;
+        }
+
+        // 因为一定是在主线程里操作
+        if (userAuthed) {
+            // 其实是可以支持回调的
+            Ferry.getInstance().send(box);
+            return true;
+        }
+        else {
+            // 不要阻塞
+            return pendingMsgs.offer(box);
+        }
+    }
+
     private boolean removeUser() {
         Box box = new Box();
         box.cmd = Proto.CMD_REMOVE_USER;
@@ -327,7 +392,7 @@ public class PushService extends Service {
         }
     }
 
-    private void showNotification(String title, String content) {
+    private void showNotification(int ID, String title, String content) {
         //消息通知栏
         //定义NotificationManager
         String ns = Context.NOTIFICATION_SERVICE;
@@ -338,8 +403,12 @@ public class PushService extends Service {
 
         //定义下拉通知栏时要展现的内容信息
         Intent notificationIntent = new Intent(this, PushActivity.class);
+        // 让activiy可以取到
+        notificationIntent.putExtra("notification_id", ID);
+
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
+
         Notification notification = new Notification(DeviceInfo.getAppIconId(), tickerText, when);
         notification.setLatestEventInfo(this, title, content,
                 contentIntent);
@@ -353,8 +422,7 @@ public class PushService extends Service {
         */
 
         //用mNotificationManager的notify方法通知用户生成标题栏消息通知
-        int nfyid = 0;
-        mNotificationManager.notify(nfyid, notification);
+        mNotificationManager.notify(ID, notification);
     }
 
     private class AllocServerTask extends AsyncTask<String, Integer, Integer> {

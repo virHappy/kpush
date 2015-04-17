@@ -17,6 +17,20 @@ public class PushActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent comingIntent = getIntent();
+        int notificationID = comingIntent.getIntExtra("notification_id", 0);
+
+        KLog.d("notification_id: " + notificationID);
+
+        sendClickNotificationMsg(notificationID);
+
+        openAppMainActivity();
+
+        // 关闭自己
+        this.finish();
+    }
+
+    private void openAppMainActivity() {
         Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
         resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         resolveIntent.setPackage(DeviceInfo.getPackageName());
@@ -41,8 +55,15 @@ public class PushActivity extends Activity {
             intent.setComponent(cn);
             startActivity(intent);
         }
+    }
 
-        // 关闭自己
-        this.finish();
+    private void sendClickNotificationMsg(int notificationID) {
+        Intent serviceIntent = new Intent();
+
+        serviceIntent.setAction(Constants.INTENT_ACTION_SEND_MSG);
+        serviceIntent.putExtra("cmd", Proto.CMD_NOTIFICATION_CLICK);
+        serviceIntent.putExtra("notification_id", notificationID);
+
+        startService(serviceIntent);
     }
 }

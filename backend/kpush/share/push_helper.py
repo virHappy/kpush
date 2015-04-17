@@ -41,6 +41,8 @@ class PushHelper(object):
             appid = appinfo['appid']
 
         match_uids = self.find_match_uids(appid, alias, tags_or)
+        if not match_uids:
+            return match_uids
 
         # 要对uids分组
         uids_list = [[] for it in range(0, len(kit.triggers))]
@@ -58,6 +60,8 @@ class PushHelper(object):
                     body=pack_data(notification)
                 )],
             ])
+
+        return match_uids
 
     def find_match_uids(self, appid, alias=None, tags_or=None):
         """

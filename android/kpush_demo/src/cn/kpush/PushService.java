@@ -396,7 +396,7 @@ public class PushService extends Service {
         //消息通知栏
         //定义NotificationManager
         String ns = Context.NOTIFICATION_SERVICE;
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(ns);
         //定义通知栏展现的内容信息
         CharSequence tickerText = title;
         long when = System.currentTimeMillis();
@@ -407,7 +407,7 @@ public class PushService extends Service {
         notificationIntent.putExtra("notification_id", ID);
 
         // 对于FLAG_UPDATE_CURRENT,如果上面的num为常量， 则所有对应的Intent里面的extra被更新为最新的， 就是全部为最后一次的。
-        // 相反，如果num每次不一样，则里面的Inent的数据没被更新。
+        // 相反，如果num每次不一样，则里面的Intent的数据没被更新。
         // 所以要通过extra数据来区分intent，应采用PendingIntent.FLAG_UPDATE_CURRENT)，且每次num不一样
         PendingIntent contentIntent = PendingIntent.getActivity(this, ID,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -425,7 +425,7 @@ public class PushService extends Service {
         */
 
         //用mNotificationManager的notify方法通知用户生成标题栏消息通知
-        mNotificationManager.notify(ID, notification);
+        notificationManager.notify(ID, notification);
     }
 
     private class AllocServerTask extends AsyncTask<String, Integer, Integer> {

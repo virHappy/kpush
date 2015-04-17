@@ -131,9 +131,11 @@ class PushHelper(object):
             content=content,
             query=query,
             create_time=datetime.datetime.now(),
-            dst_users_count=dst_users_count,
-            recv_users_count=0,  # 收到通知的用户数
-            click_users_count=0,  # 点击通知的用户数
+            stat=dict(
+                dst=dst_users_count,
+                recv=0,  # 收到通知的用户数
+                click=0,  # 点击通知的用户数
+            )
         ))
 
         return notification_id

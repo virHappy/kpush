@@ -6,7 +6,7 @@ from share.kit import kit
 from flask import current_app
 from share.log import web_logger
 from share import proto
-from share.utils import pack_data
+from share.utils import pack_data, alloc_autoid
 
 
 class PushHelper(object):
@@ -68,7 +68,7 @@ class PushHelper(object):
                 [uids, dict(
                     cmd=proto.EVT_NOTIFICATION,
                     body=pack_data(dict(
-                        id=str(notification_id),
+                        id=notification_id,
                         title=title,
                         content=content,
                     ))
@@ -123,7 +123,10 @@ class PushHelper(object):
 
         notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 
-        notification_id = notification_table.save(dict(
+        notification_id = alloc_autoid('notification')
+
+        notification_table.save(dict(
+            id=notification_id,
             title=title,
             content=content,
             query=query,

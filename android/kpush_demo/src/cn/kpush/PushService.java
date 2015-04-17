@@ -404,6 +404,7 @@ public class PushService extends Service {
         //定义下拉通知栏时要展现的内容信息
         Intent notificationIntent = new Intent(this, PushActivity.class);
         // 让activiy可以取到
+        // FIXME activity取不到
         notificationIntent.putExtra("notification_id", ID);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,

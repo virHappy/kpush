@@ -166,8 +166,8 @@ def runworker(host, port, debug, workers):
 
 
 @manager.option('-k', '--appkey', dest='appkey')
-@manager.option(dest='appname')
-def addapp(appname, appkey):
+@manager.option(dest='package')
+def addapp(package, appkey):
     appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
 
     if appkey:
@@ -185,11 +185,11 @@ def addapp(appname, appkey):
     appinfo_table.insert({
         "appid": appid,
         "appkey": appkey,
-        "appname": appname,
+        "package": package,
         "appsecret": appsecret,
     })
 
-    print "appid: %s, appkey: %s, appname: %s" % (appid, appkey, appname)
+    print "appid: %s, appkey: %s, package: %s, appsecret: %s" % (appid, appkey, package, appsecret)
 
 
 @manager.option('-g', '--tags', dest='tags_or', action='append')

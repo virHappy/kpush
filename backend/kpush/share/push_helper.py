@@ -33,7 +33,11 @@ class PushHelper(object):
         if appid is None:
             assert appkey is not None, "if appid is None, appkey should not be None"
 
-            appinfo = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
+            appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
+            appinfo = appinfo_table.find_one(dict(
+                appkey=appkey
+            ))
+
             if not appinfo:
                 web_logger.error('appinfo not found: %s', appkey)
                 return False

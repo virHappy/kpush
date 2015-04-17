@@ -1,7 +1,7 @@
 # kpush
 开源android push解决方案
 
-### 设计思路
+### 一. 设计思路
 
 服务器端是用 [maple](http://github.com/dantezhu/maple)，客户端使用 [ferry](http://github.com/dantezhu/ferry)
 
@@ -27,7 +27,7 @@
     这个要用到数据存储了
 
 
-### 部署配置
+### 二. 部署配置
 
 supervisor配置:
 

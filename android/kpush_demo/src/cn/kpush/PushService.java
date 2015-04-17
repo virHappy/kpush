@@ -37,7 +37,7 @@ public class PushService extends Service {
     // 一开始就是未验证通过的
     private boolean userAuthed;
 
-    private ArrayBlockingQueue<Box> pendingMsg = new ArrayBlockingQueue<Box>(Constants.MAX_PENDING_MSG);
+    private ArrayBlockingQueue<Box> pendingMsgs = new ArrayBlockingQueue<Box>(Constants.MAX_PENDING_MSG);
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -60,6 +60,9 @@ public class PushService extends Service {
         regEventCallback();
 
         allocServer();
+
+        // 启动心跳
+        heartbeat();
     }
 
     @Override
@@ -93,7 +96,7 @@ public class PushService extends Service {
             @Override
             public void onOpen() {
 
-                userKLogin();
+                userLogin();
             }
 
             @Override
@@ -131,7 +134,7 @@ public class PushService extends Service {
         }, this, "main");
     }
 
-    private void userKLogin() {
+    private void userLogin() {
 
         Box box = new Box();
         box.cmd = Proto.CMD_LOGIN;
@@ -165,33 +168,35 @@ public class PushService extends Service {
 
                 if (box.ret != 0) {
                     // 几秒后再重试
-                    userKLoginLater();
+                    userLoginLater();
                 } else {
                     // 登录成功
                     userAuthed = true;
+
+                    sendPendingMsgs();
                 }
             }
 
             @Override
             public void onError(int code, IBox ibox) {
                 KLog.d(String.format("code: %s, box: %s", code, ibox));
-                userKLoginLater();
+                userLoginLater();
             }
 
             @Override
             public void onTimeout() {
                 KLog.d("");
 
-                userKLoginLater();
+                userLoginLater();
             }
         }, 5, this);
     }
 
-    private void userKLoginLater() {
+    private void userLoginLater() {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                userKLogin();
+                userLogin();
             }
         }, Constants.ERROR_RETRY_INTERVAL * 1000);
     }
@@ -238,7 +243,37 @@ public class PushService extends Service {
         }
         else {
             // 不要阻塞
-            return pendingMsg.offer(box);
+            return pendingMsgs.offer(box);
+        }
+    }
+
+    private void heartbeat() {
+        Box box = new Box();
+        box.cmd = Proto.CMD_HEARTBEAT;
+
+        if (Ferry.getInstance().isConnected()) {
+            // 心跳
+            Ferry.getInstance().send(box);
+        }
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                heartbeat();
+            }
+        }, Constants.HEARTBEAT_INTERVAL);
+    }
+
+    private void sendPendingMsgs() {
+        while (true) {
+            // 不阻塞
+            Box box = pendingMsgs.poll();
+            if (box == null) {
+                break;
+            }
+
+            // 其实还是可以有回调的
+            Ferry.getInstance().send(box);
         }
     }
 

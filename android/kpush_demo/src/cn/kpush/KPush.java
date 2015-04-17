@@ -14,14 +14,18 @@ public class KPush {
     public static void init(Context context) {
         KPush.context = context;
 
-        startService();
-    }
-
-    private static void startService() {
-        // 启动service
-        //Intent intent = new Intent(context, PushService.class);
         Intent intent = new Intent();
         intent.setAction(Constants.INTENT_ACTION_SERVICE_START);
+        context.startService(intent);
+    }
+
+    public static void setAliasAndTags(String alias, String[] tags) {
+        Intent intent = new Intent();
+        intent.setAction(Constants.INTENT_ACTION_SEND_MSG);
+        intent.putExtra("cmd", Proto.CMD_SET_ALIAS_AND_TAGS);
+        intent.putExtra("alias", alias);
+        intent.putExtra("tags", tags);
+
         context.startService(intent);
     }
 

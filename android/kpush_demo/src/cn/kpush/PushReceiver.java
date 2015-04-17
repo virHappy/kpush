@@ -14,11 +14,9 @@ public class PushReceiver extends BroadcastReceiver {
         KLog.d(String.format("action: %s, data: %s", intent.getAction(), intent.getData()));
         Intent serviceIntent = new Intent();
 
-        if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
-            serviceIntent.setAction(Constants.INTENT_ACTION_PACKAGE_ADDED);
-        }
-        else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
-            serviceIntent.setAction(Constants.INTENT_ACTION_PACKAGE_REMOVED);
+        if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
+            serviceIntent.setAction(Constants.INTENT_ACTION_SEND_MSG);
+            serviceIntent.putExtra("cmd", Proto.CMD_REMOVE_USER);
         }
         else {
             // Intent.ACTION_USER_PRESENT 是在锁屏操作触发的，并不实时

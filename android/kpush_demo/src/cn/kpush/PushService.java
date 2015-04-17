@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import cn.vimer.ferry.Ferry;
@@ -17,6 +18,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
@@ -69,7 +71,27 @@ public class PushService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 每次发intent都会进来，可以重复进入
         KLog.d("action: " + (intent == null ? null : intent.getAction()));
-        return super.onStartCommand(intent, flags, startId);
+        int result = super.onStartCommand(intent, flags, startId);
+
+        if (intent != null) {
+            if (intent.getAction().equals(Constants.INTENT_ACTION_SEND_MSG)) {
+                switch (intent.getIntExtra("cmd", 0)) {
+                    case Proto.CMD_SET_ALIAS_AND_TAGS:
+                        // 设置
+                        setAliasAndTags(
+                                intent.getStringExtra("alias"),
+                                intent.getStringArrayExtra("tags")
+                        );
+                        break;
+                    case Proto.CMD_REMOVE_USER:
+                        // 删除
+                        removeUser();
+                        break;
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -234,6 +256,22 @@ public class PushService extends Service {
             KLog.e("exc occur. e: " + e);
             return false;
         }
+
+        // 因为一定是在主线程里操作
+        if (userAuthed) {
+            // 其实是可以支持回调的
+            Ferry.getInstance().send(box);
+            return true;
+        }
+        else {
+            // 不要阻塞
+            return pendingMsgs.offer(box);
+        }
+    }
+
+    private boolean removeUser() {
+        Box box = new Box();
+        box.cmd = Proto.CMD_REMOVE_USER;
 
         // 因为一定是在主线程里操作
         if (userAuthed) {

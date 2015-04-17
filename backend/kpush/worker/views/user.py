@@ -118,3 +118,38 @@ def set_alias_and_tags(request):
     request.write_to_client(dict(
         ret=0
     ))
+
+
+@bp.route(proto.CMD_HEARTBEAT)
+@login_required
+def heartbeat(request):
+    """
+    心跳
+    :param request:
+    :return:
+    """
+    request.write_to_client(dict(
+        ret=0
+    ))
+
+
+@bp.route(proto.CMD_REMOVE_USER)
+@login_required
+def remove_user(request):
+    """
+    删除自己
+    :param request:
+    :return:
+    """
+
+    user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_USER']]
+
+    user_table.remove(dict(
+        uid=request.gw_box.uid
+    ))
+
+    request.write_to_client(
+        dict(
+            ret=0
+        )
+    )

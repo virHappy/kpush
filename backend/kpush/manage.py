@@ -192,5 +192,19 @@ def addapp(appname, appkey):
     print "appid: %s, appkey: %s, appname: %s" % (appid, appkey, appname)
 
 
+@manager.option('-g', '--tags', dest='tags_or', action='append')
+@manager.option('-s', '--alias', dest='alias')
+@manager.option('-k', '--appkey', dest='appkey')
+@manager.option('-d', '--appid', dest='appid', type=int)
+@manager.option(dest='content')
+@manager.option(dest='title')
+def pushntf(title, content, appid, appkey, alias, tags_or):
+    from share.push_helper import PushHelper
+    push_helper = PushHelper()
+    print push_helper.push_notification(dict(
+        title=title,
+        content=content,
+    ), appid=appid, appkey=appkey, alias=alias, tags_or=tags_or)
+
 if __name__ == '__main__':
     manager.run()

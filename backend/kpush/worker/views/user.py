@@ -10,7 +10,7 @@ from share.log import worker_logger
 from worker.worker_share.utils import login_required
 
 
-bp = Blueprint()
+bp = Blueprint('user')
 
 
 # @bp.route(proto.CMD_REGISTER)

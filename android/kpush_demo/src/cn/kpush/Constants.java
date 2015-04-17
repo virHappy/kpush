@@ -14,6 +14,9 @@ public class Constants {
 
     public static final String PREFS_NAME = "data";
 
+    // 最多缓存的msg
+    public static final int MAX_PENDING_MSG = 500;
+
     // 出错重试的时间（秒）
     public static final int ERROR_RETRY_INTERVAL = 1;
 

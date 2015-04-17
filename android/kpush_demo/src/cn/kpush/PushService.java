@@ -20,6 +20,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import java.util.concurrent.ArrayBlockingQueue;
+
+
 /**
  * Created by dantezhu on 15-4-13.
  */
@@ -31,6 +34,11 @@ public class PushService extends Service {
     private long userId;
     private String userKey;
 
+    // 一开始就是未验证通过的
+    private boolean userAuthed;
+
+    private ArrayBlockingQueue<Box> pendingMsg = new ArrayBlockingQueue<Box>(Constants.MAX_PENDING_MSG);
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -39,6 +47,9 @@ public class PushService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // 初始化的时候
+        userAuthed = false;
 
         // 因为service可能重新进来
         DeviceInfo.init(this);
@@ -105,6 +116,7 @@ public class PushService extends Service {
 
             @Override
             public void onClose() {
+                userAuthed = false;
                 KLog.d("");
                 // Ferry.getInstance().connect();
                 // 从获取IP开始
@@ -154,6 +166,9 @@ public class PushService extends Service {
                 if (box.ret != 0) {
                     // 几秒后再重试
                     userKLoginLater();
+                } else {
+                    // 登录成功
+                    userAuthed = true;
                 }
             }
 
@@ -195,6 +210,36 @@ public class PushService extends Service {
                 allocServer();
             }
         }, Constants.ERROR_RETRY_INTERVAL * 1000);
+    }
+
+    private boolean setAliasAndTags(String alias, String[] tags) {
+        Box box = new Box();
+        box.cmd = Proto.CMD_SET_ALIAS_AND_TAGS;
+
+        JSONObject jsonObject = new JSONObject();
+        try{
+            if (alias != null) {
+                jsonObject.put("alias", alias);
+            }
+            if (tags != null) {
+                jsonObject.put("tags", tags);
+            }
+        }
+        catch (Exception e) {
+            KLog.e("exc occur. e: " + e);
+            return false;
+        }
+
+        // 因为一定是在主线程里操作
+        if (userAuthed) {
+            // 其实是可以支持回调的
+            Ferry.getInstance().send(box);
+            return true;
+        }
+        else {
+            // 不要阻塞
+            return pendingMsg.offer(box);
+        }
     }
 
     private void showNotification(String title, String content) {

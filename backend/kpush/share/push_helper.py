@@ -40,7 +40,7 @@ class PushHelper(object):
 
             if not appinfo:
                 web_logger.error('appinfo not found: %s', appkey)
-                return False
+                return None
 
             appid = appinfo['appid']
 
@@ -52,7 +52,7 @@ class PushHelper(object):
                                                 )
 
         if not match_uids:
-            return match_uids
+            return notification_id, match_uids
 
         # 要对uids分组
         uids_list = [[] for it in range(0, len(kit.triggers))]
@@ -75,7 +75,7 @@ class PushHelper(object):
                 )],
             ])
 
-        return match_uids
+        return notification_id, match_uids
 
     def find_match_uids(self, appid, alias=None, tags_or=None):
         """

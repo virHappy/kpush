@@ -167,5 +167,10 @@ MONGO_TB_ADMIN_USER = 'admin_user'
 
 # 服务器列表
 SERVER_LIST = [
-    ('115.28.224.64', 29000)
+    dict(
+        outer_host='115.28.224.64',
+        outer_port=29000,
+        inner_host='115.28.224.64',
+        inner_port=28000,
+    )
 ]

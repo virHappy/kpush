@@ -56,8 +56,8 @@ def alloc_server():
                 key=user['key'],
             ),
             server=dict(
-                host=server[0],
-                port=server[1],
+                host=server['outer_host'],
+                port=server['outer_port'],
             )
         )
     ), mimetype='application/json')

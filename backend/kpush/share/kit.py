@@ -21,8 +21,8 @@ class Kit(object):
     def triggers(self):
         if self._triggers is None:
             self._triggers = []
-            for host, port in current_app.config['SERVER_LIST']:
-                self._triggers.append(Trigger(Box, host, port))
+            for server in current_app.config['SERVER_LIST']:
+                self._triggers.append(Trigger(Box, server['inner_host'], server['inner_port']))
 
         return self._triggers
 

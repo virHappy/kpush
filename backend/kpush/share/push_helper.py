@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from share.kit import kit
 from flask import current_app
 from share.log import web_logger
@@ -12,13 +14,11 @@ class PushHelper(object):
     发送消息的helper
     """
 
-    def push_notification(self, notification, appid=None, appkey=None, alias=None, tags_or=None):
+    def push_notification(self, title, content, appid=None, appkey=None, alias=None, tags_or=None):
         """
         发送通知
-        :param notification: 发送内容 {
-            title: 标题
-            content: 内容
-        }
+        :param title: 标题
+        :param content: 内容
         :param appid: 如果有appid就直接用
         :param appkey: 需要先把appkey换成appid
         :param alias: 为None代表不过滤
@@ -45,6 +45,12 @@ class PushHelper(object):
             appid = appinfo['appid']
 
         match_uids = self.find_match_uids(appid, alias, tags_or)
+
+        # 保存消息
+        notification_id = self.saveNotification(title=title, content=content, dst_users_count=len(match_uids),
+                                                appid=appid, alias=alias, tags_or=tags_or
+                                                )
+
         if not match_uids:
             return match_uids
 
@@ -61,7 +67,11 @@ class PushHelper(object):
             kit.triggers[i].write_to_users([
                 [uids, dict(
                     cmd=proto.EVT_NOTIFICATION,
-                    body=pack_data(notification)
+                    body=pack_data(dict(
+                        id=str(notification_id),
+                        title=title,
+                        content=content,
+                    ))
                 )],
             ])
 
@@ -103,3 +113,24 @@ class PushHelper(object):
         })
 
         return [user['uid'] for user in users]
+
+    def saveNotification(self, title, content, dst_users_count, **query):
+        """
+        保存起来
+        dst_users: 目标用户数
+        :return:
+        """
+
+        notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
+
+        notification_id = notification_table.save(dict(
+            title=title,
+            content=content,
+            query=query,
+            create_time=datetime.datetime.now(),
+            dst_users_count=dst_users_count,
+            recv_users_count=0,  # 收到通知的用户数
+            click_users_count=0,  # 点击通知的用户数
+        ))
+
+        return notification_id

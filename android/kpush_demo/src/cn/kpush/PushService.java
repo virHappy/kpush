@@ -20,6 +20,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -250,13 +251,23 @@ public class PushService extends Service {
                 jsonObject.put("alias", alias);
             }
             if (tags != null) {
-                jsonObject.put("tags", tags);
+                JSONArray jsonArray = new JSONArray();
+                for(int i=0; i<tags.length; i++) {
+                    jsonArray.put(tags[i]);
+                }
+                jsonObject.put("tags", jsonArray);
             }
+
+            KLog.d("json: " + jsonObject.toString());
+
+            String body = Utils.packData(jsonObject);
+            box.body = body == null ? null:body.getBytes();
         }
         catch (Exception e) {
             KLog.e("exc occur. e: " + e);
             return false;
         }
+
 
         // 因为一定是在主线程里操作
         if (userAuthed) {

@@ -220,10 +220,9 @@ def pushntf(title, content, appid, appkey, alias, str_tags_or):
     else:
         tags_or = None
 
-    print push_helper.push_notification(dict(
-        title=title,
-        content=content,
-    ), appid=appid, appkey=appkey, alias=alias, tags_or=tags_or)
+    print push_helper.push_notification(
+        title, content,
+        appid=appid, appkey=appkey, alias=alias, tags_or=tags_or)
 
 if __name__ == '__main__':
     manager.run()

@@ -26,6 +26,4 @@ public class Constants {
     // 自定义action
     public static final String INTENT_ACTION_SERVICE_START = "cn.kpush.intent.SERVICE_START";
     public static final String INTENT_ACTION_SEND_MSG = "cn.kpush.intent.SEND_MSG";
-    public static final String INTENT_ACTION_PACKAGE_ADDED = "cn.kpush.intent.PACKAGE_ADDED";
-    public static final String INTENT_ACTION_PACKAGE_REMOVED = "cn.kpush.intent.PACKAGE_REMOVED";
 }

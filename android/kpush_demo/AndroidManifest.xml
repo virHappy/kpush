@@ -22,8 +22,6 @@
             <intent-filter>
                 <action android:name="cn.kpush.intent.SERVICE_START"/>
                 <action android:name="cn.kpush.intent.SEND_MSG"/>
-                <action android:name="cn.kpush.intent.PACKAGE_ADDED"/>
-                <action android:name="cn.kpush.intent.PACKAGE_REMOVED"/>
             </intent-filter>
         </service>
 

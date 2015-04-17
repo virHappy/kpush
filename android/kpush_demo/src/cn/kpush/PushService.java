@@ -50,20 +50,17 @@ public class PushService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        KLog.d("");
 
         // 初始化的时候
         userAuthed = false;
 
         // 因为service可能重新进来
         DeviceInfo.init(this);
-        KLog.d("");
-
         handler = new Handler();
 
         regEventCallback();
-
         allocServer();
-
         // 启动心跳
         heartbeat();
     }

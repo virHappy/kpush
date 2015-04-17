@@ -163,3 +163,56 @@ def remove_user(request):
             ret=0
         )
     )
+
+
+@bp.route(proto.CMD_NOTIFICATION_RECV)
+@login_required
+def recv_notification(request):
+    """
+    收到通知
+    :param request:
+    :return:
+    """
+    notification_id = request.json_data['notification_id']
+
+    notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
+
+    user_recv_notifications = request.user.get('recv_notifications', [])
+
+    if notification_id in user_recv_notifications:
+        request.write_to_client(dict(
+            ret=proto.RET_REPEAT_ACTION
+        ))
+        return
+
+    # TODO 加入到用户存储中，并修改stat
+
+    request.write_to_client(dict(
+        ret=0
+    ))
+
+
+@bp.route(proto.CMD_NOTIFICATION_CLICK)
+@login_required
+def click_notification(request):
+    """
+    点击通知
+    :param request:
+    :return:
+    """
+
+    notification_id = request.json_data['notification_id']
+
+    notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
+
+    user_click_notifications = request.user.get('click_notifications', [])
+
+    if notification_id in user_click_notifications:
+        request.write_to_client(dict(
+            ret=proto.RET_REPEAT_ACTION
+        ))
+        return
+
+    request.write_to_client(dict(
+        ret=0
+    ))

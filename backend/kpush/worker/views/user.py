@@ -109,6 +109,14 @@ def set_alias_and_tags(request):
     if request.json_data.get('tags') is not None:
         update_values['tags'] = list(set(request.json_data.get('tags')))
 
+    worker_logger.debug('update_values: %s', update_values)
+
+    if not update_values:
+        request.write_to_client(dict(
+            ret=0
+        ))
+        return
+
     user_table.update({
         'uid': request.gw_box.uid,
     }, {

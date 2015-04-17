@@ -14,5 +14,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
 
         KPush.init(this);
+        KPush.setAliasAndTags("dante", new String[]{"a", "c"});
     }
 }

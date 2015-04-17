@@ -81,11 +81,6 @@ public class PushService extends Service {
                                 intent.getStringArrayExtra("tags")
                         );
                         break;
-                    case Proto.CMD_REMOVE_USER:
-                        // 删除
-                        // 不删除了，因为有时候顺序会很奇怪
-                        // removeUser();
-                        break;
                     case Proto.CMD_NOTIFICATION_CLICK:
                         clickNotification(intent.getIntExtra("notification_id", 0));
                         break;
@@ -331,22 +326,6 @@ public class PushService extends Service {
             KLog.e("exc occur. e: " + e);
             return false;
         }
-
-        // 因为一定是在主线程里操作
-        if (userAuthed) {
-            // 其实是可以支持回调的
-            Ferry.getInstance().send(box);
-            return true;
-        }
-        else {
-            // 不要阻塞
-            return pendingMsgs.offer(box);
-        }
-    }
-
-    private boolean removeUser() {
-        Box box = new Box();
-        box.cmd = Proto.CMD_REMOVE_USER;
 
         // 因为一定是在主线程里操作
         if (userAuthed) {

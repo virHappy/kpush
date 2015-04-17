@@ -213,9 +213,12 @@ def pushntf(title, content, appid, appkey, alias, str_tags_or):
     push_helper = PushHelper()
 
     # 这样获取到的tags是个string
-    tags_or = []
-    for str_tags in str_tags_or:
-        tags_or.append(re.split(r'\s*,\s*', str_tags))
+    if str_tags_or:
+        tags_or = []
+        for str_tags in str_tags_or:
+            tags_or.append(re.split(r'\s*,\s*', str_tags))
+    else:
+        tags_or = None
 
     print push_helper.push_notification(dict(
         title=title,

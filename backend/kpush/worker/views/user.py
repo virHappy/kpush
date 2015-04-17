@@ -177,7 +177,7 @@ def recv_notification(request):
 
     notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 
-    user_recv_notifications = request.user.get('recv_notifications', [])
+    user_recv_notifications = request.user.get('recv_notifications') or []
 
     if notification_id in user_recv_notifications:
         request.write_to_client(dict(
@@ -185,7 +185,23 @@ def recv_notification(request):
         ))
         return
 
-    # TODO 加入到用户存储中，并修改stat
+    # 加入到用户存储中，并修改stat
+    user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_USER']]
+    user_table.update(dict(
+        uid=request.gw_box.uid,
+    ), {
+        '$push': {
+            'recv_notifications': notification_id
+        }
+    })
+
+    notification_table.update(dict(
+        id=notification_id
+    ), {
+        '$inc': {
+            'stat.recv': 1,
+        }
+    })
 
     request.write_to_client(dict(
         ret=0
@@ -205,13 +221,31 @@ def click_notification(request):
 
     notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 
-    user_click_notifications = request.user.get('click_notifications', [])
+    user_click_notifications = request.user.get('click_notifications') or []
 
     if notification_id in user_click_notifications:
         request.write_to_client(dict(
             ret=proto.RET_REPEAT_ACTION
         ))
         return
+
+    # 加入到用户存储中，并修改stat
+    user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_USER']]
+    user_table.update(dict(
+        uid=request.gw_box.uid,
+    ), {
+        '$push': {
+            'click_notifications': notification_id
+        }
+    })
+
+    notification_table.update(dict(
+        id=notification_id
+    ), {
+        '$inc': {
+            'stat.click': 1,
+            }
+    })
 
     request.write_to_client(dict(
         ret=0

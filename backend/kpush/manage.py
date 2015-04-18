@@ -14,7 +14,6 @@ import flask_script
 from flask_script.commands import ShowUrls
 
 from web.application import create_app
-from share.extensions import db
 from share.kit import kit
 from share.utils import alloc_autoid
 
@@ -68,14 +67,6 @@ class GServer(flask_script.Command):
 
 manager.add_command('urls', ShowUrls())
 manager.add_command('rungserver', GServer())
-
-
-@manager.command
-def syncdb():
-    """
-    Create tables
-    """
-    db.create_all()
 
 
 @manager.command

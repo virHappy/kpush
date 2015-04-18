@@ -15,7 +15,7 @@ public class PushReceiver extends BroadcastReceiver {
         Intent serviceIntent = new Intent();
 
         // Intent.ACTION_USER_PRESENT 是在锁屏操作触发的，并不实时
-        serviceIntent.setAction(Constants.INTENT_ACTION_SERVICE_START);
+        serviceIntent.setAction(Config.INTENT_ACTION_SERVICE_START);
 
         context.startService(serviceIntent);
     }

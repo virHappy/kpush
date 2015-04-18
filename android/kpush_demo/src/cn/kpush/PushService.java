@@ -38,7 +38,7 @@ public class PushService extends Service {
     // 一开始就是未验证通过的
     private boolean userAuthed;
 
-    private ArrayBlockingQueue<Box> pendingMsgs = new ArrayBlockingQueue<Box>(Constants.MAX_PENDING_MSGS);
+    private ArrayBlockingQueue<Box> pendingMsgs = new ArrayBlockingQueue<Box>(Config.MAX_PENDING_MSGS);
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -70,7 +70,7 @@ public class PushService extends Service {
         int result = super.onStartCommand(intent, flags, startId);
 
         if (intent != null) {
-            if (intent.getAction().equals(Constants.INTENT_ACTION_SEND_MSG)) {
+            if (intent.getAction().equals(Config.INTENT_ACTION_SEND_MSG)) {
                 switch (intent.getIntExtra("cmd", 0)) {
                     case Proto.CMD_SET_ALIAS_AND_TAGS:
                         // 设置
@@ -217,7 +217,7 @@ public class PushService extends Service {
             public void run() {
                 userLogin();
             }
-        }, Constants.ERROR_RETRY_INTERVAL * 1000);
+        }, Config.ERROR_RETRY_INTERVAL * 1000);
     }
 
 
@@ -233,7 +233,7 @@ public class PushService extends Service {
                 // 重新申请
                 allocServer();
             }
-        }, Constants.ERROR_RETRY_INTERVAL * 1000);
+        }, Config.ERROR_RETRY_INTERVAL * 1000);
     }
 
     private boolean setAliasAndTags(String alias, String[] tags) {
@@ -348,7 +348,7 @@ public class PushService extends Service {
             public void run() {
                 heartbeat();
             }
-        }, Constants.HEARTBEAT_INTERVAL * 1000);
+        }, Config.HEARTBEAT_INTERVAL * 1000);
     }
 
     private void sendPendingMsgs() {
@@ -412,7 +412,7 @@ public class PushService extends Service {
             try{
                 HttpClient httpClient = new DefaultHttpClient();
 
-                HttpPost httpPost = new HttpPost(Constants.ALLOC_SERVER_URL);
+                HttpPost httpPost = new HttpPost(Config.ALLOC_SERVER_URL);
 
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("appkey", DeviceInfo.getAppkey());
@@ -420,8 +420,8 @@ public class PushService extends Service {
                 jsonObject.put("device_id", DeviceInfo.getDeviceId());
                 jsonObject.put("device_name", DeviceInfo.getDeviceName());
                 jsonObject.put("os_version", DeviceInfo.getOsVersion());
-                jsonObject.put("os", Constants.OS);
-                jsonObject.put("sdk_version", Constants.SDK_VERSION);
+                jsonObject.put("os", Config.OS);
+                jsonObject.put("sdk_version", Config.SDK_VERSION);
 
                 KLog.d(jsonObject.toString());
 

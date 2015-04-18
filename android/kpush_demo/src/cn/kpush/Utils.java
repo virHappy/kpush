@@ -73,7 +73,7 @@ public class Utils {
             String data = jsonBody.getString("data");
             String sign = jsonBody.getString("sign");
 
-            String source = Constants.SECRET + "|" + data;
+            String source = Config.SECRET + "|" + data;
 
             String calcSign = genMD5(source);
 
@@ -100,7 +100,7 @@ public class Utils {
             JSONObject jsonBody = new JSONObject();
 
             String data = jsonData.toString();
-            String source = Constants.SECRET + "|" + data;
+            String source = Config.SECRET + "|" + data;
             String sign = genMD5(source);
 
             jsonBody.put("data", data);

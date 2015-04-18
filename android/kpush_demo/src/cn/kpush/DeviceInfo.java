@@ -107,7 +107,7 @@ public class DeviceInfo {
     }
 
     private static void initDeviceId() {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.PREFS_NAME, 0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Config.PREFS_NAME, 0);
 
         String tmpDeviceId = sharedPreferences.getString("device_id", null);
 

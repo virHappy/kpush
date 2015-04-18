@@ -3,10 +3,9 @@ package cn.kpush;
 /**
  * Created by dantezhu on 15-4-13.
  */
-public class Constants {
-    // 自己部署服务器，需要修改这两处地方
-    public static final String DOMAIN = "192.168.0.108:5000";
-    public static final String SECRET = "tmp_secret";
+public class Config {
+    public static final String DOMAIN = LocalConfig.DOMAIN;
+    public static final String SECRET = LocalConfig.SECRET;
 
     public static final String ALLOC_SERVER_URL = "http://" + DOMAIN + "/server/alloc";
 

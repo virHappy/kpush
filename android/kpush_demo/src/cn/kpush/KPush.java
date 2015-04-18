@@ -15,13 +15,13 @@ public class KPush {
         KPush.context = context;
 
         Intent intent = new Intent();
-        intent.setAction(Constants.INTENT_ACTION_SERVICE_START);
+        intent.setAction(Config.INTENT_ACTION_SERVICE_START);
         context.startService(intent);
     }
 
     public static void setAliasAndTags(String alias, String[] tags) {
         Intent intent = new Intent();
-        intent.setAction(Constants.INTENT_ACTION_SEND_MSG);
+        intent.setAction(Config.INTENT_ACTION_SEND_MSG);
         intent.putExtra("cmd", Proto.CMD_SET_ALIAS_AND_TAGS);
         intent.putExtra("alias", alias);
         intent.putExtra("tags", tags);

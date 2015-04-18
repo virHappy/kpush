@@ -59,7 +59,7 @@ public class PushActivity extends Activity {
     private void sendClickNotificationMsg(int notificationID) {
         Intent serviceIntent = new Intent();
 
-        serviceIntent.setAction(Constants.INTENT_ACTION_SEND_MSG);
+        serviceIntent.setAction(Config.INTENT_ACTION_SEND_MSG);
         serviceIntent.putExtra("cmd", Proto.CMD_NOTIFICATION_CLICK);
         serviceIntent.putExtra("notification_id", notificationID);
 

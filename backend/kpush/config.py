@@ -14,12 +14,13 @@ MODE = os.environ.get('MODE')
 
 DEBUG = MODE == DEV_MODE
 
-# 不能随便修改。用作 session、user.password 的密钥
-SECRET_KEY = "4y%zgs*074ibnacl31w2d!l-o$3qaa+lu)w25g*0#e6i_qt1*#305^gij7a+js$i"
+SECRET_KEY = "tmp_secret"
 
 BLUEPRINTS = (
     ('web.views.frontend', ''),
 )
+
+LOGGER_NAME = 'web'
 
 
 class RequireDebugOrNot(logging.Filter):
@@ -143,18 +144,11 @@ LOGGING = {
     }
 }
 
-LOGGER_NAME = 'web'
-
-# flask-sqlalchemy
-SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % os.path.join(BASE_DIR, 'db.sqlite')
-#SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/flask_dpl'
-SQLALCHEMY_ECHO = False
-
 # admin_user
 SESSION_KEY_ADMIN_USERNAME = 'admin_username'
 
 # mongodb
-MONGO_URL = 'mongodb://admin:admin@127.0.0.1:27017/kpush'
+MONGO_URL = 'mongodb://127.0.0.1:27017/kpush'
 
 # 表
 MONGO_TB_AUTOID = 'autoid'
@@ -164,13 +158,15 @@ MONGO_TB_NOTIFICATION = 'notification'
 
 MONGO_TB_ADMIN_USER = 'admin_user'
 
-
 # 服务器列表
 SERVER_LIST = [
     dict(
-        outer_host='115.28.224.64',
+        outer_host='127.0.0.1',
         outer_port=29000,
-        inner_host='115.28.224.64',
+        inner_host='127.0.0.1',
         inner_port=28000,
     )
 ]
+
+# 导入自定义配置
+from local_config import *

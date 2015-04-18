@@ -21,7 +21,6 @@ def register(request):
     :return:
     """
     appinfo = get_appinfo_by_appkey(request.json_data['appkey'])
-    worker_logger.debug("appinfo: %s", appinfo)
 
     if appinfo is None:
         # 报错
@@ -42,8 +41,6 @@ def register(request):
         sdk_version=request.json_data.get('sdk_version'),
     ))
 
-    worker_logger.debug("user: %s", user)
-
     rsp = dict(
         uid=user['uid'],
     )
@@ -63,7 +60,6 @@ def login(request):
     :param request:
     :return:
     """
-    worker_logger.debug(request.json_data)
     user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_USER']]
 
     user = user_table.find_one({
@@ -76,8 +72,6 @@ def login(request):
             ret=proto.RET_NO_DATA
         ))
         return
-
-    worker_logger.debug("user: %s", user)
 
     # 因为现在注册永远是第一步，所以不需要再在login的时候做更新了
     # 只有部分数据要更新，其他的就按照注册的时候来
@@ -109,8 +103,6 @@ def set_alias_and_tags(request):
 
     if request.json_data.get('tags') is not None:
         update_values['tags'] = list(set(request.json_data.get('tags')))
-
-    worker_logger.debug('update_values: %s', update_values)
 
     if not update_values:
         request.write_to_client(dict(
@@ -150,8 +142,6 @@ def remove_user(request):
     :param request:
     :return:
     """
-
-    worker_logger.debug("remove_user: %s", request.gw_box.uid)
 
     user_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_USER']]
 

@@ -2,6 +2,7 @@ package cn.kpush;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 
 /**
@@ -10,6 +11,7 @@ import android.content.Intent;
 public class KPush {
 
     private static Context context = null;
+    private static boolean debug = false;
 
     public static void init(Context context) {
         KPush.context = context;
@@ -17,6 +19,14 @@ public class KPush {
         Intent intent = new Intent();
         intent.setAction(Config.INTENT_ACTION_SERVICE_START);
         context.startService(intent);
+    }
+
+    public static void setDebug(boolean debug) {
+        KPush.debug = debug;
+
+        if (debug) {
+            KLog.setLevel(Log.DEBUG);
+        }
     }
 
     public static void setAliasAndTags(String alias, String[] tags) {

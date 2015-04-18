@@ -6,14 +6,14 @@ public class KLog {
     /**
      * 对外static调用
      */
-    private static Logger instance = getLogger("kpush");
+    private static KLog instance = getLogger("kpush");
 
-    public static Logger getLogger(String tag) {
-        return new Logger(tag);
+    public static KLog getLogger(String tag) {
+        return new KLog(tag);
     }
 
     public static void setLevel(int level) {
-        instance.setLevel(level);
+        instance.setLoggerLevel(level);
     }
 
     public static void v(String msg){
@@ -32,91 +32,89 @@ public class KLog {
         instance.error(msg);
     }
 
-    private static class Logger {
-        /**
-         * log tag
-         */
-        private String tag = null;//application name
-        private int level = Log.ERROR; // 默认级别
+    /**
+     * log tag
+     */
+    private String tag = null;//application name
+    private int level = Log.ERROR; // 默认级别
 
-        public Logger(String tag) {
-            this.tag = tag;
-        }
+    public KLog(String tag) {
+        this.tag = tag;
+    }
 
-        public void setLevel(int level) {
-            this.level = level;
-        }
+    public void setLoggerLevel(int level) {
+        this.level = level;
+    }
 
-        /**
-         * 获取函数名称
-         */
-        private String getFunctionName() {
-            StackTraceElement[] sts = Thread.currentThread().getStackTrace();
+    /**
+     * 获取函数名称
+     */
+    private String getFunctionName() {
+        StackTraceElement[] sts = Thread.currentThread().getStackTrace();
 
-            if (sts == null) {
-                return null;
-            }
-
-            for (StackTraceElement st : sts) {
-                if (st.isNativeMethod()) {
-                    continue;
-                }
-
-                if (st.getClassName().equals(Thread.class.getName())) {
-                    continue;
-                }
-
-                if (st.getClassName().equals(this.getClass().getName())) {
-                    continue;
-                }
-
-                return "[" + Thread.currentThread().getName() + "(" + Thread.currentThread().getId()
-                        + ") " + st.getFileName() + ":" + st.getLineNumber() + " " + st.getMethodName() + "]";
-            }
-
+        if (sts == null) {
             return null;
         }
 
-        private String createMessage(String msg) {
-            String functionName = getFunctionName();
-            String message = (functionName == null ? msg : (functionName + ": " + msg));
-            return message;
-        }
-
-        public void verbose(String msg){
-            if (Log.VERBOSE < this.level) {
-                return;
+        for (StackTraceElement st : sts) {
+            if (st.isNativeMethod()) {
+                continue;
             }
 
-            String message = createMessage(msg);
-            Log.v(tag, message);
-        }
-
-        public void debug(String msg){
-            if (Log.DEBUG < this.level) {
-                return;
+            if (st.getClassName().equals(Thread.class.getName())) {
+                continue;
             }
 
-            String message = createMessage(msg);
-            Log.d(tag, message);
-        }
-
-        public void info(String msg){
-            if (Log.INFO < this.level) {
-                return;
+            if (st.getClassName().equals(this.getClass().getName())) {
+                continue;
             }
 
-            String message = createMessage(msg);
-            Log.i(tag, message);
+            return "[" + Thread.currentThread().getName() + "(" + Thread.currentThread().getId()
+                    + ") " + st.getFileName() + ":" + st.getLineNumber() + " " + st.getMethodName() + "]";
         }
 
-        public void error(String msg){
-            if (Log.ERROR < this.level) {
-                return;
-            }
+        return null;
+    }
 
-            String message = createMessage(msg);
-            Log.e(tag, message);
+    private String createMessage(String msg) {
+        String functionName = getFunctionName();
+        String message = (functionName == null ? msg : (functionName + ": " + msg));
+        return message;
+    }
+
+    public void verbose(String msg){
+        if (Log.VERBOSE < this.level) {
+            return;
         }
+
+        String message = createMessage(msg);
+        Log.v(tag, message);
+    }
+
+    public void debug(String msg){
+        if (Log.DEBUG < this.level) {
+            return;
+        }
+
+        String message = createMessage(msg);
+        Log.d(tag, message);
+    }
+
+    public void info(String msg){
+        if (Log.INFO < this.level) {
+            return;
+        }
+
+        String message = createMessage(msg);
+        Log.i(tag, message);
+    }
+
+    public void error(String msg){
+        if (Log.ERROR < this.level) {
+            return;
+        }
+
+        String message = createMessage(msg);
+        Log.e(tag, message);
     }
 }

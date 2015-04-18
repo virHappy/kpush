@@ -14,11 +14,12 @@ class PushHelper(object):
     发送消息的helper
     """
 
-    def push_notification(self, title, content, appid=None, appkey=None, alias=None, tags_or=None):
+    def push_notification(self, title, content, silent=False, appid=None, appkey=None, alias=None, tags_or=None):
         """
         发送通知
         :param title: 标题
         :param content: 内容
+        :param silent: 不弹出
         :param appid: 如果有appid就直接用
         :param appkey: 需要先把appkey换成appid
         :param alias: 为None代表不过滤
@@ -47,7 +48,7 @@ class PushHelper(object):
         match_uids = self.find_match_uids(appid, alias, tags_or)
 
         # 保存消息
-        notification_id = self.saveNotification(title=title, content=content, dst_users_count=len(match_uids),
+        notification_id = self.saveNotification(title, content, silent, dst_users_count=len(match_uids),
                                                 appid=appid, alias=alias, tags_or=tags_or
                                                 )
 
@@ -71,6 +72,7 @@ class PushHelper(object):
                         id=notification_id,
                         title=title,
                         content=content,
+                        silent=silent,
                     ))
                 )],
             ])
@@ -114,7 +116,7 @@ class PushHelper(object):
 
         return [user['uid'] for user in users]
 
-    def saveNotification(self, title, content, dst_users_count, **query):
+    def saveNotification(self, title, content, silent, dst_users_count, **query):
         """
         保存起来
         dst_users: 目标用户数
@@ -129,6 +131,7 @@ class PushHelper(object):
             id=notification_id,
             title=title,
             content=content,
+            silent=silent,
             query=query,
             create_time=datetime.datetime.now(),
             stat=dict(

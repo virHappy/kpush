@@ -4,10 +4,11 @@ package cn.kpush;
  * Created by dantezhu on 15-4-13.
  */
 public class Constants {
+    // 自己部署服务器，需要修改这两处地方
     public static final String DOMAIN = "192.168.0.108:5000";
-    public static final String ALLOC_SERVER_URL = "http://" + DOMAIN + "/server/alloc";
+    public static final String SECRET = "tmp_secret";
 
-    public static final String SECRET = "4y%zgs*074ibnacl31w2d!l-o$3qaa+lu)w25g*0#e6i_qt1*#305^gij7a+js$i";
+    public static final String ALLOC_SERVER_URL = "http://" + DOMAIN + "/server/alloc";
 
     public static final int SDK_VERSION = 1;
     public static final String OS = "android";

@@ -29,12 +29,12 @@
 {% endblock %}
 
 {% block access_control %}
-    <ul class="nav pull-right">
+    <ul class="nav navbar-nav navbar-right">
         {% if g.admin_user %}
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <span class="label label-important">{{ g.admin_user.username }}</span>
-                    <b class="caret"></b>
+            <li role="presentation" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                    <span class="label label-danger">{{ g.admin_user.username }}</span>
+                    <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu" >
                     <li><a tabindex="-1" href="javascript: user_logout();">退出</a></li>

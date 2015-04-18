@@ -38,7 +38,7 @@ public class PushService extends Service {
     // 一开始就是未验证通过的
     private boolean userAuthed;
 
-    private ArrayBlockingQueue<Box> pendingMsgs = new ArrayBlockingQueue<Box>(Constants.MAX_PENDING_MSG);
+    private ArrayBlockingQueue<Box> pendingMsgs = new ArrayBlockingQueue<Box>(Constants.MAX_PENDING_MSGS);
 
     @Override
     public IBinder onBind(Intent intent) {

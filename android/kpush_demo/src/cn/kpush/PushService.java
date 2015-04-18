@@ -489,6 +489,8 @@ public class PushService extends Service {
 
         @Override
         protected void onCancelled() {
+            KLog.d("");
+            allocServerLater();
         }
     }
 

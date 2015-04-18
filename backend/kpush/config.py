@@ -169,4 +169,7 @@ SERVER_LIST = [
 ]
 
 # 导入自定义配置
-from local_config import *
+try:
+    from local_config import *
+except:
+    pass

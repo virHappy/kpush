@@ -129,7 +129,14 @@ public class PushService extends Service {
 
                             recvNotification(notificationID);
 
-                            showNotification(notificationID, jsonData.getString("title"), jsonData.getString("content"));
+                            boolean silent = false;
+                            if (jsonData.has("silent")) {
+                                silent = jsonData.getBoolean("silent");
+                            }
+
+                            if (!silent) {
+                                showNotification(notificationID, jsonData.getString("title"), jsonData.getString("content"));
+                            }
                         } catch (Exception e) {
                             KLog.e(String.format("exc occur. e: %s, box: %s", e, box));
                         }

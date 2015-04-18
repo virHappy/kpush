@@ -184,13 +184,14 @@ def addapp(package, appkey):
     print "appid: %s, appkey: %s, package: %s, appsecret: %s" % (appid, appkey, package, appsecret)
 
 
-@manager.option('-g', '--tags', dest='str_tags_or', action='append')
-@manager.option('-s', '--alias', dest='alias')
+@manager.option('--tags', dest='str_tags_or', action='append')
+@manager.option('--alias', dest='alias')
 @manager.option('-k', '--appkey', dest='appkey')
 @manager.option('-d', '--appid', dest='appid', type=int)
+@manager.option('-s', '--silent', dest='silent', action='store_true')
 @manager.option(dest='content')
 @manager.option(dest='title')
-def pushntf(title, content, appid, appkey, alias, str_tags_or):
+def pushntf(title, content, silent, appid, appkey, alias, str_tags_or):
     """
     python manage.py pushntf "t" "c" -k 7d357c9b4ce1414fb27f077b54fb5a8f -g "a, b" -g c
     :param title:
@@ -213,7 +214,7 @@ def pushntf(title, content, appid, appkey, alias, str_tags_or):
         tags_or = None
 
     result = push_helper.push_notification(
-        title, content,
+        title, content, silent,
         appid=appid, appkey=appkey, alias=alias, tags_or=tags_or)
 
     print 'notification_id: %s\nusers: %s' % (result[0], result[1])

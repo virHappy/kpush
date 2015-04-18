@@ -10,3 +10,12 @@ class LoginForm(Form):
 
     username = StringField(u'帐号', validators=[DataRequired(u'该项不能为空')])
     password = PasswordField(u'密码', validators=[DataRequired(u'该项不能为空')])
+
+
+class NotificationCreateForm(Form):
+    """
+    创建推送
+    """
+
+    username = StringField(u'帐号', validators=[DataRequired(u'该项不能为空')])
+    password = PasswordField(u'密码', validators=[DataRequired(u'该项不能为空')])

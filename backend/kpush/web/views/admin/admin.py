@@ -11,7 +11,7 @@ from passlib.hash import sha256_crypt
 
 from share.extensions import admin
 from share.kit import kit
-from forms import LoginForm
+from forms import LoginForm, NotificationCreateForm
 
 
 def register_views(app):
@@ -101,10 +101,15 @@ class AdminNotificationView(BaseView):
 
         return self.render('admin/notification/index.html', op_type='list', notification_list=notification_list)
 
-    @expose('/send', methods=['GET', 'POST'])
-    def push(self):
+    @expose('/create', methods=['GET', 'POST'])
+    def create(self):
         """
         发送
         :return:
         """
-        pass
+
+        form = NotificationCreateForm()
+        if form.validate_on_submit():
+            return redirect(url_for('adminnotificationview.list'))
+
+        return self.render('admin/notification/index.html', op_type='create', form=form)

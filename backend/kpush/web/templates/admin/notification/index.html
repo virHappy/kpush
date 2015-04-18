@@ -2,8 +2,8 @@
 
 {% block body %}
     <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#">历史推送</a></li>
-        <li role="presentation"><a href="#">新推送</a></li>
+        <li role="presentation" {% if op_type == 'list' %} class="active" {% endif %}><a href="{{ url_for("adminnotificationview.list") }}">历史推送</a></li>
+        <li role="presentation" {% if op_type == 'create' %} class="active" {% endif %}><a href="{{ url_for("adminnotificationview.create") }}">新推送</a></li>
     </ul>
     {% if op_type == 'list' %}
         <div class="col-sm-12">
@@ -42,6 +42,6 @@
             </table>
         </div>
     {% elif op_type == 'create' %}
-
+{{ form }}
     {% endif %}
 {% endblock %}

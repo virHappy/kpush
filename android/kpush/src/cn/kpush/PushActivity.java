@@ -41,8 +41,6 @@ public class PushActivity extends Activity {
             String packageName = ri.activityInfo.packageName;
             String className = ri.activityInfo.name;
 
-            KLog.d(String.format("packageName: %s, className: %s", packageName, className));
-
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
 

@@ -7,6 +7,7 @@ import random
 import uuid
 import re
 import json
+import pprint
 
 from flask import current_app
 from flask import render_template_string
@@ -186,12 +187,13 @@ def addapp(package, appkey):
 
 @manager.option('--tags', dest='str_tags_or', action='append')
 @manager.option('--alias', dest='alias')
+@manager.option('--all', dest='all', action='store_true')
 @manager.option('-k', '--appkey', dest='appkey')
 @manager.option('-d', '--appid', dest='appid', type=int)
 @manager.option('-s', '--silent', dest='silent', action='store_true')
 @manager.option(dest='content')
 @manager.option(dest='title')
-def pushntf(title, content, silent, appid, appkey, alias, str_tags_or):
+def pushntf(title, content, silent, appid, appkey, all, alias, str_tags_or):
     """
     python manage.py pushntf "t" "c" -k 7d357c9b4ce1414fb27f077b54fb5a8f -g "a, b" -g c
     :param title:
@@ -202,6 +204,12 @@ def pushntf(title, content, silent, appid, appkey, alias, str_tags_or):
     :param str_tags_or:
     :return:
     """
+
+    if not (all or alias or str_tags_or):
+        # 起码要指定一个
+        print 'please special one at least: --all, --alias, --tags'
+        return
+
     from share.push_helper import PushHelper
     push_helper = PushHelper()
 
@@ -212,6 +220,10 @@ def pushntf(title, content, silent, appid, appkey, alias, str_tags_or):
             tags_or.append(re.split(r'\s*,\s*', str_tags))
     else:
         tags_or = None
+
+    if all:
+        # 强制赋值为None，即使其无效
+        alias = str_tags_or = None
 
     result = push_helper.push_notification(
         title, content, silent,
@@ -251,6 +263,7 @@ def statntf(notification_id):
     print u'点击数: %s' % stat_info['click']
     print u'触达率: %.02f%%' % (stat_info['recv_rate'] * 100)
     print u'点击率: %.02f%%' % (stat_info['click_rate'] * 100)
+    print u'详细内容:\n%s' % pprint.pformat(notification, indent=4)
 
 if __name__ == '__main__':
     manager.run()

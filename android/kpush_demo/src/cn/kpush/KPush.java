@@ -13,20 +13,27 @@ public class KPush {
     private static Context context = null;
     private static boolean debug = false;
 
-    public static void init(Context context) {
-        KPush.context = context;
+    public static void init(Context context_) {
+        context = context_;
 
         Intent intent = new Intent();
         intent.setAction(Config.INTENT_ACTION_SERVICE_START);
-        context.startService(intent);
+        context_.startService(intent);
     }
 
-    public static void setDebug(boolean debug) {
-        KPush.debug = debug;
+    public static void setDebug(boolean debug_) {
+        debug = debug_;
 
         if (debug) {
             KLog.setLevel(Log.DEBUG);
         }
+        else {
+            KLog.setLevel(Log.ERROR);
+        }
+    }
+
+    public static boolean getDebug() {
+        return debug;
     }
 
     public static void setAliasAndTags(String alias, String[] tags) {

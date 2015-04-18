@@ -29,8 +29,8 @@ public class DeviceInfo {
 
     private static Context context = null;
 
-    public static void init(Context context) {
-        DeviceInfo.context = context;
+    public static void init(Context context_) {
+        context = context_;
 
         initVals();
 

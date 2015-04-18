@@ -7,7 +7,6 @@ from flask import redirect, url_for, flash
 from flask import session, request, g, current_app
 from flask import Markup
 from flask_admin import AdminIndexView, BaseView, expose
-from flask_admin.contrib.sqla import ModelView
 from passlib.hash import sha256_crypt
 
 from share.extensions import admin
@@ -26,6 +25,7 @@ def register_views(app):
         ))
 
     admin.add_view(AdminAuthView())
+    admin.add_view(AdminNotificationView(name=u'推送'))
 
 
 class AdminAuthView(BaseView):
@@ -67,3 +67,24 @@ class AdminAuthView(BaseView):
         session.pop(current_app.config['SESSION_KEY_ADMIN_USERNAME'], None)
         return redirect(url_for('admin.index'))
 
+
+class AdminNotificationView(BaseView):
+
+    def is_accessible(self):
+        return g.admin_user
+
+    @expose('/')
+    def list(self):
+        """
+        返回主界面
+        :return:
+        """
+        return self.render('admin/notification/list.html')
+
+    @expose('/send', methods=['GET', 'POST'])
+    def push(self):
+        """
+        发送
+        :return:
+        """
+        pass

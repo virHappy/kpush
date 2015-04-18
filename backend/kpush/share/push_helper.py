@@ -14,43 +14,35 @@ class PushHelper(object):
     发送消息的helper
     """
 
-    def push_notification(self, title, content, silent=False, appid=None, appkey=None, alias=None, tags_or=None):
+    def push_notification(self, title, content, appid, query, silent=False):
         """
         发送通知
         :param title: 标题
         :param content: 内容
-        :param silent: 不弹出
         :param appid: 如果有appid就直接用
-        :param appkey: 需要先把appkey换成appid
-        :param alias: 为None代表不过滤
-        :param tags_or: [
-            ["x", "y", "z"],
-            ["a", "b", "c"],
-        ]
+        :param silent: 不弹出
+        :param query 为{}代表不过滤
+            alias: 为None代表不过滤
+            tags_or: [
+                ["x", "y", "z"],
+                ["a", "b", "c"],
+            ]
         即顶上一层使用 or，底下那层是and
         :return:
         """
 
-        if appid is None:
-            assert appkey is not None, "if appid is None, appkey should not be None"
-
-            appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
-            appinfo = appinfo_table.find_one(dict(
-                appkey=appkey
-            ))
-
-            if not appinfo:
-                web_logger.error('appinfo not found: %s', appkey)
-                return None
-
-            appid = appinfo['appid']
-
-        match_uids = self.find_match_uids(appid, alias, tags_or)
+        match_uids = self.find_match_uids(appid, query)
 
         # 保存消息
-        notification_id = self.saveNotification(title, content, silent, dst_users_count=len(match_uids),
-                                                appid=appid, alias=alias, tags_or=tags_or
-                                                )
+        notification_id = self.saveNotification(dict(
+            title=title,
+            content=content,
+            appid=appid,
+            silent=silent,
+            query=query,
+        ),
+            dst_users_count=len(match_uids),
+        )
 
         if not match_uids:
             return notification_id, match_uids
@@ -79,15 +71,17 @@ class PushHelper(object):
 
         return notification_id, match_uids
 
-    def find_match_uids(self, appid, alias=None, tags_or=None):
+    def find_match_uids(self, appid, query):
         """
         获取匹配的uid列表
         :param appid: appid
-        :param alias: 为None代表不过滤
-        :param tags_or: [
-            ["x", "y", "z"],
-            ["a", "b", "c"],
-        ]
+        :param query
+            all: True，代表全部发送，其他字段就无效了
+            alias: 为None代表不过滤
+            tags_or: [
+                ["x", "y", "z"],
+                ["a", "b", "c"],
+            ]
         即顶上一层使用 or，底下那层是and
         :return:
         """
@@ -95,6 +89,10 @@ class PushHelper(object):
         query_params = dict(
             appid=appid
         )
+
+        alias = query.get('alias')
+        tags_or = query.get('tags_or')
+
         if alias is not None:
             query_params['alias'] = alias
 
@@ -116,7 +114,7 @@ class PushHelper(object):
 
         return [user['uid'] for user in users]
 
-    def saveNotification(self, title, content, silent, dst_users_count, **query):
+    def saveNotification(self, src_notification, dst_users_count):
         """
         保存起来
         dst_users: 目标用户数
@@ -127,18 +125,18 @@ class PushHelper(object):
 
         notification_id = alloc_autoid('notification')
 
-        notification_table.save(dict(
+        notification = dict(
             id=notification_id,
-            title=title,
-            content=content,
-            silent=silent,
-            query=query,
             create_time=datetime.datetime.now(),
             stat=dict(
                 dst=dst_users_count,
                 recv=0,  # 收到通知的用户数
                 click=0,  # 点击通知的用户数
             )
-        ))
+        )
+
+        notification.update(src_notification)
+
+        notification_table.save(notification)
 
         return notification_id

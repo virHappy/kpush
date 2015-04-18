@@ -16,7 +16,7 @@ from flask_script.commands import ShowUrls
 
 from web.application import create_app
 from share.kit import kit
-from share.utils import alloc_autoid
+from share.utils import alloc_autoid, get_appinfo_by_appkey
 
 manager = flask_script.Manager(create_app)
 manager.add_option('-c', '--config', dest='config', required=False)
@@ -204,13 +204,25 @@ def pushntf(title, content, silent, appid, appkey, all, alias, str_tags_or):
     :param str_tags_or:
     :return:
     """
+    from share.push_helper import PushHelper
 
     if not (all or alias or str_tags_or):
         # 起码要指定一个
         print 'please special one at least: --all, --alias, --tags'
         return
 
-    from share.push_helper import PushHelper
+    if not appid:
+        if not appkey:
+            print 'if appid is None, appkey should not be None'
+            return
+        else:
+            appinfo = get_appinfo_by_appkey(appkey)
+            if not appinfo:
+                print 'appkey is invalid'
+                return
+            else:
+                appid = appinfo['appid']
+
     push_helper = PushHelper()
 
     # 这样获取到的tags是个string
@@ -223,11 +235,16 @@ def pushntf(title, content, silent, appid, appkey, all, alias, str_tags_or):
 
     if all:
         # 强制赋值为None，即使其无效
-        alias = str_tags_or = None
+        query = {}
+    else:
+        query = dict(
+            alias=alias,
+            tags_or=tags_or,
+        )
 
     result = push_helper.push_notification(
-        title, content, silent,
-        appid=appid, appkey=appkey, alias=alias, tags_or=tags_or)
+        title, content, appid, query=query, silent=silent
+    )
 
     print 'notification_id: %s\nusers: %s' % (result[0], result[1])
 

@@ -163,9 +163,6 @@ public class PushService extends Service {
         try {
             jsonObject.put("uid", userId);
             jsonObject.put("key", userKey);
-            jsonObject.put("os", Constants.OS);
-            jsonObject.put("sdk_version", Constants.SDK_VERSION);
-            jsonObject.put("os_version", DeviceInfo.getOsVersion());
         } catch (Exception e) {
             KLog.e("exc occur. e: " + e);
         }

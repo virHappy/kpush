@@ -3,6 +3,7 @@ package cn.kpush;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import cn.vimer.ferry.Ferry;
 
 
 /**
@@ -23,6 +24,8 @@ public class KPush {
 
     public static void setDebug(boolean debug_) {
         debug = debug_;
+
+        Ferry.setDebug(debug);
 
         if (debug) {
             KLog.setLevel(Log.DEBUG);

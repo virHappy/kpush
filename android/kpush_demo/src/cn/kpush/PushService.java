@@ -118,7 +118,6 @@ public class PushService extends Service {
 
             @Override
             public void onRecv(IBox ibox) {
-                KLog.d(String.format("box: %s", ibox));
                 Box box = (Box) ibox;
 
                 JSONObject jsonData = Utils.unpackData(box.body);
@@ -149,7 +148,6 @@ public class PushService extends Service {
 
             @Override
             public void onError(int code, IBox ibox) {
-                KLog.d(String.format("code: %s, box: %s", code, ibox));
             }
 
         }, this, "main");
@@ -167,8 +165,6 @@ public class PushService extends Service {
             KLog.e("exc occur. e: " + e);
         }
 
-        KLog.d(jsonObject.toString());
-
         String body = Utils.packData(jsonObject);
 
         box.body = body == null ? null:body.getBytes();
@@ -176,14 +172,11 @@ public class PushService extends Service {
         Ferry.getInstance().send(box, new Ferry.CallbackListener() {
             @Override
             public void onSend(IBox ibox) {
-                KLog.d(String.format("box: %s", ibox));
             }
 
             @Override
             public void onRecv(IBox ibox) {
-                KLog.d(String.format("box: %s", ibox));
                 Box box = (Box) ibox;
-                // KLog.d("data: " + Utils.unpackData(box.body));
 
                 if (box.ret != 0) {
                     // 几秒后再重试
@@ -198,7 +191,6 @@ public class PushService extends Service {
 
             @Override
             public void onError(int code, IBox ibox) {
-                KLog.d(String.format("code: %s, box: %s", code, ibox));
                 userLoginLater();
             }
 
@@ -253,8 +245,6 @@ public class PushService extends Service {
                 jsonObject.put("tags", jsonArray);
             }
 
-            KLog.d("json: " + jsonObject.toString());
-
             String body = Utils.packData(jsonObject);
             box.body = body == null ? null:body.getBytes();
         }
@@ -283,7 +273,6 @@ public class PushService extends Service {
         JSONObject jsonObject = new JSONObject();
         try{
             jsonObject.put("notification_id", notificationID);
-            KLog.d("json: " + jsonObject.toString());
 
             String body = Utils.packData(jsonObject);
             box.body = body == null ? null:body.getBytes();
@@ -312,7 +301,6 @@ public class PushService extends Service {
         JSONObject jsonObject = new JSONObject();
         try{
             jsonObject.put("notification_id", notificationID);
-            KLog.d("json: " + jsonObject.toString());
 
             String body = Utils.packData(jsonObject);
             box.body = body == null ? null:body.getBytes();
@@ -422,8 +410,6 @@ public class PushService extends Service {
                 jsonObject.put("os_version", DeviceInfo.getOsVersion());
                 jsonObject.put("os", Config.OS);
                 jsonObject.put("sdk_version", Config.SDK_VERSION);
-
-                KLog.d(jsonObject.toString());
 
                 String postBody = Utils.packData(jsonObject);
                 if (postBody == null) {

@@ -14,7 +14,7 @@ class PushHelper(object):
     发送消息的helper
     """
 
-    def push_notification(self, title, content, appid, query, silent=False):
+    def push_notification(self, title, content, appid, query, silent=None):
         """
         发送通知
         :param title: 标题
@@ -30,6 +30,8 @@ class PushHelper(object):
         即顶上一层使用 or，底下那层是and
         :return:
         """
+
+        silent = silent or False
 
         match_uids = self.find_match_uids(appid, query)
 

@@ -13,7 +13,7 @@ from share.utils import get_appinfo_by_appkey, create_or_update_user, pack_data
 bp = Blueprint('frontend', __name__)
 
 
-@bp.route('/server/alloc', methods=['GET', 'POST'])
+@bp.route('/server/alloc', methods=['POST'])
 def alloc_server():
     """
     # 方便测试
@@ -61,3 +61,69 @@ def alloc_server():
             )
         )
     ), mimetype='application/json')
+
+
+@bp.route('/api/push', methods=['POST'])
+def push_api():
+    """
+    push的api
+    {
+        title
+        content
+        silent
+        query
+    }
+    :return:
+    """
+    from share.api_utils import unpack_api_data
+    from share.push_helper import PushHelper
+
+    appinfo, json_data = unpack_api_data(request.get_data())
+
+    if appinfo is None or json_data is None:
+        return jsonify(
+            ret=proto.RET_INVALID_PARAMS,
+            error=u'签名验证失败',
+        )
+
+    query = json_data.get('query')
+    if not query:
+        return jsonify(
+            ret=proto.RET_INVALID_PARAMS,
+            error=u'query参数不存在',
+        )
+
+    if not (query.get('all') or query.get('alias') or query.get('tags_or')):
+        return jsonify(
+            ret=proto.RET_INVALID_PARAMS,
+            error=u'query参数不合法, 请至少指定all/alias/tags_or其中一个',
+        )
+
+    if not query.get('title') or not query.get('content'):
+        return jsonify(
+            ret=proto.RET_INVALID_PARAMS,
+            error=u'请指定title和content',
+        )
+
+    if query.get('all'):
+        query = dict()
+    else:
+        query = dict(
+            alias=query.get('alias'),
+            tags_or=query.get('tags_or'),
+        )
+
+    push_helper = PushHelper()
+    notification_id, dst_uids = push_helper.push_notification(
+        json_data.get('title'),
+        json_data.get('content'),
+        appinfo['appid'],
+        query,
+        silent=json_data.get('silent')
+    )
+
+    return jsonify(
+        ret=0,
+        notification_id=notification_id,
+        dst_uids=len(dst_uids),
+    )

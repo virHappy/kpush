@@ -79,7 +79,27 @@ class AdminNotificationView(BaseView):
         返回主界面
         :return:
         """
-        return self.render('admin/notification/list.html')
+        notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
+
+        notification_list = []
+        for src_notification in notification_table.find(dict()).sort([('id', -1)]):
+            notification = dict()
+            notification.update(src_notification)
+
+            notification_stat = notification.get('stat')
+
+            if notification_stat:
+                notification_stat['recv_rate'] = 0 if notification_stat['dst'] == 0 else\
+                    1.0 * notification_stat['recv'] / notification_stat['dst']
+                notification_stat['recv_rate'] = '%.02f%%' % (notification_stat['recv_rate'] * 100)
+
+                notification_stat['click_rate'] = 0 if notification_stat['recv'] == 0 else \
+                    1.0 * notification_stat['click'] / notification_stat['recv']
+                notification_stat['click_rate'] = '%.02f%%' % (notification_stat['click_rate'] * 100)
+
+                notification_list.append(notification)
+
+        return self.render('admin/notification/index.html', op_type='list', notification_list=notification_list)
 
     @expose('/send', methods=['GET', 'POST'])
     def push(self):

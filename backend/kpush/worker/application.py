@@ -25,7 +25,7 @@ def configure_handlers(app):
         内部content json
         """
 
-        worker_logger.debug(request.box)
+        worker_logger.debug('endpoint: %s, box: %s', request.endpoint, request.box)
 
         # 先赋值None
         request.json_data = None

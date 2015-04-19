@@ -120,7 +120,7 @@ class AdminNotificationView(BaseView):
             query = dict()
 
             if not form.all.data:
-                if not form.alias.data and not form.tags:
+                if not form.alias.data and not form.tags.data:
                     form.all.errors.append(u'所有人/别名/标签请至少选择一个')
                     form.alias.errors.append(u'所有人/别名/标签请至少选择一个')
                     form.tags.errors.append(u'所有人/别名/标签请至少选择一个')
@@ -139,7 +139,7 @@ class AdminNotificationView(BaseView):
             if notification_id is not None and dst_users is not None:
                 return redirect(url_for('adminnotificationview.list'))
             else:
-                flash(u'发送失败')
+                flash(u'发送失败', 'error')
                 return self.render('admin/notification/index.html', form=form)
 
         return self.render('admin/notification/index.html', form=form)

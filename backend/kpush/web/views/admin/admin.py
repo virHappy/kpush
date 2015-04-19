@@ -99,7 +99,7 @@ class AdminNotificationView(BaseView):
 
                 notification_list.append(notification)
 
-        return self.render('admin/notification/index.html', op_type='list', notification_list=notification_list)
+        return self.render('admin/notification/index.html', notification_list=notification_list)
 
     @expose('/create', methods=['GET', 'POST'])
     def create(self):
@@ -112,4 +112,4 @@ class AdminNotificationView(BaseView):
         if form.validate_on_submit():
             return redirect(url_for('adminnotificationview.list'))
 
-        return self.render('admin/notification/index.html', op_type='create', form=form)
+        return self.render('admin/notification/index.html', form=form)

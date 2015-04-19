@@ -2,10 +2,10 @@
 
 {% block body %}
     <ul class="nav nav-tabs">
-        <li role="presentation" {% if op_type == 'list' %} class="active" {% endif %}><a href="{{ url_for("adminnotificationview.list") }}">历史推送</a></li>
-        <li role="presentation" {% if op_type == 'create' %} class="active" {% endif %}><a href="{{ url_for("adminnotificationview.create") }}">新推送</a></li>
+        <li role="presentation" {% if request.endpoint == 'adminnotificationview.list' %} class="active" {% endif %}><a href="{{ url_for("adminnotificationview.list") }}">历史推送</a></li>
+        <li role="presentation" {% if request.endpoint == 'adminnotificationview.create' %} class="active" {% endif %}><a href="{{ url_for("adminnotificationview.create") }}">新推送</a></li>
     </ul>
-    {% if op_type == 'list' %}
+    {% if request.endpoint == 'adminnotificationview.list' %}
         <div class="col-sm-12">
             <table class="table table-hover table-striped">
                 <thead>
@@ -41,7 +41,7 @@
 
             </table>
         </div>
-    {% elif op_type == 'create' %}
-{{ form }}
+    {% elif request.endpoint == 'adminnotificationview.create' %}
+        {{ form }}
     {% endif %}
 {% endblock %}

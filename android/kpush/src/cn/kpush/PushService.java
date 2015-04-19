@@ -333,7 +333,6 @@ public class PushService extends Service {
         Box box = new Box();
         box.cmd = Proto.CMD_HEARTBEAT;
 
-        // TODO 检测服务器超时
         if (Ferry.getInstance().isConnected()) {
             // 心跳
             Ferry.getInstance().send(box);
@@ -346,10 +345,12 @@ public class PushService extends Service {
             }
         }, Config.HEARTBEAT_INTERVAL * 1000);
 
-        // 该发送的还是发送
-        if (System.currentTimeMillis() - Ferry.getInstance().getLastRecvTimeMills() > Config.CONN_ALIVE_TIMEOUT * 1000) {
-            // 说明链接已经断开
-            Ferry.getInstance().disconnect();
+        if (Config.CONN_ALIVE_TIMEOUT > 0 && Ferry.getInstance().getLastRecvTimeMills() > 0) {
+            if (System.currentTimeMillis() - Ferry.getInstance().getLastRecvTimeMills() > (Config.CONN_ALIVE_TIMEOUT * 1000)) {
+                // 说明链接已经断开
+                KLog.d("conn alive timeout");
+                Ferry.getInstance().disconnect();
+            }
         }
     }
 

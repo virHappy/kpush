@@ -17,9 +17,9 @@ class NotificationCreateForm(Form):
     创建推送
     """
 
-    appid = SelectField(u'APP', validators=[DataRequired(u'该项不能为空')], coerce=int)
+    appid = SelectField(u'应用', validators=[DataRequired(u'该项不能为空')], coerce=int)
     title = StringField(u'标题', validators=[DataRequired(u'该项不能为空')])
-    content = StringField(u'密码', validators=[DataRequired(u'该项不能为空')])
-    all = BooleanField(u'发送全部', validators=[DataRequired(u'该项不能为空')], default=False)
+    content = StringField(u'内容', validators=[DataRequired(u'该项不能为空')])
+    all = BooleanField(u'所有用户', default=False)
     alias = StringField(u'别名')
     tags = StringField(u'标签')

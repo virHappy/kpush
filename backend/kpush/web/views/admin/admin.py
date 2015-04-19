@@ -11,6 +11,7 @@ from passlib.hash import sha256_crypt
 
 from share.extensions import admin
 from share.kit import kit
+from share.utils import get_appinfo_list
 from forms import LoginForm, NotificationCreateForm
 
 
@@ -109,7 +110,10 @@ class AdminNotificationView(BaseView):
         """
 
         form = NotificationCreateForm()
-        form.appid.choices = [(1, 'ok')]
+
+        # 获取所有appinfo
+        appinfo_list = get_appinfo_list()
+        form.appid.choices = [(appinfo['appid'], appinfo['package'])for appinfo in appinfo_list]
         if form.validate_on_submit():
             return redirect(url_for('adminnotificationview.list'))
 

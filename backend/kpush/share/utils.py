@@ -79,6 +79,16 @@ def get_appinfo_by_appkey(appkey):
     ))
 
 
+def get_appinfo_list(query=None):
+    """
+    获取appinfo列表
+    """
+    query = query or dict()
+    appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
+
+    return appinfo_table.find(query)
+
+
 def create_or_update_user(user_info):
     """
     返回或者创建user

@@ -10,8 +10,8 @@ MONGO_URL = 'mongodb://admin:admin@127.0.0.1:27017/kpush'
 SERVER_LIST = [
     dict(
         outer_host='115.28.224.64',
-        outer_port=29000,
+        outer_port=29100,
         inner_host='115.28.224.64',
-        inner_port=28000,
+        inner_port=28100,
     )
 ]

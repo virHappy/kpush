@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-sm-12">
                 {{ pagination.links }}
-                <table class="table table-hover table-striped">
+                <table class="table table-hover">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -26,7 +26,7 @@
                     </thead>
                     <tbody>
                     {% for notification in notification_list %}
-                        <tr>
+                        <tr {% if special == notification.id|string %} class="success" {% endif %}>
                             <td>{{ notification.id }}</td>
                             <td>{{ notification.package }}</td>
                             <td>{{ notification.title }}</td>

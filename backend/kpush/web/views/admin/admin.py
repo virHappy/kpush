@@ -84,9 +84,12 @@ class AdminAppInfoView(BaseView):
         返回主界面
         :return:
         """
+        special = request.args.get('special')
+
         appinfo_list = get_appinfo_list(sort=[('appid', -1)])
 
-        return self.render('admin/appinfo/index.html', appinfo_list=appinfo_list)
+        return self.render('admin/appinfo/index.html',
+                           appinfo_list=appinfo_list, special=special)
 
     @expose('/create', methods=['GET', 'POST'])
     def create(self):
@@ -101,7 +104,7 @@ class AdminAppInfoView(BaseView):
             appinfo, error = create_appinfo(package=form.package.data)
 
             if appinfo:
-                return redirect(url_for('adminappinfoview.list'))
+                return redirect(url_for('adminappinfoview.list', special=appinfo['appid']))
             else:
                 flash(error, 'error')
                 return self.render('admin/appinfo/index.html', form=form)
@@ -121,6 +124,8 @@ class AdminNotificationView(BaseView):
         :return:
         """
         page = request.args.get('page', type=int) or 1
+        special = request.args.get('special')
+
         per_page = current_app.config['ADMIN_PAGE_PER_SIZE']
 
         appinfo_list = get_appinfo_list()
@@ -158,7 +163,7 @@ class AdminNotificationView(BaseView):
         # print pagination.total, pagination.css_framework, pagination.page, pagination.total_pages
 
         return self.render('admin/notification/index.html',
-                           notification_list=notification_list, pagination=pagination)
+                           notification_list=notification_list, pagination=pagination, special=special)
 
     @expose('/create', methods=['GET', 'POST'])
     def create(self):
@@ -193,7 +198,7 @@ class AdminNotificationView(BaseView):
             push_helper = PushHelper()
             notification_id, dst_users = push_helper.push_notification(form.title.data, form.content.data, form.appid.data, query=query)
             if notification_id is not None and dst_users is not None:
-                return redirect(url_for('adminnotificationview.list'))
+                return redirect(url_for('adminnotificationview.list', special=notification_id))
             else:
                 flash(u'发送失败', 'error')
                 return self.render('admin/notification/index.html', form=form)

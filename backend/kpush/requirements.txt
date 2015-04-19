@@ -1,7 +1,8 @@
 flask
-flask-sqlalchemy
 flask-admin
 flask-wtf
 flask-script
+flask-paginate
 passlib
 maple
+pymongo

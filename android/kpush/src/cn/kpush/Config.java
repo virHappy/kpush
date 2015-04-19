@@ -9,7 +9,7 @@ public class Config {
 
     public static final String ALLOC_SERVER_URL = "http://" + DOMAIN + "/server/alloc";
 
-    public static final int SDK_VERSION = 1;
+    public static final int SDK_VERSION = 2;
     public static final String OS = "android";
 
     public static final String PREFS_NAME = "data";

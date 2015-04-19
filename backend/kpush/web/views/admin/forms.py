@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from wtforms import StringField, PasswordField, SelectField, BooleanField
+from wtforms import StringField, PasswordField, SelectField, BooleanField, IntegerField
 from wtforms.validators import DataRequired
 from flask_wtf import Form
 
@@ -10,6 +10,14 @@ class LoginForm(Form):
 
     username = StringField(u'帐号', validators=[DataRequired(u'该项不能为空')])
     password = PasswordField(u'密码', validators=[DataRequired(u'该项不能为空')])
+
+
+class AppInfoCreateForm(Form):
+    """
+    创建应用
+    """
+
+    package = StringField(u'包名', validators=[DataRequired(u'该项不能为空')])
 
 
 class NotificationCreateForm(Form):

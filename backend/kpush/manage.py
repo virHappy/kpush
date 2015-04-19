@@ -162,7 +162,10 @@ def runworker(host, port, debug, workers):
 @manager.option(dest='package')
 def addapp(package, appkey):
 
-    appinfo = create_appinfo(package, appkey)
+    appinfo, error = create_appinfo(package, appkey)
+    if not appinfo:
+        print error
+        return
     print "appid: %s, appkey: %s, package: %s, appsecret: %s" % (
         appinfo['appid'],
         appinfo['appkey'],

@@ -12,9 +12,9 @@ from passlib.hash import sha256_crypt
 
 from share.extensions import admin
 from share.kit import kit
-from share.utils import get_appinfo_list
+from share.utils import get_appinfo_list, create_appinfo
 from share.push_helper import PushHelper
-from forms import LoginForm, NotificationCreateForm
+from forms import LoginForm, AppInfoCreateForm, NotificationCreateForm
 
 
 def register_views(app):
@@ -94,38 +94,18 @@ class AdminAppInfoView(BaseView):
         :return:
         """
 
-        form = NotificationCreateForm()
+        form = AppInfoCreateForm()
 
-        # 获取所有appinfo
-        appinfo_list = get_appinfo_list()
-        form.appid.choices = [(appinfo['appid'], appinfo['package'])for appinfo in appinfo_list]
         if form.validate_on_submit():
-            query = dict()
+            appinfo, error = create_appinfo(package=form.package.data)
 
-            if not form.all.data:
-                if not form.alias.data and not form.tags.data:
-                    form.all.errors.append(u'所有人/别名/标签请至少选择一个')
-                    form.alias.errors.append(u'所有人/别名/标签请至少选择一个')
-                    form.tags.errors.append(u'所有人/别名/标签请至少选择一个')
-                    return self.render('admin/notification/index.html', form=form)
-
-                if form.alias.data:
-                    query['alias'] = form.alias.data
-
-                if form.tags.data:
-                    query['tags_or'] = [
-                        re.split(r'\s*,\s*', form.tags.data)
-                    ]
-
-            push_helper = PushHelper()
-            notification_id, dst_users = push_helper.push_notification(form.title.data, form.content.data, form.appid.data, query=query)
-            if notification_id is not None and dst_users is not None:
-                return redirect(url_for('adminnotificationview.list'))
+            if appinfo:
+                return redirect(url_for('adminappinfoview.list'))
             else:
-                flash(u'发送失败', 'error')
-                return self.render('admin/notification/index.html', form=form)
+                flash(error, 'error')
+                return self.render('admin/appinfo/index.html', form=form)
 
-        return self.render('admin/notification/index.html', form=form)
+        return self.render('admin/appinfo/index.html', form=form)
 
 
 class AdminNotificationView(BaseView):

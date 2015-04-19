@@ -105,10 +105,14 @@ def create_appinfo(package, appkey=None):
         if appinfo_table.find_one({
             "appkey": appkey
         }):
-            print 'appkey exists'
-            return
+            return None, 'appkey exists'
     else:
         appkey = uuid.uuid4().hex
+
+    if appinfo_table.find_one({
+        "package": package
+    }):
+        return None, 'package exists'
 
     appid = alloc_autoid("appinfo")
     appsecret = uuid.uuid4().hex
@@ -123,7 +127,7 @@ def create_appinfo(package, appkey=None):
 
     appinfo_table.insert(appinfo)
 
-    return appinfo
+    return appinfo, None
 
 
 def create_or_update_user(user_info):

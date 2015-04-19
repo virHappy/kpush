@@ -39,64 +39,17 @@
                 <form action="" class="form-horizontal" method="post">
                     <fieldset>
                         {{ form.csrf_token }}
-                        <div class="form-group {% if form.appid.errors %}has-error{% endif %}">
-                            {{ form.appid.label(class="col-sm-4 col-md-2 control-label") }}
+                        <div class="form-group {% if form.package.errors %}has-error{% endif %}">
+                            {{ form.package.label(class="col-sm-4 col-md-2 control-label") }}
                             <div class="col-sm-6 col-md-4">
-                                {{ form.appid(class='form-control') }}
-                                <span class="help-block">{{ form.appid.errors|first }}</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group {% if form.title.errors %}has-error{% endif %}">
-                            {{ form.title.label(class="col-sm-4 col-md-2 control-label") }}
-                            <div class="col-sm-6 col-md-4">
-                                {{ form.title(class='form-control') }}
-                                <span class="help-block">{{ form.title.errors|first }}</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group {% if form.content.errors %}has-error{% endif %}">
-                            {{ form.content.label(class="col-sm-4 col-md-2 control-label") }}
-                            <div class="col-sm-6 col-md-4">
-                                {{ form.content(class='form-control') }}
-                                <span class="help-block">{{ form.content.errors|first }}</span>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="form-group {% if form.all.errors %}has-error{% endif %}">
-                            {{ form.all.label(class="col-sm-4 col-md-2 control-label") }}
-                            <div class="col-sm-8 col-md-10">
-                                <div class="checkbox">
-                                    <label>
-                                        {{ form.all }}
-                                    </label>
-                                </div>
-                                <span class="help-block">{{ form.all.errors|first }}</span>
-                            </div>
-
-                        </div>
-
-                        <div class="form-group {% if form.alias.errors %}has-error{% endif %}">
-                            {{ form.alias.label(class="col-sm-4 col-md-2 control-label") }}
-                            <div class="col-sm-6 col-md-4">
-                                {{ form.alias(class='form-control') }}
-                                <span class="help-block">{{ form.alias.errors|first }}</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group {% if form.tags.errors %}has-error{% endif %}">
-                            {{ form.tags.label(class="col-sm-4 col-md-2 control-label") }}
-                            <div class="col-sm-6 col-md-4">
-                                {{ form.tags(class='form-control') }}
-                                <span class="help-block">{{ form.tags.errors|first }}</span>
+                                {{ form.package(class='form-control') }}
+                                <span class="help-block">{{ form.package.errors|first }}</span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-sm-offset-4 col-sm-6 col-md-offset-2 col-md-10">
-                                <button type="submit" class="btn btn-primary">立即推送</button>
+                                <button type="submit" class="btn btn-primary">创建</button>
                             </div>
                         </div>
                     </fieldset>

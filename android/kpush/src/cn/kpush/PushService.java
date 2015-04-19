@@ -345,6 +345,12 @@ public class PushService extends Service {
                 heartbeat();
             }
         }, Config.HEARTBEAT_INTERVAL * 1000);
+
+        // 该发送的还是发送
+        if (System.currentTimeMillis() - Ferry.getInstance().getLastRecvTimeMills() > Config.CONN_ALIVE_TIMEOUT * 1000) {
+            // 说明链接已经断开
+            Ferry.getInstance().disconnect();
+        }
     }
 
     private void sendPendingMsgs() {

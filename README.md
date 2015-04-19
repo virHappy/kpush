@@ -42,7 +42,7 @@ supervisor配置:
     [program:kpush_worker]
     environment=PYTHON_EGG_CACHE=/tmp/.python-eggs/
     directory=/kpush/backend/kpush
-    command=/usr/local/bin/python manage.py runworker -p 28000
+    command=/usr/local/bin/python manage.py runworker -p 28100
     user=user_00
     autorestart=true
     redirect_stderr=true

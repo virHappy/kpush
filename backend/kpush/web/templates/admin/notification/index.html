@@ -42,6 +42,25 @@
             </table>
         </div>
     {% elif request.endpoint == 'adminnotificationview.create' %}
-        {{ form }}
+        <div class="col-sm-12">
+            <form action="" class="form-horizontal" method="post">
+                <fieldset>
+                    {{ form.csrf_token }}
+                    <div class="form-group {% if form.appid.errors %}has-error{% endif %}">
+                        {{ form.appid.label(class="col-sm-4 col-md-2 control-label") }}
+                        <div class="col-sm-6 col-md-4">
+                            {{ form.appid(class='form-control') }}
+                            <span class="help-block">{{ form.appid.errors|first }}</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-6 col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-default">登录</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
     {% endif %}
 {% endblock %}

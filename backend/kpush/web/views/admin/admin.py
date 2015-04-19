@@ -109,6 +109,7 @@ class AdminNotificationView(BaseView):
         """
 
         form = NotificationCreateForm()
+        form.appid.choices = [(1, 'ok')]
         if form.validate_on_submit():
             return redirect(url_for('adminnotificationview.list'))
 

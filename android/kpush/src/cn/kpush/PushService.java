@@ -333,6 +333,7 @@ public class PushService extends Service {
         Box box = new Box();
         box.cmd = Proto.CMD_HEARTBEAT;
 
+        // TODO 检测服务器超时
         if (Ferry.getInstance().isConnected()) {
             // 心跳
             Ferry.getInstance().send(box);

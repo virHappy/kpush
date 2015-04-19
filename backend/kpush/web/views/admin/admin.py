@@ -82,12 +82,17 @@ class AdminNotificationView(BaseView):
         返回主界面
         :return:
         """
+        appinfo_list = get_appinfo_list()
+
+        appid2package = dict([(appinfo['appid'], appinfo['package']) for appinfo in appinfo_list])
+
         notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 
         notification_list = []
         for src_notification in notification_table.find(dict()).sort([('id', -1)]):
             notification = dict()
             notification.update(src_notification)
+            notification['package'] = appid2package[notification['appid']]
 
             notification_stat = notification.get('stat')
 

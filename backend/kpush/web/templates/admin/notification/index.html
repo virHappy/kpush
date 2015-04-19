@@ -12,7 +12,7 @@
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>APPID</th>
+                        <th>应用</th>
                         <th>标题</th>
                         <th>内容</th>
                         <th>推送时间</th>
@@ -27,7 +27,7 @@
                     {% for notification in notification_list %}
                         <tr>
                             <td>{{ notification.id }}</td>
-                            <td>{{ notification.appid }}</td>
+                            <td>{{ notification.package }}</td>
                             <td>{{ notification.title }}</td>
                             <td>{{ notification.content }}</td>
                             <td>{{ notification.create_time.strftime("%Y-%m-%d %H:%M:%S") }}</td>

@@ -28,6 +28,7 @@ def register_views(app):
         ))
 
     admin.add_view(AdminAuthView())
+    admin.add_view(AdminAppInfoView(name=u'应用'))
     admin.add_view(AdminNotificationView(name=u'推送'))
 
 
@@ -69,6 +70,62 @@ class AdminAuthView(BaseView):
     def logout(self):
         session.pop(current_app.config['SESSION_KEY_ADMIN_USERNAME'], None)
         return redirect(url_for('admin.index'))
+
+
+class AdminAppInfoView(BaseView):
+
+    def is_accessible(self):
+        return g.admin_user
+
+    @expose('/')
+    def list(self):
+        """
+        返回主界面
+        :return:
+        """
+        appinfo_list = get_appinfo_list(sort=[('appid', -1)])
+
+        return self.render('admin/appinfo/index.html', appinfo_list=appinfo_list)
+
+    @expose('/create', methods=['GET', 'POST'])
+    def create(self):
+        """
+        发送
+        :return:
+        """
+
+        form = NotificationCreateForm()
+
+        # 获取所有appinfo
+        appinfo_list = get_appinfo_list()
+        form.appid.choices = [(appinfo['appid'], appinfo['package'])for appinfo in appinfo_list]
+        if form.validate_on_submit():
+            query = dict()
+
+            if not form.all.data:
+                if not form.alias.data and not form.tags.data:
+                    form.all.errors.append(u'所有人/别名/标签请至少选择一个')
+                    form.alias.errors.append(u'所有人/别名/标签请至少选择一个')
+                    form.tags.errors.append(u'所有人/别名/标签请至少选择一个')
+                    return self.render('admin/notification/index.html', form=form)
+
+                if form.alias.data:
+                    query['alias'] = form.alias.data
+
+                if form.tags.data:
+                    query['tags_or'] = [
+                        re.split(r'\s*,\s*', form.tags.data)
+                    ]
+
+            push_helper = PushHelper()
+            notification_id, dst_users = push_helper.push_notification(form.title.data, form.content.data, form.appid.data, query=query)
+            if notification_id is not None and dst_users is not None:
+                return redirect(url_for('adminnotificationview.list'))
+            else:
+                flash(u'发送失败', 'error')
+                return self.render('admin/notification/index.html', form=form)
+
+        return self.render('admin/notification/index.html', form=form)
 
 
 class AdminNotificationView(BaseView):

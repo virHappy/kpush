@@ -4,6 +4,7 @@ import json
 import hashlib
 from flask import current_app
 import uuid
+import datetime
 from share.kit import kit
 
 
@@ -79,14 +80,50 @@ def get_appinfo_by_appkey(appkey):
     ))
 
 
-def get_appinfo_list(query=None):
+def get_appinfo_list(query=None, sort=None):
     """
     获取appinfo列表
     """
     query = query or dict()
     appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
 
-    return appinfo_table.find(query)
+    result = appinfo_table.find(query)
+    if sort:
+        result.sort(sort)
+
+    return result
+
+
+def create_appinfo(package, appkey=None):
+    """
+    创建appinfo
+    """
+
+    appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
+
+    if appkey:
+        if appinfo_table.find_one({
+            "appkey": appkey
+        }):
+            print 'appkey exists'
+            return
+    else:
+        appkey = uuid.uuid4().hex
+
+    appid = alloc_autoid("appinfo")
+    appsecret = uuid.uuid4().hex
+
+    appinfo = {
+        "appid": appid,
+        "appkey": appkey,
+        "package": package,
+        "appsecret": appsecret,
+        "create_time": datetime.datetime.now()
+        }
+
+    appinfo_table.insert(appinfo)
+
+    return appinfo
 
 
 def create_or_update_user(user_info):

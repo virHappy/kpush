@@ -1,0 +1,107 @@
+{% extends "admin/master.html" %}
+
+{% block body %}
+    <ul class="nav nav-tabs">
+        <li role="presentation" {% if request.endpoint == 'adminappinfoview.list' %} class="active" {% endif %}><a href="{{ url_for("adminappinfoview.list") }}">历史推送</a></li>
+        <li role="presentation" {% if request.endpoint == 'adminappinfoview.create' %} class="active" {% endif %}><a href="{{ url_for("adminappinfoview.create") }}">新推送</a></li>
+    </ul>
+    {% if request.endpoint == 'adminappinfoview.list' %}
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>包名</th>
+                        <th>appid</th>
+                        <th>appkey</th>
+                        <th>appsecret</th>
+                        <th>创建时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for appinfo in appinfo_list %}
+                        <tr>
+                            <td>{{ appinfo.package }}</td>
+                            <td>{{ appinfo.appid }}</td>
+                            <td>{{ appinfo.appkey }}</td>
+                            <td>{{ appinfo.appsecret }}</td>
+                            <td>{{ appinfo.create_time.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    {% elif request.endpoint == 'adminappinfoview.create' %}
+        <div class="row" style="margin-top:30px;">
+            <div class="col-sm-12">
+                <form action="" class="form-horizontal" method="post">
+                    <fieldset>
+                        {{ form.csrf_token }}
+                        <div class="form-group {% if form.appid.errors %}has-error{% endif %}">
+                            {{ form.appid.label(class="col-sm-4 col-md-2 control-label") }}
+                            <div class="col-sm-6 col-md-4">
+                                {{ form.appid(class='form-control') }}
+                                <span class="help-block">{{ form.appid.errors|first }}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group {% if form.title.errors %}has-error{% endif %}">
+                            {{ form.title.label(class="col-sm-4 col-md-2 control-label") }}
+                            <div class="col-sm-6 col-md-4">
+                                {{ form.title(class='form-control') }}
+                                <span class="help-block">{{ form.title.errors|first }}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group {% if form.content.errors %}has-error{% endif %}">
+                            {{ form.content.label(class="col-sm-4 col-md-2 control-label") }}
+                            <div class="col-sm-6 col-md-4">
+                                {{ form.content(class='form-control') }}
+                                <span class="help-block">{{ form.content.errors|first }}</span>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-group {% if form.all.errors %}has-error{% endif %}">
+                            {{ form.all.label(class="col-sm-4 col-md-2 control-label") }}
+                            <div class="col-sm-8 col-md-10">
+                                <div class="checkbox">
+                                    <label>
+                                        {{ form.all }}
+                                    </label>
+                                </div>
+                                <span class="help-block">{{ form.all.errors|first }}</span>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group {% if form.alias.errors %}has-error{% endif %}">
+                            {{ form.alias.label(class="col-sm-4 col-md-2 control-label") }}
+                            <div class="col-sm-6 col-md-4">
+                                {{ form.alias(class='form-control') }}
+                                <span class="help-block">{{ form.alias.errors|first }}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group {% if form.tags.errors %}has-error{% endif %}">
+                            {{ form.tags.label(class="col-sm-4 col-md-2 control-label") }}
+                            <div class="col-sm-6 col-md-4">
+                                {{ form.tags(class='form-control') }}
+                                <span class="help-block">{{ form.tags.errors|first }}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-6 col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-primary">立即推送</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

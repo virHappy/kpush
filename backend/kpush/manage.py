@@ -16,7 +16,7 @@ from flask_script.commands import ShowUrls
 
 from web.application import create_app
 from share.kit import kit
-from share.utils import alloc_autoid, get_appinfo_by_appkey
+from share.utils import alloc_autoid, get_appinfo_by_appkey, create_appinfo
 
 manager = flask_script.Manager(create_app)
 manager.add_option('-c', '--config', dest='config', required=False)
@@ -161,28 +161,14 @@ def runworker(host, port, debug, workers):
 @manager.option('-k', '--appkey', dest='appkey')
 @manager.option(dest='package')
 def addapp(package, appkey):
-    appinfo_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_APPINFO']]
 
-    if appkey:
-        if appinfo_table.find_one({
-            "appkey": appkey
-        }):
-            print 'appkey exists'
-            return
-    else:
-        appkey = uuid.uuid4().hex
-
-    appid = alloc_autoid("appinfo")
-    appsecret = uuid.uuid4().hex
-
-    appinfo_table.insert({
-        "appid": appid,
-        "appkey": appkey,
-        "package": package,
-        "appsecret": appsecret,
-    })
-
-    print "appid: %s, appkey: %s, package: %s, appsecret: %s" % (appid, appkey, package, appsecret)
+    appinfo = create_appinfo(package, appkey)
+    print "appid: %s, appkey: %s, package: %s, appsecret: %s" % (
+        appinfo['appid'],
+        appinfo['appkey'],
+        appinfo['package'],
+        appinfo['appsecret'],
+    )
 
 
 @manager.option('--tags', dest='str_tags_or', action='append')

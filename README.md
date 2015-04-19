@@ -49,3 +49,36 @@ supervisor配置:
     stopsignal=USR1
     stopwaitsecs=10
 
+gateway配置:
+
+    [outer]
+    host=0.0.0.0
+    port=29100
+    backlog=512
+
+    recv_buf_init_size=1024
+    recv_buf_max_size=-1
+
+    conn_timeout_check_interval=60
+    conn_timeout=900
+    conns_maxsize=500000
+
+    [inner]
+    host=0.0.0.0
+    port=28100
+    backlog=512
+
+    recv_buf_init_size=1024
+    recv_buf_max_size=-1
+
+    conns_maxsize=-1
+
+    [log]
+    log_level=error
+    log_dir=logs
+    file_prefix=gw
+    file_max_size=1024
+    file_max_num=20
+
+    [stat]
+    file_name=stat_file

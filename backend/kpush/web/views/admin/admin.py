@@ -196,7 +196,9 @@ class AdminNotificationView(BaseView):
                     ]
 
             push_helper = PushHelper()
-            notification_id, dst_users = push_helper.push_notification(form.title.data, form.content.data, form.appid.data, query=query)
+            notification_id, dst_users = push_helper.push_notification(
+                form.title.data, form.content.data, form.appid.data,
+                query=query, silent=form.silent.data)
             if notification_id is not None and dst_users is not None:
                 return redirect(url_for('adminnotificationview.list', special=notification_id))
             else:

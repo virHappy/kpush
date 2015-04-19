@@ -16,6 +16,7 @@
                         <th>应用</th>
                         <th>标题</th>
                         <th>内容</th>
+                        <th>静默</th>
                         <th>推送时间</th>
                         <th>目标数</th>
                         <th>触达数</th>
@@ -31,6 +32,7 @@
                             <td>{{ notification.package }}</td>
                             <td>{{ notification.title }}</td>
                             <td>{{ notification.content }}</td>
+                            <td>{{ "是" if notification.silent else "否" }}</td>
                             <td>{{ notification.create_time.strftime("%Y-%m-%d %H:%M:%S") }}</td>
                             <td>{{ notification.stat.dst }}</td>
                             <td>{{ notification.stat.recv }}</td>
@@ -75,6 +77,18 @@
                             </div>
                         </div>
 
+                        <div class="form-group {% if form.silent.errors %}has-error{% endif %}">
+                            {{ form.silent.label(class="col-sm-4 col-md-2 control-label") }}
+                            <div class="col-sm-8 col-md-10">
+                                <div class="checkbox">
+                                    <label>
+                                        {{ form.silent }}
+                                    </label>
+                                </div>
+                                <span class="help-block">{{ form.silent.errors|first }}</span>
+                            </div>
+                        </div>
+
                         <hr>
 
                         <div class="form-group {% if form.all.errors %}has-error{% endif %}">
@@ -87,7 +101,6 @@
                                 </div>
                                 <span class="help-block">{{ form.all.errors|first }}</span>
                             </div>
-
                         </div>
 
                         <div class="form-group {% if form.alias.errors %}has-error{% endif %}">

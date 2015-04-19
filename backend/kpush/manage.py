@@ -166,12 +166,11 @@ def addapp(package, appkey):
     if not appinfo:
         print error
         return
-    print "appid: %s, appkey: %s, package: %s, appsecret: %s" % (
-        appinfo['appid'],
-        appinfo['appkey'],
-        appinfo['package'],
-        appinfo['appsecret'],
-    )
+
+    print 'package: %s' % appinfo['package']
+    print 'appid: %s' % appinfo['appid']
+    print 'appkey: %s' % appinfo['appkey']
+    print 'appsecret: %s' % appinfo['appsecret']
 
 
 @manager.option('--tags', dest='str_tags_or', action='append')

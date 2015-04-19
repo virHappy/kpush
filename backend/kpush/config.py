@@ -165,9 +165,9 @@ MONGO_TB_ADMIN_USER = 'admin_user'
 SERVER_LIST = [
     dict(
         outer_host='127.0.0.1',
-        outer_port=29000,
+        outer_port=29100,
         inner_host='127.0.0.1',
-        inner_port=28000,
+        inner_port=28100,
     )
 ]
 

@@ -5,7 +5,7 @@ package cn.kpush;
  */
 public class Config {
     public static final String DOMAIN = LocalConfig.DOMAIN;
-    public static final String SECRET = LocalConfig.SECRET;
+    public static final String SECRET_KEY = LocalConfig.SECRET_KEY;
 
     public static final String ALLOC_SERVER_URL = "http://" + DOMAIN + "/server/alloc";
 

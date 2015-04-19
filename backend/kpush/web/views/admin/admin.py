@@ -8,6 +8,7 @@ from flask import redirect, url_for, flash
 from flask import session, request, g, current_app
 from flask import Markup
 from flask_admin import AdminIndexView, BaseView, expose
+from flask_paginate import Pagination
 from passlib.hash import sha256_crypt
 
 from share.extensions import admin
@@ -119,14 +120,20 @@ class AdminNotificationView(BaseView):
         返回主界面
         :return:
         """
+        page = request.args.get('page', type=int) or 1
+        per_page = current_app.config['ADMIN_PAGE_PER_SIZE']
+
         appinfo_list = get_appinfo_list()
 
         appid2package = dict([(appinfo['appid'], appinfo['package']) for appinfo in appinfo_list])
 
         notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 
+        src_notification_list = notification_table.find(dict()).sort([('id', -1)]). \
+            skip(per_page * (page-1)).limit(per_page)
+
         notification_list = []
-        for src_notification in notification_table.find(dict()).sort([('id', -1)]):
+        for src_notification in src_notification_list:
             notification = dict()
             notification.update(src_notification)
             notification['package'] = appid2package[notification['appid']]
@@ -144,7 +151,14 @@ class AdminNotificationView(BaseView):
 
                 notification_list.append(notification)
 
-        return self.render('admin/notification/index.html', notification_list=notification_list)
+        total_count = notification_table.find().count()
+        pagination = Pagination(css_framework='bootstrap3',
+                                per_page=per_page,
+                                page=page, total=total_count, record_name='notification_list')
+        # print pagination.total, pagination.css_framework, pagination.page, pagination.total_pages
+
+        return self.render('admin/notification/index.html',
+                           notification_list=notification_list, pagination=pagination)
 
     @expose('/create', methods=['GET', 'POST'])
     def create(self):

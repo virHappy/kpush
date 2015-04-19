@@ -147,6 +147,9 @@ LOGGING = {
 # admin_user
 SESSION_KEY_ADMIN_USERNAME = 'admin_username'
 
+# admin里每页数量
+ADMIN_PAGE_PER_SIZE =1
+
 # mongodb
 MONGO_URL = 'mongodb://127.0.0.1:27017/kpush'
 

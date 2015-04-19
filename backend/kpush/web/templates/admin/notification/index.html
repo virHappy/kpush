@@ -8,6 +8,7 @@
     {% if request.endpoint == 'adminnotificationview.list' %}
         <div class="row">
             <div class="col-sm-12">
+                {{ pagination.links }}
                 <table class="table table-hover table-striped">
                     <thead>
                     <tr>
@@ -41,6 +42,7 @@
                     </tbody>
 
                 </table>
+                {{ pagination.links }}
             </div>
         </div>
     {% elif request.endpoint == 'adminnotificationview.create' %}

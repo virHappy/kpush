@@ -2,8 +2,8 @@
 
 {% block body %}
     <ul class="nav nav-tabs">
-        <li role="presentation" {% if request.endpoint == 'adminappinfoview.list' %} class="active" {% endif %}><a href="{{ url_for("adminappinfoview.list") }}">历史推送</a></li>
-        <li role="presentation" {% if request.endpoint == 'adminappinfoview.create' %} class="active" {% endif %}><a href="{{ url_for("adminappinfoview.create") }}">新推送</a></li>
+        <li role="presentation" {% if request.endpoint == 'adminappinfoview.list' %} class="active" {% endif %}><a href="{{ url_for("adminappinfoview.list") }}">应用列表</a></li>
+        <li role="presentation" {% if request.endpoint == 'adminappinfoview.create' %} class="active" {% endif %}><a href="{{ url_for("adminappinfoview.create") }}">创建应用</a></li>
     </ul>
     {% if request.endpoint == 'adminappinfoview.list' %}
         <div class="row">

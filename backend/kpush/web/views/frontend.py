@@ -99,26 +99,26 @@ def push_api():
             error=u'query参数不合法, 请至少指定all/alias/tags_or其中一个',
         )
 
-    if not query.get('title') or not query.get('content'):
+    if not json_data.get('title') or not json_data.get('content'):
         return jsonify(
             ret=proto.RET_INVALID_PARAMS,
             error=u'请指定title和content',
         )
 
-    if query.get('all'):
-        query = dict()
-    else:
-        query = dict(
-            alias=query.get('alias'),
-            tags_or=query.get('tags_or'),
-        )
+    real_query = dict()
+    if not query.get('all'):
+        if query.get('alias') is not None:
+            real_query['alias'] = query.get('alias')
+
+        if query.get('tags_or') is not None:
+            real_query['tags_or'] = query.get('tags_or')
 
     push_helper = PushHelper()
     notification_id, dst_uids = push_helper.push_notification(
         json_data.get('title'),
         json_data.get('content'),
         appinfo['appid'],
-        query,
+        query=real_query,
         silent=json_data.get('silent')
     )
 

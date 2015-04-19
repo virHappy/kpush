@@ -23,6 +23,7 @@
                         <th>点击数</th>
                         <th>触达率</th>
                         <th>点击率</th>
+                        <th>条件</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -39,6 +40,7 @@
                             <td>{{ notification.stat.click }}</td>
                             <td>{{ notification.stat.recv_rate }}</td>
                             <td>{{ notification.stat.click_rate }}</td>
+                            <td>{{ notification.query }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

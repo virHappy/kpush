@@ -222,15 +222,15 @@ def pushntf(title, content, silent, appid, appkey, all, alias, str_tags_or):
     else:
         tags_or = None
 
-    if all:
-        # 强制赋值为None，即使其无效
-        query = {}
-    else:
-        query = dict(
-            alias=alias,
-            tags_or=tags_or,
-        )
+    query = {}
 
+    if not all:
+        if alias is not None:
+            query['alias'] = alias
+
+        if tags_or is not None:
+            query['tags_or'] = tags_or
+            
     result = push_helper.push_notification(
         title, content, appid, query=query, silent=silent
     )

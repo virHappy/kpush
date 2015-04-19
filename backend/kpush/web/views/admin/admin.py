@@ -2,6 +2,7 @@
 
 import functools
 import datetime
+import re
 
 from flask import redirect, url_for, flash
 from flask import session, request, g, current_app
@@ -12,6 +13,7 @@ from passlib.hash import sha256_crypt
 from share.extensions import admin
 from share.kit import kit
 from share.utils import get_appinfo_list
+from share.push_helper import PushHelper
 from forms import LoginForm, NotificationCreateForm
 
 
@@ -115,6 +117,29 @@ class AdminNotificationView(BaseView):
         appinfo_list = get_appinfo_list()
         form.appid.choices = [(appinfo['appid'], appinfo['package'])for appinfo in appinfo_list]
         if form.validate_on_submit():
-            return redirect(url_for('adminnotificationview.list'))
+            query = dict()
+
+            if not form.all.data:
+                if not form.alias.data and not form.tags:
+                    form.all.errors.append(u'所有人/别名/标签请至少选择一个')
+                    form.alias.errors.append(u'所有人/别名/标签请至少选择一个')
+                    form.tags.errors.append(u'所有人/别名/标签请至少选择一个')
+                    return self.render('admin/notification/index.html', form=form)
+
+                if form.alias.data:
+                    query['alias'] = form.alias.data
+
+                if form.tags.data:
+                    query['tags_or'] = [
+                        re.split(r'\s*,\s*', form.tags.data)
+                    ]
+
+            push_helper = PushHelper()
+            notification_id, dst_users = push_helper.push_notification(form.title.data, form.content.data, form.appid.data, query=query)
+            if notification_id is not None and dst_users is not None:
+                return redirect(url_for('adminnotificationview.list'))
+            else:
+                flash(u'发送失败')
+                return self.render('admin/notification/index.html', form=form)
 
         return self.render('admin/notification/index.html', form=form)

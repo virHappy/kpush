@@ -40,7 +40,7 @@ class GServer(flask_script.Command):
     def get_options(self):
 
         options = (
-            flask_script.Option('-h', '--host',
+            flask_script.Option('-t', '--host',
                                 dest='host',
                                 default=self.host),
 

@@ -53,8 +53,8 @@ class AdminAuthView(BaseView):
 
             if not admin_user or not sha256_crypt.verify(form.password.data, admin_user['password']):
                 # flash('invalid username or password')
-                form.username.errors.append(u'用户名或密码错误')
-                form.password.errors.append(u'用户名或密码错误')
+                form.username.errors.append(u'帐号或密码错误')
+                form.password.errors.append(u'帐号或密码错误')
                 return self.render("admin/login.html", form=form)
 
             session.permanent = True

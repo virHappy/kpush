@@ -105,6 +105,14 @@ def login(request):
     # 放appid的原因是，心跳的时候可以直接取到appid，这样写入redis的时候就方便多了
     request.login_client(user['uid'], user['appid'])
 
+    if current_app.config['REDIS_ONLINE_SAVE']:
+        # 有效
+        try:
+            key = current_app.config['REDIS_ONLINE_KEY_TPL'].format(uid=user['uid'], appid=user['appid'])
+            kit.redis_client.set(key, time.time(), ex=current_app.config['REDIS_ONLINE_TIMEOUT'])
+        except:
+            worker_logger.error('exc occur. request: %s', request, exc_info=True)
+
     request.write_to_client(dict(
         ret=0
     ))

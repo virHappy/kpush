@@ -18,7 +18,7 @@ public class Config {
     public static final int ERROR_RETRY_INTERVAL = 10;
 
     // 心跳间隔（秒）
-    public static final int HEARTBEAT_INTERVAL = 60;
+    public static final int HEARTBEAT_INTERVAL = 30;
 
     // 多长时间内没有收到任何消息，与服务器配置一样。<= 0 为永不超时
     public static final int CONN_ALIVE_TIMEOUT = HEARTBEAT_INTERVAL * 3;

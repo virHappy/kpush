@@ -21,7 +21,7 @@ def client_conn_closed(request):
     :param request:
     :return:
     """
-    if current_app.config['REDIS_ONLINE_SAVE']:
+    if current_app.config['REDIS_ONLINE_SAVE'] and request.gw_box.uid > 0:
         # 有效
         try:
             key = current_app.config['REDIS_ONLINE_KEY_TPL'].format(uid=request.gw_box.uid, appid=request.gw_box.userdata)

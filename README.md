@@ -47,7 +47,7 @@ supervisor配置:
     autorestart=true
     redirect_stderr=true
     stopsignal=USR1
-    stopwaitsecs=10
+    stopwaitsecs=20
 
 gateway配置:
 

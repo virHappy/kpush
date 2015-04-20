@@ -177,7 +177,7 @@ REDIS_ONLINE_SAVE = False
 # 在线超时(秒)
 REDIS_ONLINE_TIMEOUT = 180
 # key模板
-REDIS_ONLINE_KEY_TPL = 'kpush,uid:%(uid)s,appid:%(appid)s'
+REDIS_ONLINE_KEY_TPL = 'kpush,uid:{uid},appid:{appid}'
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 REDIS_DB = 0

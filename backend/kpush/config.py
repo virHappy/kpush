@@ -175,7 +175,7 @@ SERVER_LIST = [
 # 默认关闭，即不保存
 REDIS_ONLINE_SAVE = False
 # 在线超时(秒)
-REDIS_ONLINE_TIMEOUT = 180
+REDIS_ONLINE_TIMEOUT = 90
 # key模板
 REDIS_ONLINE_KEY_TPL = 'kpush:uid:{uid}:appid:{appid}:'
 REDIS_HOST = '127.0.0.1'

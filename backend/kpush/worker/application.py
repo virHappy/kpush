@@ -47,14 +47,15 @@ def configure_handlers(app):
 
         request.json_data = json.loads(data)
 
-    @app.before_request
-    def inject_user(request):
-        if request.gw_box.uid > 0:
-            request.user = kit.mongo_client.get_default_database()['user'].find_one(dict(
-                uid=request.gw_box.uid
-            ))
-        else:
-            request.user = None
+    # 心跳对mongodb的压力太大了
+    # @app.before_request
+    # def inject_user(request):
+    #     if request.gw_box.uid > 0:
+    #         request.user = kit.mongo_client.get_default_database()['user'].find_one(dict(
+    #             uid=request.gw_box.uid
+    #         ))
+    #     else:
+    #         request.user = None
 
 
 def create_app():

@@ -16,7 +16,7 @@ bp = Blueprint('user')
 # @bp.route(proto.CMD_REGISTER)
 def register(request):
     """
-    注册，废弃
+    (未使用)注册
     :param request:
     :return:
     """
@@ -85,7 +85,8 @@ def login(request):
     #     )
     # })
 
-    request.login_client(user['uid'])
+    # 放appid的原因是，心跳的时候可以直接取到appid，这样写入redis的时候就方便多了
+    request.login_client(user['uid'], user['appid'])
 
     request.write_to_client(dict(
         ret=0
@@ -129,6 +130,7 @@ def heartbeat(request):
     :param request:
     :return:
     """
+    worker_logger.debug('uid: %s, userdata: %s', request.gw_box.uid, request.gw_box.userdata)
     request.write_to_client(dict(
         ret=0
     ))
@@ -138,7 +140,7 @@ def heartbeat(request):
 @login_required
 def remove_user(request):
     """
-    删除自己
+    (未使用)删除自己
     :param request:
     :return:
     """
@@ -164,11 +166,20 @@ def recv_notification(request):
     :param request:
     :return:
     """
+    user = kit.mongo_client.get_default_database()['user'].find_one(dict(
+        uid=request.gw_box.uid
+    ))
+    if not user:
+        request.write_to_client(dict(
+            ret=proto.RET_NO_DATA,
+        ))
+        return
+
     notification_id = request.json_data['notification_id']
 
     notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 
-    user_recv_notifications = request.user.get('recv_notifications') or []
+    user_recv_notifications = user.get('recv_notifications') or []
 
     if notification_id in user_recv_notifications:
         request.write_to_client(dict(
@@ -208,11 +219,20 @@ def click_notification(request):
     :return:
     """
 
+    user = kit.mongo_client.get_default_database()['user'].find_one(dict(
+        uid=request.gw_box.uid
+    ))
+    if not user:
+        request.write_to_client(dict(
+            ret=proto.RET_NO_DATA,
+        ))
+        return
+
     notification_id = request.json_data['notification_id']
 
     notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 
-    user_click_notifications = request.user.get('click_notifications') or []
+    user_click_notifications = user.get('click_notifications') or []
 
     if notification_id in user_click_notifications:
         request.write_to_client(dict(

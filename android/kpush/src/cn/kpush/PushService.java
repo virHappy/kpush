@@ -345,8 +345,8 @@ public class PushService extends Service {
             }
         }, Config.HEARTBEAT_INTERVAL * 1000);
 
-        if (Config.CONN_ALIVE_TIMEOUT > 0 && Ferry.getInstance().getLastRecvTimeMills() > 0) {
-            if (System.currentTimeMillis() - Ferry.getInstance().getLastRecvTimeMills() > (Config.CONN_ALIVE_TIMEOUT * 1000)) {
+        if (Config.CONN_ALIVE_TIMEOUT > 0 && Ferry.getInstance().getLastActiveTimeMills() > 0) {
+            if (System.currentTimeMillis() - Ferry.getInstance().getLastActiveTimeMills() > (Config.CONN_ALIVE_TIMEOUT * 1000)) {
                 // 说明链接已经断开
                 KLog.d("conn alive timeout");
                 Ferry.getInstance().disconnect();

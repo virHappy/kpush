@@ -164,3 +164,12 @@ def create_or_update_user(user_info):
         device_id=user_info['device_id'],
     ))
 
+
+def save_redis_online(uid, appid):
+    key = current_app.config['REDIS_ONLINE_KEY_TPL'].format(uid=uid, appid=appid)
+    kit.redis_client.delete(key)
+
+
+def remove_redis_online(uid, appid):
+    key = current_app.config['REDIS_ONLINE_KEY_TPL'].format(uid=uid, appid=appid)
+    kit.redis_client.delete(key)

@@ -131,6 +131,15 @@ def heartbeat(request):
     :return:
     """
     worker_logger.debug('uid: %s, userdata: %s', request.gw_box.uid, request.gw_box.userdata)
+
+    if current_app.config['REDIS_ONLINE_SAVE']:
+        # 有效
+        try:
+            key = current_app.config['REDIS_ONLINE_KEY_TPL'].format(uid=request.gw_box.uid, appid=request.gw_box.userdata)
+            kit.redis_client.set(key, 1, ex=current_app.config['REDIS_ONLINE_TIMEOUT'])
+        except:
+            worker_logger.error('exc occur. request: %s', request, exc_info=True)
+
     request.write_to_client(dict(
         ret=0
     ))

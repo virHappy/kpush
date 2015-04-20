@@ -171,6 +171,17 @@ SERVER_LIST = [
     )
 ]
 
+# (可选) redis配置，用来存储在线用户状态
+# 默认关闭，即不保存
+REDIS_ONLINE_SAVE = False
+# 在线超时(秒)
+REDIS_ONLINE_TIMEOUT = 180
+# key模板
+REDIS_ONLINE_KEY_TPL = 'kpush,uid:%(uid)s,appid:%(appid)s'
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = 6379
+REDIS_DB = 0
+
 # 导入自定义配置
 try:
     from local_config import *

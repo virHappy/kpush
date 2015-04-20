@@ -15,3 +15,6 @@ SERVER_LIST = [
         inner_port=28100,
     )
 ]
+
+# (可选) redis配置，用来存储在线用户状态
+REDIS_ONLINE_SAVE = False

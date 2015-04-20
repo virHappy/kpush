@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import time
 import json
 import hashlib
 from flask import current_app
@@ -167,7 +168,7 @@ def create_or_update_user(user_info):
 
 def save_redis_online(uid, appid):
     key = current_app.config['REDIS_ONLINE_KEY_TPL'].format(uid=uid, appid=appid)
-    kit.redis_client.delete(key)
+    kit.redis_client.set(key, time.time(), ex=current_app.config['REDIS_ONLINE_TIMEOUT'])
 
 
 def remove_redis_online(uid, appid):

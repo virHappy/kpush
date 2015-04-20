@@ -14,6 +14,22 @@ from worker.worker_share.utils import login_required
 bp = Blueprint('user')
 
 
+@bp.close_app_client
+def client_conn_closed(request):
+    """
+    当客户端链接断掉的时候
+    :param request:
+    :return:
+    """
+    if current_app.config['REDIS_ONLINE_SAVE']:
+        # 有效
+        try:
+            key = current_app.config['REDIS_ONLINE_KEY_TPL'].format(uid=request.gw_box.uid, appid=request.gw_box.userdata)
+            kit.redis_client.delete(key)
+        except:
+            worker_logger.error('exc occur. request: %s', request, exc_info=True)
+
+
 # @bp.route(proto.CMD_REGISTER)
 def register(request):
     """

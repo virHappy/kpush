@@ -17,6 +17,8 @@ public class KPush {
     public static void init(Context context_) {
         context = context_;
 
+        setDebug(false);
+
         Intent intent = new Intent();
         intent.setAction(Config.INTENT_ACTION_SERVICE_START);
         context_.startService(intent);

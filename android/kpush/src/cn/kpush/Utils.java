@@ -45,7 +45,7 @@ public class Utils {
         return null;
     }
 
-    public static JSONObject unpackData(byte[] bytesBody) {
+    public static JSONObject unpackData(String secretKey, byte[] bytesBody) {
         try{
             if (bytesBody == null) {
                 return null;
@@ -53,7 +53,7 @@ public class Utils {
 
             String body = new String(bytesBody, "UTF-8");
 
-            return unpackData(body);
+            return unpackData(secretKey, body);
         }
         catch (Exception e) {
             KLog.e("fail: " + bytesBody);
@@ -62,7 +62,7 @@ public class Utils {
         return null;
     }
 
-    public static JSONObject unpackData(String body) {
+    public static JSONObject unpackData(String secretKey, String body) {
         if (body == null) {
             return null;
         }
@@ -73,7 +73,7 @@ public class Utils {
             String data = jsonBody.getString("data");
             String sign = jsonBody.getString("sign");
 
-            String source = Config.SECRET_KEY + "|" + data;
+            String source = secretKey + "|" + data;
 
             String calcSign = genMD5(source);
 
@@ -91,7 +91,7 @@ public class Utils {
         return null;
     }
 
-    public static String packData(JSONObject jsonData) {
+    public static String packData(String secretKey, JSONObject jsonData) {
         try{
             if (jsonData == null) {
                 return null;
@@ -100,7 +100,7 @@ public class Utils {
             JSONObject jsonBody = new JSONObject();
 
             String data = jsonData.toString();
-            String source = Config.SECRET_KEY + "|" + data;
+            String source = secretKey + "|" + data;
             String sign = genMD5(source);
 
             jsonBody.put("data", data);

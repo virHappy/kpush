@@ -28,6 +28,9 @@ import java.util.concurrent.ArrayBlockingQueue;
  * Created by dantezhu on 15-4-13.
  */
 public class PushService extends Service {
+    // custom
+    private final String DOMAIN = "115.28.224.64:7555";
+    private final String SECRET_KEY = "tmp_secret";
 
     private Handler handler;
     private String serverHost;
@@ -120,7 +123,7 @@ public class PushService extends Service {
             public void onRecv(IBox ibox) {
                 Box box = (Box) ibox;
 
-                JSONObject jsonData = Utils.unpackData(box.body);
+                JSONObject jsonData = Utils.unpackData(SECRET_KEY, box.body);
 
                 if (box.cmd == Proto.EVT_NOTIFICATION) {
                     if (jsonData != null) {
@@ -172,7 +175,7 @@ public class PushService extends Service {
             KLog.e("exc occur. e: " + e);
         }
 
-        String body = Utils.packData(jsonObject);
+        String body = Utils.packData(SECRET_KEY, jsonObject);
 
         box.body = body == null ? null:body.getBytes();
 
@@ -252,7 +255,7 @@ public class PushService extends Service {
                 jsonObject.put("tags", jsonArray);
             }
 
-            String body = Utils.packData(jsonObject);
+            String body = Utils.packData(SECRET_KEY, jsonObject);
             box.body = body == null ? null:body.getBytes();
         }
         catch (Exception e) {
@@ -281,7 +284,7 @@ public class PushService extends Service {
         try{
             jsonObject.put("notification_id", notificationID);
 
-            String body = Utils.packData(jsonObject);
+            String body = Utils.packData(SECRET_KEY, jsonObject);
             box.body = body == null ? null:body.getBytes();
         }
         catch (Exception e) {
@@ -309,7 +312,7 @@ public class PushService extends Service {
         try{
             jsonObject.put("notification_id", notificationID);
 
-            String body = Utils.packData(jsonObject);
+            String body = Utils.packData(SECRET_KEY, jsonObject);
             box.body = body == null ? null:body.getBytes();
         }
         catch (Exception e) {
@@ -416,7 +419,9 @@ public class PushService extends Service {
             try{
                 HttpClient httpClient = new DefaultHttpClient();
 
-                HttpPost httpPost = new HttpPost(Config.ALLOC_SERVER_URL);
+                String allocServerUrl = String.format(Config.ALLOC_SERVER_URL, DOMAIN);
+                KLog.d("allocServerUrl: " + allocServerUrl);
+                HttpPost httpPost = new HttpPost(allocServerUrl);
 
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("appkey", DeviceInfo.getAppkey());
@@ -427,7 +432,7 @@ public class PushService extends Service {
                 jsonObject.put("os", Config.OS);
                 jsonObject.put("sdk_version", Config.SDK_VERSION);
 
-                String postBody = Utils.packData(jsonObject);
+                String postBody = Utils.packData(SECRET_KEY, jsonObject);
                 if (postBody == null) {
                     return -1;
                 }
@@ -439,7 +444,7 @@ public class PushService extends Service {
                 if (code == 200) {
                     String recvBody = EntityUtils.toString(httpResponse.getEntity());
 
-                    jsonData = Utils.unpackData(recvBody);
+                    jsonData = Utils.unpackData(SECRET_KEY, recvBody);
 
                     if (jsonData == null) {
                         return -3;

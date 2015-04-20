@@ -4,12 +4,9 @@ package cn.kpush;
  * Created by dantezhu on 15-4-13.
  */
 public class Config {
-    public static final String DOMAIN = LocalConfig.DOMAIN;
-    public static final String SECRET_KEY = LocalConfig.SECRET_KEY;
+    public static final String ALLOC_SERVER_URL = "http://%s/server/alloc";
 
-    public static final String ALLOC_SERVER_URL = "http://" + DOMAIN + "/server/alloc";
-
-    public static final int SDK_VERSION = 2;
+    public static final int SDK_VERSION = 5;
     public static final String OS = "android";
 
     public static final String PREFS_NAME = "data";

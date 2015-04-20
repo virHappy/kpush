@@ -59,6 +59,9 @@ def configure_handlers(app):
 
 def create_app():
     app = Worker(Box)
+    app.job_timeout = 60
+    app.stop_timeout = 10
+
     configure_views(app)
     configure_handlers(app)
 

@@ -13,6 +13,6 @@ public class Proto {
     public static final int CMD_NOTIFICATION_RECV = 101;
     public static final int CMD_NOTIFICATION_CLICK = 102;
 
-    public static final int EVT_NOTIFICATION = 1001;
-    public static final int EVT_MESSAGE = 1002;
+    public static final int EVT_NOTIFICATION = 10001;
+    public static final int EVT_MESSAGE = 10002;
 }

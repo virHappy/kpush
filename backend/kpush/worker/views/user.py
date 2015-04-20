@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import time
 from maple import Blueprint
 from flask import current_app
 
@@ -136,7 +137,7 @@ def heartbeat(request):
         # 有效
         try:
             key = current_app.config['REDIS_ONLINE_KEY_TPL'].format(uid=request.gw_box.uid, appid=request.gw_box.userdata)
-            kit.redis_client.set(key, 1, ex=current_app.config['REDIS_ONLINE_TIMEOUT'])
+            kit.redis_client.set(key, time.time(), ex=current_app.config['REDIS_ONLINE_TIMEOUT'])
         except:
             worker_logger.error('exc occur. request: %s', request, exc_info=True)
 

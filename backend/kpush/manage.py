@@ -264,9 +264,9 @@ def statntf(notification_id):
     stat_info['click_rate'] = 0 if stat_info['recv'] == 0 else 1.0 * stat_info['click'] / stat_info['recv']
 
     print u'目标数: %s' % stat_info['dst']
-    print u'触达数: %s' % stat_info['recv']
+    print u'到达数: %s' % stat_info['recv']
     print u'点击数: %s' % stat_info['click']
-    print u'触达率: %.02f%%' % (stat_info['recv_rate'] * 100)
+    print u'到达率: %.02f%%' % (stat_info['recv_rate'] * 100)
     print u'点击率: %.02f%%' % (stat_info['click_rate'] * 100)
     print u'详细内容:\n%s' % pprint.pformat(notification, indent=4)
 

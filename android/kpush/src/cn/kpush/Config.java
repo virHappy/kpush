@@ -14,6 +14,10 @@ public class Config {
     // 最多缓存的msgs
     public static final int MAX_PENDING_MSGS = 500;
 
+    // http请求端口超时设置(秒)
+    public static final int HTTP_CONNECT_TIMEOUT = 10;
+    public static final int HTTP_READ_TIMEOUT = 10;
+
     // 出错重试的时间（秒）
     public static final int ERROR_RETRY_INTERVAL = 10;
 

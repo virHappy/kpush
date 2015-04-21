@@ -17,6 +17,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -418,6 +419,10 @@ public class PushService extends Service {
         protected Integer doInBackground(String... params) {
             try{
                 HttpClient httpClient = new DefaultHttpClient();
+                // 连接超时
+                httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, Config.HTTP_CONNECT_TIMEOUT * 1000);
+                // 读取超时
+                httpClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, Config.HTTP_READ_TIMEOUT * 1000);
 
                 String allocServerUrl = String.format(Config.ALLOC_SERVER_URL, DOMAIN);
                 KLog.d("allocServerUrl: " + allocServerUrl);

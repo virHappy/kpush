@@ -96,8 +96,13 @@ public class PushService extends Service {
     @Override
     public void onDestroy() {
         KLog.d("");
+        try {
+            Ferry.getInstance().stop();
+        }
+        catch (Exception e) {
+            KLog.e(String.format("exc occur. e: %s", e));
+        }
         super.onDestroy();
-        Ferry.getInstance().stop();
     }
 
     private void connectToServer() {

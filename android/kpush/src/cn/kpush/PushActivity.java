@@ -18,11 +18,6 @@ public class PushActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         // 移到onResume里，finish可能不会立即让activity析构？
         // 但是移到onResume还是有时候调用不到这个activity

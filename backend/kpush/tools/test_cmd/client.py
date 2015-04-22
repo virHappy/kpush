@@ -18,9 +18,6 @@ def login():
     req = dict(
         uid=199,
         key='4b91e0cd5d534a8c9cb41d2517415260',
-        os='android',
-        os_version=33,
-        sdk_version=22,
     )
     worker_client.write(dict(
         cmd=proto.CMD_LOGIN,

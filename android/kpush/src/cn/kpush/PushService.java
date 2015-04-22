@@ -42,6 +42,9 @@ public class PushService extends Service {
     // 一开始就是未验证通过的
     private boolean userAuthed;
 
+    // 尝试链接的失败次数
+    private int failConnectTimes = 0;
+
     private ArrayBlockingQueue<Box> pendingMsgs = new ArrayBlockingQueue<Box>(Config.MAX_PENDING_MSGS);
 
     @Override
@@ -200,6 +203,7 @@ public class PushService extends Service {
                 } else {
                     // 登录成功
                     userAuthed = true;
+                    failConnectTimes = 0;
 
                     sendPendingMsgs();
                 }
@@ -220,12 +224,19 @@ public class PushService extends Service {
     }
 
     private void userLoginLater() {
+        // 错误次数+1
+        failConnectTimes += 1;
+        int interval = Config.ERROR_RETRY_INTERVAL * failConnectTimes;
+        interval = interval <= Config.MAX_ERROR_RETRY_INTERVAL ? interval : Config.MAX_ERROR_RETRY_INTERVAL;
+
+        KLog.e(String.format("userLogin after %d secs", interval));
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 userLogin();
             }
-        }, Config.ERROR_RETRY_INTERVAL * 1000);
+        }, interval * 1000);
     }
 
 
@@ -235,13 +246,20 @@ public class PushService extends Service {
     }
 
     private void allocServerLater() {
+        // 错误次数+1
+        failConnectTimes += 1;
+        int interval = Config.ERROR_RETRY_INTERVAL * failConnectTimes;
+        interval = interval <= Config.MAX_ERROR_RETRY_INTERVAL ? interval : Config.MAX_ERROR_RETRY_INTERVAL;
+
+        KLog.e(String.format("allocServer after %d secs", interval));
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 // 重新申请
                 allocServer();
             }
-        }, Config.ERROR_RETRY_INTERVAL * 1000);
+        }, interval * 1000);
     }
 
     private boolean setAliasAndTags(String alias, String[] tags) {
@@ -500,6 +518,9 @@ public class PushService extends Service {
                 allocServerLater();
                 return;
             }
+
+            // 清零
+            failConnectTimes = 0;
 
             connectToServer();
         }

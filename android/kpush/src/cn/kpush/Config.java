@@ -19,7 +19,9 @@ public class Config {
     public static final int HTTP_READ_TIMEOUT = 10;
 
     // 出错重试的时间（秒）
-    public static final int ERROR_RETRY_INTERVAL = 10;
+    public static final int ERROR_RETRY_INTERVAL = 1;
+    // 出错重试最大的间隔（秒）
+    public static final int MAX_ERROR_RETRY_INTERVAL = 60;
 
     // 心跳间隔（秒）
     public static final int HEARTBEAT_INTERVAL = 30;

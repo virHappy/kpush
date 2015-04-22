@@ -237,13 +237,13 @@ def pushntf(title, content, silent, appid, appkey, all, alias, str_tags_or):
 
     print 'notification_id: %s\nusers: %s' % (notification_id, users)
     while True:
+        print '-' * 80
+        statntf(notification_id, False)
+
         try:
             time.sleep(1)
         except KeyboardInterrupt:
             break
-
-        print '-' * 80
-        statntf(notification_id)
 
 
 @manager.option('-d', '--detail', dest='notification_id', action='store_true')

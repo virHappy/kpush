@@ -239,7 +239,7 @@ def pushntf(title, content, silent, appid, appkey, all, alias, str_tags_or):
     print 'notification_id: %s\nusers: %s' % (notification_id, users)
     while True:
         print '-' * 80
-        print '时间: ', datetime.datetime.now()
+        print '时间: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         statntf(notification_id, False)
 
         try:

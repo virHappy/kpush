@@ -237,20 +237,12 @@ def pushntf(title, content, silent, appid, appkey, all, alias, str_tags_or):
     )
 
     print 'notification_id: %s\nusers: %s' % (notification_id, users)
-    while True:
-        print '-' * 80
-        print '时间: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        statntf(notification_id, False)
-
-        try:
-            time.sleep(1)
-        except KeyboardInterrupt:
-            break
+    statntf(notification_id, True)
 
 
-@manager.option('-d', '--detail', dest='notification_id', action='store_true')
+@manager.option('-l', '--loop', dest='loop', action='store_true')
 @manager.option(dest='notification_id', type=int)
-def statntf(notification_id, detail):
+def statntf(notification_id, loop):
 
     notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 
@@ -275,13 +267,22 @@ def statntf(notification_id, detail):
     stat_info['recv_rate'] = 0 if stat_info['dst'] == 0 else 1.0 * stat_info['recv'] / stat_info['dst']
     stat_info['click_rate'] = 0 if stat_info['recv'] == 0 else 1.0 * stat_info['click'] / stat_info['recv']
 
-    print u'目标数: %s' % stat_info['dst']
-    print u'到达数: %s' % stat_info['recv']
-    print u'点击数: %s' % stat_info['click']
-    print u'到达率: %.02f%%' % (stat_info['recv_rate'] * 100)
-    print u'点击率: %.02f%%' % (stat_info['click_rate'] * 100)
-    if detail:
-        print u'详细内容:\n%s' % pprint.pformat(notification, indent=4)
+    while True:
+        print '-' * 80
+        print '时间: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print u'目标数: %s' % stat_info['dst']
+        print u'到达数: %s' % stat_info['recv']
+        print u'点击数: %s' % stat_info['click']
+        print u'到达率: %.02f%%' % (stat_info['recv_rate'] * 100)
+        print u'点击率: %.02f%%' % (stat_info['click_rate'] * 100)
+
+        if not loop:
+            break
+        else:
+            try:
+                time.sleep(1)
+            except KeyboardInterrupt:
+                break
 
 if __name__ == '__main__':
     manager.run()

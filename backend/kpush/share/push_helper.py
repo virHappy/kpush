@@ -36,7 +36,7 @@ class PushHelper(object):
         match_uids = self.find_match_uids(appid, query)
 
         # 保存消息
-        notification_id = self.saveNotification(dict(
+        notification_id = self.save_notification(dict(
             title=title,
             content=content,
             appid=appid,
@@ -116,7 +116,7 @@ class PushHelper(object):
 
         return [user['uid'] for user in users]
 
-    def saveNotification(self, src_notification, dst_users_count):
+    def save_notification(self, src_notification, dst_users_count):
         """
         保存起来
         dst_users: 目标用户数

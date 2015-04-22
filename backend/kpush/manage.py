@@ -9,6 +9,7 @@ import re
 import json
 import pprint
 import time
+import datetime
 
 from flask import current_app
 from flask import render_template_string
@@ -238,6 +239,7 @@ def pushntf(title, content, silent, appid, appkey, all, alias, str_tags_or):
     print 'notification_id: %s\nusers: %s' % (notification_id, users)
     while True:
         print '-' * 80
+        print '时间: ', datetime.datetime.now()
         statntf(notification_id, False)
 
         try:

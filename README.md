@@ -82,3 +82,7 @@ gateway配置:
 
     [stat]
     file_name=stat_file
+
+系统配置:
+
+由于是要直接连入公网，请务必不要将tcp_tw_recycle和tcp_timestamps同时开启，会导致connect失败的问题

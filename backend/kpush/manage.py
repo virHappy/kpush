@@ -8,6 +8,7 @@ import uuid
 import re
 import json
 import pprint
+import time
 
 from flask import current_app
 from flask import render_template_string
@@ -230,15 +231,24 @@ def pushntf(title, content, silent, appid, appkey, all, alias, str_tags_or):
         if tags_or is not None:
             query['tags_or'] = tags_or
             
-    result = push_helper.push_notification(
+    notification_id, users = push_helper.push_notification(
         title, content, appid, query=query, silent=silent
     )
 
-    print 'notification_id: %s\nusers: %s' % (result[0], result[1])
+    print 'notification_id: %s\nusers: %s' % (notification_id, users)
+    while True:
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            break
+
+        print '-' * 80
+        statntf(notification_id)
 
 
+@manager.option('-d', '--detail', dest='notification_id', action='store_true')
 @manager.option(dest='notification_id', type=int)
-def statntf(notification_id):
+def statntf(notification_id, detail):
 
     notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 
@@ -268,7 +278,8 @@ def statntf(notification_id):
     print u'点击数: %s' % stat_info['click']
     print u'到达率: %.02f%%' % (stat_info['recv_rate'] * 100)
     print u'点击率: %.02f%%' % (stat_info['click_rate'] * 100)
-    print u'详细内容:\n%s' % pprint.pformat(notification, indent=4)
+    if detail:
+        print u'详细内容:\n%s' % pprint.pformat(notification, indent=4)
 
 if __name__ == '__main__':
     manager.run()

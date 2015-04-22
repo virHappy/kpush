@@ -246,28 +246,28 @@ def statntf(notification_id, loop):
 
     notification_table = kit.mongo_client.get_default_database()[current_app.config['MONGO_TB_NOTIFICATION']]
 
-    notification = notification_table.find_one(dict(
-        id=notification_id
-    ))
-
-    if not notification:
-        print 'notification not exists: %s' % notification_id
-        return
-
-    stat_info = dict(
-        dst=0,
-        recv=0,
-        click=0,
-    )
-    if notification.get('stat'):
-        stat_info.update(
-            notification.get('stat')
-        )
-
-    stat_info['recv_rate'] = 0 if stat_info['dst'] == 0 else 1.0 * stat_info['recv'] / stat_info['dst']
-    stat_info['click_rate'] = 0 if stat_info['recv'] == 0 else 1.0 * stat_info['click'] / stat_info['recv']
-
     while True:
+        notification = notification_table.find_one(dict(
+            id=notification_id
+        ))
+
+        if not notification:
+            print 'notification not exists: %s' % notification_id
+            return
+
+        stat_info = dict(
+            dst=0,
+            recv=0,
+            click=0,
+        )
+        if notification.get('stat'):
+            stat_info.update(
+                notification.get('stat')
+            )
+
+        stat_info['recv_rate'] = 0 if stat_info['dst'] == 0 else 1.0 * stat_info['recv'] / stat_info['dst']
+        stat_info['click_rate'] = 0 if stat_info['recv'] == 0 else 1.0 * stat_info['click'] / stat_info['recv']
+
         print '-' * 80
         print '时间: ', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print u'目标数: %s' % stat_info['dst']

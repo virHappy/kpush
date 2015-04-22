@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.Handler;
 
 import java.util.List;
 
@@ -12,10 +13,19 @@ import java.util.List;
  * Created by dantezhu on 15-4-14.
  */
 public class PushActivity extends Activity {
+    private Handler handler = new Handler();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // 移到onResume里，finish可能不会立即让activity析构？
+        // 但是移到onResume还是有时候调用不到这个activity
         Intent comingIntent = getIntent();
         int notificationID = comingIntent.getIntExtra("notification_id", 0);
 
@@ -25,8 +35,13 @@ public class PushActivity extends Activity {
 
         openAppMainActivity();
 
-        // 关闭自己
-        this.finish();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                // 关闭自己
+                PushActivity.this.finish();
+            }
+        });
     }
 
     private void openAppMainActivity() {

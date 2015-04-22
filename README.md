@@ -86,3 +86,7 @@ gateway配置:
 系统配置:
 
 由于是要直接连入公网，请务必不要将tcp_tw_recycle和tcp_timestamps同时开启，会导致connect失败的问题
+
+### 三. 已知bug
+
+1. 在程序已经运行在前台的情况下，点击通知有时候会不进入PushActivity，重现路径不明。

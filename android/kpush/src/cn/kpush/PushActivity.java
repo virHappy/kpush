@@ -28,6 +28,9 @@ public class PushActivity extends Activity {
 
         sendClickNotificationMsg(notificationID);
 
+        // 在米4上验证结果如下:
+        // 如果应用已经打开并且运行在前台，那么会保持在现有的栈顶activity
+        // 如果应用已经打开但没有运行在前台，同样会保持在现有的栈顶activity
         openAppMainActivity();
 
         handler.post(new Runnable() {

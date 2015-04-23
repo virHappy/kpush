@@ -11,7 +11,7 @@ SERVER_LIST = [
     dict(
         outer_host='115.28.224.64',
         outer_port=29100,
-        inner_host='115.28.224.64',
+        inner_host='127.0.0.1',
         inner_port=28100,
     )
 ]

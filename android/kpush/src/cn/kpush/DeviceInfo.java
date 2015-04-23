@@ -34,7 +34,7 @@ public class DeviceInfo {
 
         initVals();
 
-        KLog.v(String.format(
+        KLog.d(String.format(
                         "packageName: %s, appVersion: %s, deviceId: %s, osVersion: %s, deviceName: %s",
                         packageName, appVersion, deviceId, osVersion, deviceName
                 )

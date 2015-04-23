@@ -4,9 +4,10 @@ package cn.kpush;
  * Created by dantezhu on 15-4-13.
  */
 public class Config {
+    public static final int SDK_VERSION = 5;
+
     public static final String ALLOC_SERVER_URL = "http://%s/server/alloc";
 
-    public static final int SDK_VERSION = 5;
     public static final String OS = "android";
 
     public static final String PREFS_NAME = "data";

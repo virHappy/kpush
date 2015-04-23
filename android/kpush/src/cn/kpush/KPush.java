@@ -42,7 +42,7 @@ public class KPush {
     }
 
     public static void setAliasAndTags(String alias, String[] tags) {
-        Intent intent = new Intent();
+        Intent intent = new Intent(context, PushService.class);
         intent.setAction(Config.INTENT_ACTION_SEND_MSG);
         intent.putExtra("cmd", Proto.CMD_SET_ALIAS_AND_TAGS);
         intent.putExtra("alias", alias);

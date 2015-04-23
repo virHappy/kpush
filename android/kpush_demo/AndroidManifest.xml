@@ -22,7 +22,9 @@
                   android:configChanges="orientation|keyboardHidden">
         </activity>
 
-        <service android:name="cn.kpush.PushService">
+        <service android:name="cn.kpush.PushService"
+                 android:exported="false"
+                >
             <intent-filter>
                 <action android:name="cn.kpush.intent.SERVICE_START"/>
                 <action android:name="cn.kpush.intent.SEND_MSG"/>
@@ -32,6 +34,7 @@
         <receiver android:name="cn.kpush.PushReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
         <!-- kpush end -->

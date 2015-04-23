@@ -159,7 +159,7 @@ public class PushService extends Service {
             @Override
             public void onClose() {
                 userAuthed = false;
-                KLog.d("");
+                KLog.e("");
                 // Ferry.getInstance().connect();
                 // 从获取IP开始
                 allocServer();
@@ -167,6 +167,7 @@ public class PushService extends Service {
 
             @Override
             public void onError(int code, IBox ibox) {
+                KLog.e(String.format("code: %d", code));
             }
 
         }, this, "main");
@@ -211,12 +212,13 @@ public class PushService extends Service {
 
             @Override
             public void onError(int code, IBox ibox) {
+                KLog.e(String.format("code: %d", code));
                 userLoginLater();
             }
 
             @Override
             public void onTimeout() {
-                KLog.d("");
+                KLog.e("");
 
                 userLoginLater();
             }
@@ -462,6 +464,8 @@ public class PushService extends Service {
 
                 String postBody = Utils.packData(SECRET_KEY, jsonObject);
                 if (postBody == null) {
+                    // 一般不会出现在这
+                    KLog.e(String.format("packData fail. jsonData: %s", jsonObject.toString()));
                     return -1;
                 }
 
@@ -475,13 +479,16 @@ public class PushService extends Service {
                     jsonData = Utils.unpackData(SECRET_KEY, recvBody);
 
                     if (jsonData == null) {
+                        KLog.e(String.format("unpackData invalid: %s", recvBody));
                         return -3;
                     }
 
+                    KLog.d("succ");
                     // 解析成功
                     return 0;
                 }
                 else {
+                    KLog.e(String.format("status code invalid: %d", code));
                     return -4;
                 }
             }

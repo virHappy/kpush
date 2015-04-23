@@ -60,7 +60,7 @@ gateway配置:
     recv_buf_max_size=-1
 
     conn_timeout_check_interval=10
-    conn_timeout=180
+    conn_timeout=90
     conns_maxsize=500000
 
     [inner]

@@ -19,7 +19,7 @@ public class KPush {
 
         setDebug(false);
 
-        Intent intent = new Intent();
+        Intent intent = new Intent(context, PushService.class);
         intent.setAction(Config.INTENT_ACTION_SERVICE_START);
         context_.startService(intent);
     }

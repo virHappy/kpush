@@ -10,7 +10,9 @@
                         {{ form.username.label(class="col-sm-4 col-md-2 control-label") }}
                         <div class="col-sm-6 col-md-4">
                             {{ form.username(class='form-control') }}
+                            {% if form.username.errors %}
                             <span class="help-block">{{ form.username.errors|first }}</span>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -18,7 +20,9 @@
                         {{ form.password.label(class="col-sm-4 col-md-2 control-label") }}
                         <div class="col-sm-6 col-md-4">
                             {{ form.password(class='form-control') }}
+                            {% if form.password.errors %}
                             <span class="help-block">{{ form.password.errors|first }}</span>
+                            {% endif %}
                         </div>
                     </div>
 

@@ -59,7 +59,9 @@
                             {{ form.appid.label(class="col-sm-4 col-md-2 control-label") }}
                             <div class="col-sm-6 col-md-4">
                                 {{ form.appid(class='form-control') }}
+                                {% if form.appid.errors %}
                                 <span class="help-block">{{ form.appid.errors|first }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -67,7 +69,9 @@
                             {{ form.title.label(class="col-sm-4 col-md-2 control-label") }}
                             <div class="col-sm-6 col-md-4">
                                 {{ form.title(class='form-control') }}
+                                {% if form.title.errors %}
                                 <span class="help-block">{{ form.title.errors|first }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -75,7 +79,9 @@
                             {{ form.content.label(class="col-sm-4 col-md-2 control-label") }}
                             <div class="col-sm-6 col-md-4">
                                 {{ form.content(class='form-control') }}
+                                {% if form.content.errors %}
                                 <span class="help-block">{{ form.content.errors|first }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -87,7 +93,9 @@
                                         {{ form.silent }}
                                     </label>
                                 </div>
+                                {% if form.silent.errors %}
                                 <span class="help-block">{{ form.silent.errors|first }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -101,7 +109,9 @@
                                         {{ form.all }}
                                     </label>
                                 </div>
+                                {% if form.all.errors %}
                                 <span class="help-block">{{ form.all.errors|first }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -109,7 +119,9 @@
                             {{ form.alias.label(class="col-sm-4 col-md-2 control-label") }}
                             <div class="col-sm-6 col-md-4">
                                 {{ form.alias(class='form-control') }}
+                                {% if form.alias.errors %}
                                 <span class="help-block">{{ form.alias.errors|first }}</span>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -117,7 +129,9 @@
                             {{ form.tags.label(class="col-sm-4 col-md-2 control-label") }}
                             <div class="col-sm-6 col-md-4">
                                 {{ form.tags(class='form-control') }}
+                                {% if form.tags.errors %}
                                 <span class="help-block">{{ form.tags.errors|first }}</span>
+                                {% endif %}
                             </div>
                         </div>
 

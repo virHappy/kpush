@@ -87,10 +87,11 @@
        
 3. 客户端接入
 
-    1. 将 kpush/android/kpush/src的所有文件copy到目标工程
-    2. 修改src目录下 cn/kpush/PushService.java 中的 DOMAIN 和 SECRET_KEY 配置，修改为自己部署服务器的信息
-    3. 修改目标工程的 AndroidManifest.xml，参考 kpush/android/kpush/ 下的 AndroidManifest.xml
-    4. 运行即可
+    1. 执行 ./pull_modules.sh，将会拉取依赖的项目
+    2. 将 kpush/android/kpush/src的所有文件copy到目标工程
+    3. 修改src目录下 cn/kpush/PushService.java 中的 DOMAIN 和 SECRET_KEY 配置，修改为自己部署服务器的信息
+    4. 修改目标工程的 AndroidManifest.xml，参考 kpush/android/kpush/ 下的 AndroidManifest.xml
+    5. 编译运行即可
     
 4. 开放api
 

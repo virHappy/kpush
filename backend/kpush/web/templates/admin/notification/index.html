@@ -95,6 +95,8 @@
                                 </div>
                                 {% if form.silent.errors %}
                                 <span class="help-block">{{ form.silent.errors|first }}</span>
+                                {% else %}
+                                <span class="help-block">选中后，客户端将不显示通知</span>
                                 {% endif %}
                             </div>
                         </div>
@@ -128,7 +130,7 @@
                         <div class="form-group {% if form.tags.errors %}has-error{% endif %}">
                             {{ form.tags.label(class="col-sm-4 col-md-2 control-label") }}
                             <div class="col-sm-6 col-md-4">
-                                {{ form.tags(class='form-control') }}
+                                {{ form.tags(class='form-control', placeholder='多个标签请用英文逗号间隔') }}
                                 {% if form.tags.errors %}
                                 <span class="help-block">{{ form.tags.errors|first }}</span>
                                 {% endif %}

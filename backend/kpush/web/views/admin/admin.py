@@ -176,7 +176,11 @@ class AdminNotificationView(BaseView):
 
         # 获取所有appinfo
         appinfo_list = get_appinfo_list()
-        form.appid.choices = [(appinfo['appid'], appinfo['package'])for appinfo in appinfo_list]
+
+        # 默认是未选中状态
+        form.appid.choices = [(0, '')]
+        form.appid.choices.extend([(appinfo['appid'], appinfo['package']) for appinfo in appinfo_list])
+
         if form.validate_on_submit():
             query = dict()
 

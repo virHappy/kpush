@@ -40,19 +40,18 @@
             [stat]
             file_name=stat_file
 
-            
-      3. 使用supervisor来启动的话，配置如下:
-      
+    3. 使用supervisor来启动的话，配置如下:
+
             [program:gateway]
             directory=/data/release/gateway/
             command=/data/release/gateway/bin/gateway -c etc/config.ini
             user=root
             autorestart=true
             redirect_stderr=true
-            
-      4. 注意
-       
-         由于是要直接连入公网，请务必不要将tcp_tw_recycle和tcp_timestamps同时开启，会导致connect失败的问题
+        
+    4. 注意
+
+    由于是要直接连入公网，请务必不要将tcp_tw_recycle和tcp_timestamps同时开启，会导致connect失败的问题
 
       
 2. kpush服务器部署

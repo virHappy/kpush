@@ -141,7 +141,7 @@ class AdminNotificationView(BaseView):
         for src_notification in src_notification_list:
             notification = dict()
             notification.update(src_notification)
-            notification['package'] = appid2package[notification['appid']]
+            notification['package'] = appid2package.get(notification['appid'])
 
             notification_stat = notification.get('stat')
 

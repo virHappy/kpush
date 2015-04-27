@@ -430,7 +430,7 @@ public class PushService extends Service {
 
         //用mNotificationManager的notify方法通知用户生成标题栏消息通知
         // 固定用0，这样就不会显示很多通知了
-        notificationManager.notify(0, notification);
+        notificationManager.notify(ID, notification);
     }
 
     private class AllocServerTask extends AsyncTask<String, Integer, Integer> {

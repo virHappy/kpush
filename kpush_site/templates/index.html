@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <h1>KPush</h1>
+        <p>开源的移动端Push解决方案</p>
+        <ol>
+            <li>千万连接实时消息推送</li>
+            <li>实时统计到达率与点击率</li>
+            <li>服务器客户端代码完全开放，部署到自己的服务器上，不担心数据泄漏</li>
+        </ol>
+        <p>
+            <a class="btn btn-lg btn-primary" href="{{ url_for("doc") }}" role="button">查看文档 &raquo;</a>
+        </p>
+    </div>
+{% endblock %}

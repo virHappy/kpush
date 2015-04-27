@@ -30,7 +30,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class PushService extends Service {
     // custom
-    private final String DOMAIN = "115.28.224.64:7555";
+    private final String DOMAIN = "demo.kpush.cn";
     private final String SECRET_KEY = "tmp_secret";
 
     private Handler handler;

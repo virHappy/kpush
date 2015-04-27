@@ -15,6 +15,6 @@ public class MainActivity extends Activity {
 
         KPush.init(this);
         KPush.setDebug(true);
-        KPush.setAliasAndTags("dante", new String[]{"a", "c"});
+        // KPush.setAliasAndTags("dante", new String[]{"a", "c"});
     }
 }

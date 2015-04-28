@@ -28,9 +28,6 @@ public class PushActivity extends Activity {
 
         sendClickNotificationMsg(notificationID);
 
-        // 在米4上验证结果如下:
-        // 如果应用已经打开并且运行在前台，那么会保持在现有的栈顶activity
-        // 如果应用已经打开但没有运行在前台，同样会保持在现有的栈顶activity
         openAppMainActivity();
 
         handler.post(new Runnable() {
@@ -44,17 +41,23 @@ public class PushActivity extends Activity {
 
     private void openAppMainActivity() {
 
+        /*
+        // 似乎启动的app是一个完全独立的task，复用activity完全没用
+        // 不要用了，网上也有人说同样的问题
         Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
         if (intent != null) {
             // 如果已经存在，就用现有的，并放到ui栈顶
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
+        */
 
-        /*
+        // 在米4上验证结果如下:
+        // 如果应用已经打开并且运行在前台，那么会保持在现有的栈顶activity
+        // 如果应用已经打开但没有运行在前台，同样会保持在现有的栈顶activity
         Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
         resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        resolveIntent.setPackage(DeviceInfo.getPackageName());
+        resolveIntent.setPackage(getPackageName());
 
         List<ResolveInfo> apps = getPackageManager().queryIntentActivities(resolveIntent, 0);
 
@@ -74,7 +77,6 @@ public class PushActivity extends Activity {
             intent.setComponent(cn);
             startActivity(intent);
         }
-        */
     }
 
     private void sendClickNotificationMsg(int notificationID) {

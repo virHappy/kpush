@@ -42,10 +42,12 @@ public class PushActivity extends Activity {
     private void openAppMainActivity() {
 
         /*
-        // 似乎启动的app是一个完全独立的task，复用activity完全没用
-        // 不要用了，网上也有人说同样的问题
+        // 也可以做到与方法二一样的效果，但是需要在notification的intent里面设置 FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+
         Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
         if (intent != null) {
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
             // 如果已经存在，就用现有的，并放到ui栈顶
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -55,6 +57,11 @@ public class PushActivity extends Activity {
         // 在米4上验证结果如下:
         // 如果应用已经打开并且运行在前台，那么会保持在现有的栈顶activity
         // 如果应用已经打开但没有运行在前台，同样会保持在现有的栈顶activity
+        // 其实现的原理即如下三行，缺一不可
+        // Intent intent = new Intent(Intent.ACTION_MAIN);
+        // intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
         resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         resolveIntent.setPackage(getPackageName());

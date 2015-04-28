@@ -43,6 +43,15 @@ public class PushActivity extends Activity {
     }
 
     private void openAppMainActivity() {
+
+        Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+        if (intent != null) {
+            // 如果已经存在，就用现有的，并放到ui栈顶
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+
+        /*
         Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
         resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         resolveIntent.setPackage(DeviceInfo.getPackageName());
@@ -65,6 +74,7 @@ public class PushActivity extends Activity {
             intent.setComponent(cn);
             startActivity(intent);
         }
+        */
     }
 
     private void sendClickNotificationMsg(int notificationID) {

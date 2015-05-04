@@ -2,7 +2,8 @@
 
 # need python >= 2.7
 from importlib import import_module
-from flask import Flask, request
+from flask import Flask
+from flask import request
 
 from share.extensions import admin
 import views.admin
@@ -58,6 +59,12 @@ def configure_handlers(app):
                 request.json_data = unpack_data(request.get_data())
             except:
                 pass
+
+    @app.teardown_request
+    def log_exception(exc):
+        if exc:
+            app.logger.fatal('handle request fail. request: %s, exc: %s',
+                             request, exc, exc_info=True)
 
 
 def configure_views(app):

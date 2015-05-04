@@ -7,7 +7,7 @@
 import os
 import logging
 
-BASE_DIR = os.path.dirname(__file__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DEV_MODE = 'DEV'
 MODE = os.environ.get('MODE')

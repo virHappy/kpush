@@ -98,46 +98,6 @@ def addadmin(username, password, roles=None):
     print 'succ'
 
 
-@manager.command
-def dbshell():
-    """
-    Like Django's dbshell，with flask-sqlalchemy
-    """
-    SQLALCHEMY_DATABASE_URI = current_app.config['SQLALCHEMY_DATABASE_URI']
-    if not SQLALCHEMY_DATABASE_URI:
-        print 'no SQLALCHEMY_DATABASE_URI'
-        return
-
-    if SQLALCHEMY_DATABASE_URI.startswith('sqlite:'):
-        db_path = SQLALCHEMY_DATABASE_URI.replace('sqlite:///', '')
-        cmd = 'sqlite3 %s' % db_path
-    elif SQLALCHEMY_DATABASE_URI.startswith('mysql:'):
-        params = SQLALCHEMY_DATABASE_URI.split('/')
-        dbname = params[-1]
-        user_pass_part, host_port_part = params[-2].split('@')
-        if user_pass_part.find(':') >= 0:
-            user, password = user_pass_part.split(':')
-        else:
-            user, password = user_pass_part, ''
-
-        if host_port_part.find(':') >= 0:
-            host, port = host_port_part.split(':')
-        else:
-            host, port = host_port_part, ''
-
-        cmd = render_template_string(
-            'mysql -u{{user}} {% if password %}-p{{password}}{% endif %} {% if host %}-h{{host}}{% endif %} {% if port %}-P{{port}}{% endif %} -D{{dbname}}',
-            user=user, password=password, host=host, port=port, dbname=dbname
-        )
-
-    else:
-        print '\033[1;33m%s\033[0m' % 'only support mysql, sqlite'
-        return
-
-    print '\033[1;32m%s\033[0m' % cmd
-    os.system(cmd)
-
-
 @manager.option(dest='length', type=int)
 def genkey(length):
     """

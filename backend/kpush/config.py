@@ -14,13 +14,13 @@ MODE = os.environ.get('MODE')
 
 DEBUG = MODE == DEV_MODE
 
-SECRET_KEY = "tmp_secret"
+SECRET_KEY = 'tmp_secret_key'
 
 BLUEPRINTS = (
     ('web.views.frontend', ''),
 )
 
-LOGGER_NAME = 'web'
+LOGGER_NAME = 'flask'
 
 
 class RequireDebugOrNot(logging.Filter):
@@ -34,10 +34,11 @@ class RequireDebugOrNot(logging.Filter):
         from flask import current_app
         return current_app.debug if self._need_debug else not current_app.debug
 
+FLASK_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/flask.log")
+MAPLE_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/maple.log")
 WEB_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/web.log")
 WORKER_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/worker.log")
 NETKIT_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/netkit.log")
-MAPLE_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/maple.log")
 
 LOG_FORMAT = '\n'.join((
     '/' + '-' * 80,
@@ -74,11 +75,33 @@ LOGGING = {
             'formatter': 'standard',
             'source': os.path.basename(BASE_DIR),
         },
+        'flask_flylog': {
+            'level': 'ERROR',
+            'class': 'flylog.FlyLogHandler',
+            'formatter': 'standard',
+            'source': os.path.basename(BASE_DIR),
+        },
         'maple_flylog': {
             'level': 'ERROR',
             'class': 'flylog.FlyLogHandler',
             'formatter': 'standard',
             'source': os.path.basename(BASE_DIR),
+        },
+        'flask_rfile': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'standard',
+            'filename': FLASK_LOG_FILE_PATH,
+            'maxBytes': 1024 * 1024 * 500,  # 500 MB
+            'backupCount': 5,
+        },
+        'maple_rfile': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'standard',
+            'filename': MAPLE_LOG_FILE_PATH,
+            'maxBytes': 1024 * 1024 * 500,  # 500 MB
+            'backupCount': 5,
         },
         'web_rfile': {
             'level': 'INFO',
@@ -104,14 +127,6 @@ LOGGING = {
             'maxBytes': 1024 * 1024 * 500,  # 500 MB
             'backupCount': 5,
         },
-        'maple_rfile': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
-            'filename': MAPLE_LOG_FILE_PATH,
-            'maxBytes': 1024 * 1024 * 500,  # 500 MB
-            'backupCount': 5,
-        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
@@ -121,6 +136,16 @@ LOGGING = {
     },
 
     'loggers': {
+        'flask': {
+            'handlers': ['console', 'flask_rfile', 'flask_flylog'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'maple': {
+            'handlers': ['console', 'maple_rfile', 'maple_flylog'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
         'web': {
             'handlers': ['console', 'web_rfile', 'flylog'],
             'level': 'DEBUG',
@@ -133,11 +158,6 @@ LOGGING = {
         },
         'netkit': {
             'handlers': ['console', 'netkit_rfile', 'flylog'],
-            'level': 'DEBUG',
-            'propagate': False
-        },
-        'maple': {
-            'handlers': ['console', 'maple_rfile', 'maple_flylog'],
             'level': 'DEBUG',
             'propagate': False
         },

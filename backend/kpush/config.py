@@ -36,9 +36,8 @@ class RequireDebugOrNot(logging.Filter):
 
 FLASK_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/flask.log")
 MAPLE_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/maple.log")
-WEB_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/web.log")
-WORKER_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/worker.log")
 NETKIT_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/netkit.log")
+MAIN_LOG_FILE_PATH = os.path.join(BASE_DIR, "logs/main.log")
 
 LOG_FORMAT = '\n'.join((
     '/' + '-' * 80,
@@ -103,27 +102,19 @@ LOGGING = {
             'maxBytes': 1024 * 1024 * 500,  # 500 MB
             'backupCount': 5,
         },
-        'web_rfile': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
-            'filename': WEB_LOG_FILE_PATH,
-            'maxBytes': 1024 * 1024 * 500,  # 500 MB
-            'backupCount': 5,
-        },
-        'worker_rfile': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'standard',
-            'filename': WORKER_LOG_FILE_PATH,
-            'maxBytes': 1024 * 1024 * 500,  # 500 MB
-            'backupCount': 5,
-        },
         'netkit_rfile': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'standard',
             'filename': NETKIT_LOG_FILE_PATH,
+            'maxBytes': 1024 * 1024 * 500,  # 500 MB
+            'backupCount': 5,
+        },
+        'main_rfile': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'standard',
+            'filename': MAIN_LOG_FILE_PATH,
             'maxBytes': 1024 * 1024 * 500,  # 500 MB
             'backupCount': 5,
         },
@@ -146,18 +137,13 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False
         },
-        'web': {
-            'handlers': ['console', 'web_rfile', 'flylog'],
-            'level': 'DEBUG',
-            'propagate': False
-        },
-        'worker': {
-            'handlers': ['console', 'worker_rfile', 'flylog'],
-            'level': 'DEBUG',
-            'propagate': False
-        },
         'netkit': {
             'handlers': ['console', 'netkit_rfile', 'flylog'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'main': {
+            'handlers': ['console', 'main_rfile', 'flylog'],
             'level': 'DEBUG',
             'propagate': False
         },

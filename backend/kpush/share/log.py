@@ -2,5 +2,4 @@
 
 import logging
 
-web_logger = logging.getLogger('web')
-worker_logger = logging.getLogger('worker')
+logger = logging.getLogger('main')

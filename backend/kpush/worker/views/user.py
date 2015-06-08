@@ -7,7 +7,7 @@ from flask import current_app
 from share import proto
 from share.utils import pack_data, create_or_update_user, get_appinfo_by_appkey, save_redis_online, remove_redis_online
 from share.kit import kit
-from share.log import worker_logger
+from share.log import logger
 from worker.worker_share.utils import login_required
 
 
@@ -26,7 +26,7 @@ def client_conn_closed(request):
         try:
             remove_redis_online(request.gw_box.uid, request.gw_box.userdata)
         except:
-            worker_logger.error('exc occur. request: %s', request, exc_info=True)
+            logger.error('exc occur. request: %s', request, exc_info=True)
 
 
 # @bp.route(proto.CMD_REGISTER)
@@ -109,7 +109,7 @@ def login(request):
         try:
             save_redis_online(user['uid'], user['appid'])
         except:
-            worker_logger.error('exc occur. request: %s', request, exc_info=True)
+            logger.error('exc occur. request: %s', request, exc_info=True)
 
     request.write_to_client(dict(
         ret=0
@@ -153,14 +153,14 @@ def heartbeat(request):
     :param request:
     :return:
     """
-    worker_logger.debug('uid: %s, userdata: %s', request.gw_box.uid, request.gw_box.userdata)
+    logger.debug('uid: %s, userdata: %s', request.gw_box.uid, request.gw_box.userdata)
 
     if current_app.config['REDIS_ONLINE_SAVE']:
         # 有效
         try:
             save_redis_online(request.gw_box.uid, request.gw_box.userdata)
         except:
-            worker_logger.error('exc occur. request: %s', request, exc_info=True)
+            logger.error('exc occur. request: %s', request, exc_info=True)
 
     request.write_to_client(dict(
         ret=0

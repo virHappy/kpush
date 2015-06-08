@@ -5,7 +5,7 @@ import json
 from flask import current_app
 from maple import Worker
 from netkit.box import Box
-from share.log import worker_logger
+from share.log import logger
 from share.kit import kit
 
 
@@ -25,7 +25,7 @@ def configure_handlers(app):
         内部content json
         """
 
-        worker_logger.debug('endpoint: %s, box: %s', request.endpoint, request.box)
+        logger.debug('endpoint: %s, box: %s', request.endpoint, request.box)
 
         # 先赋值None
         request.json_data = None
@@ -42,7 +42,7 @@ def configure_handlers(app):
         )).hexdigest()
 
         if calc_sign != sign:
-            worker_logger.error('sign not equal. sign: %s, calc_sign: %s', sign, calc_sign)
+            logger.error('sign not equal. sign: %s, calc_sign: %s', sign, calc_sign)
             return
 
         request.json_data = json.loads(data)

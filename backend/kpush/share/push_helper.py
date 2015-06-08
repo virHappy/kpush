@@ -4,7 +4,6 @@ import datetime
 
 from share.kit import kit
 from flask import current_app
-from share.log import web_logger
 from share import proto
 from share.utils import pack_data, alloc_autoid
 

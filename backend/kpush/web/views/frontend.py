@@ -7,7 +7,7 @@ from flask import render_template, jsonify
 from flask import current_app, request
 from share.kit import kit
 from share import proto
-from share.log import web_logger
+from share.log import logger
 from share.utils import get_appinfo_by_appkey, create_or_update_user, pack_data
 
 bp = Blueprint('frontend', __name__)
@@ -24,7 +24,7 @@ def alloc_server():
     """
 
     appinfo = get_appinfo_by_appkey(request.json_data['appkey'])
-    web_logger.debug("appinfo: %s", appinfo)
+    logger.debug("appinfo: %s", appinfo)
 
     if appinfo is None:
         # 报错
